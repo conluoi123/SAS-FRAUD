@@ -183,6 +183,21 @@ CREATE TABLE IF NOT EXISTS fraud_sim.account_change_events (
     FOREIGN KEY (account_id, customer_id) REFERENCES fraud_sim.accounts(account_id, customer_id)
 );
 
+-- Đảm bảo constraint tồn tại ngay cả khi bảng beneficiaries được tạo từ phiên DDL cũ
+-- (CREATE TABLE IF NOT EXISTS không thêm constraint mới nếu bảng đã tồn tại)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conrelid = 'fraud_sim.beneficiaries'::regclass
+          AND contype   = 'u'
+          AND conname   = 'uq_beneficiaries_id_account'
+    ) THEN
+        ALTER TABLE fraud_sim.beneficiaries
+            ADD CONSTRAINT uq_beneficiaries_id_account UNIQUE (beneficiary_id, account_id);
+    END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS fraud_sim.transactions (
     transaction_id       TEXT PRIMARY KEY,
     simulation_run_id    TEXT NOT NULL REFERENCES fraud_sim.simulation_runs(simulation_run_id),
