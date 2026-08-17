@@ -1736,3 +1736,41 @@ Hoàn thành các mục này sẽ giúp schema ổn định để đội dữ li
 ---
 
 **Nguồn tham khảo:** Các khái niệm về Fraud Detection, Transaction Monitoring được trình bày trong tài liệu và bài viết chuyên ngành. Các ràng buộc dữ liệu sử dụng **Primary Key, Foreign Key, UNIQUE, CHECK** theo tài liệu PostgreSQL và SQL tiêu chuẩn để đảm bảo tính đúng đắn của dữ liệu. Các ví dụ SQL/mermaid trên dựa trên cấu trúc schema hiện có.
+
+## 2. Tiêm 10 kịch bản gian lận giao dịch (`inject_transaction`)
+
+Mỗi kịch bản tạo ra **chuỗi dữ liệu hoàn chỉnh** (device → session → auth → beneficiary → transaction → change events):
+
+| Code       | Tên                   | Mô tả                                                           |
+| ---------- | --------------------- | --------------------------------------------------------------- |
+| **TXN-01** | Impossible Travel     | Login HN → 15 phút sau login HCM, chuyển tiền                   |
+| **TXN-02** | Dormant Awakening     | Tài khoản ngủ 2 năm, bất ngờ active + chuyển lớn                |
+| **TXN-03** | Brute Force           | 3 lần đăng nhập fail → lần 4 thành công                         |
+| **TXN-04** | Velocity Burst        | 5 giao dịch ~4.9M trong 10 phút (structuring)                   |
+| **TXN-05** | New Beneficiary Rapid | Thêm người thụ hưởng mới → chuyển ngay sát hạn mức              |
+| **TXN-06** | Account Takeover      | Đổi pass + phone + limit → thêm bene → rút → xóa bene           |
+| **TXN-07** | Money Mule Ring       | 5 victim → mule A → chia 2 mule → rút ATM                       |
+| **TXN-08** | Bot Farm              | 10 tài khoản bị tấn công bằng emulator + rotating proxy         |
+| **TXN-09** | Rogue Employee        | Nhân viên chuyển tiền nạn nhân → tài khoản riêng → rút ra ngoài |
+| **TXN-10** | SIM Swap              | Đổi SIM → đổi trusted device + limit → rút hết số dư            |
+
+---
+
+## 3. Tiêm 10 kịch bản gian lận tín dụng (`inject_loan`)
+
+Mỗi kịch bản tạo **hồ sơ vay hoàn chỉnh** (application + declared profile + employment + references + documents + CIC + disbursement + repayment) rồi **bóp méo** các trường phù hợp:
+
+| Code        | Tên                 | Bóp méo gì                                                                                     |
+| ----------- | ------------------- | ---------------------------------------------------------------------------------------------- |
+| **LOAN-01** | Income Mismatch     | `income_band` = <5M nhưng khai 65M, payslip tamper_score cao                                   |
+| **LOAN-02** | Loan Stacking       | CIC: 6 khoản vay, 12 inquiry, DPD 45, score 380                                                |
+| **LOAN-03** | Ghost Employer      | Nhiều hồ sơ chung 1 số điện thoại employer ma                                                  |
+| **LOAN-04** | Reference Recycling | Cùng 1 SĐT reference xuất hiện ở nhiều hồ sơ                                                   |
+| **LOAN-05** | Document Integrity  | CMND hết hạn, mặt trước/sau không khớp, selfie fail                                            |
+| **LOAN-06** | Synthetic Farm      | 5 danh tính tổng hợp, chung cluster, emulator + VPN                                            |
+| **LOAN-07** | Agent Collusion     | 1 agent đẩy 10 hồ sơ, chung SĐT employer + reference                                           |
+| **LOAN-08** | Shared Disbursement | 3 người vay khác nhau, tiền giải ngân về cùng 1 tài khoản                                      |
+| **LOAN-09** | Bust-Out            | Hồ sơ sạch (CIC 780) nhưng ngay lập tức default, mất liên lạc                                  |
+| **LOAN-10** | Full Ring           | Kết hợp tất cả: synthetic + doc giả + employer ma + ref chung + cùng disbursement + cùng agent |
+
+---
