@@ -1,0 +1,98 @@
+{
+    "post": "/alerts/entityTypes",
+    "contentType": "application/vnd.sas.collection.triage.entity.type+json",
+    "body": [
+        [
+            {
+                "id": "sfd_batch",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Batch",
+                "name": "Batch",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_company",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Company",
+                "name": "Company",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_creditacc",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Credit Account",
+                "name": "Credit Account",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_creditcard",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Credit Card",
+                "name": "Credit Card",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_customer",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Customer",
+                "name": "Customer",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_debitacc",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Debit Account",
+                "name": "Debit Account",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_debitcard",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Debit Card",
+                "name": "Debit Card",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_merchant",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Merchant",
+                "name": "Merchant",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            },
+            {
+                "id": "sfd_terminal",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Terminal",
+                "name": "Terminal",
+                "optLockVersion": -1,
+                "parentEntityTypeID": "",
+                "rootEntityTypeID": "",
+                "version": 1
+            }
+        ]
+    ]
+}

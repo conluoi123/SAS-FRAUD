@@ -1,0 +1,30 @@
+{
+    "markProperties": {
+        "id": "c44fff28-bdba-4ece-b876-ae52cf969dc6",
+        "transactionId": "06b7b04d-00d6-4e47-8b80-d26e82e431f0",
+        "alertId": "539642637588672",
+        "transactionTypeId": "DCCA",
+        "markConfigId": "sfd_txMark_pymt_suspectedFraud",
+        "rootMarkName": "confirm_invalid",
+        "transactionMarkLabel": "Suspected Fraud",
+        "localizedTransactionMarkLabel": "Suspected Fraud",
+        "markAction": "added",
+        "isMarkedAcrossAlert": false,
+        "reasonCodeId": "SFD_CNP_WEAK_AMOUNT",
+        "reasonCodeLabel": "CNP - new device and weak authentication",
+        "reasonCodeLocalizedLabel": "CNP - new device and weak authentication",
+        "CreationTimeStamp": "2026-08-21T17:47:48.285189197Z",
+        "CreatedBy": "viya-admin",
+        "ModifiedTimeStamp": "2026-08-21T17:47:48.285189197Z",
+        "ModifiedBy": "viya-admin"
+    },
+    "alertData": {
+        "actionableEntityID": "NKQ-23120347"
+    },
+    "messageVariables": {
+        "message.request.messageClassificationName": "GLOBAL",
+        "message.request.schemaName": "Payment Fraud",
+        "message.sas.system.messageDtTmUtc": "2026-08-21T16:57:42.019566285Z",
+        "message.sas.system.organizationName": "BANKING_FRAUD"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "put": "/identities/groups/SASTriageUsers/groupMembers/{id}",
+    "contentType": "application/vnd.sas.identity.group+json",
+    "acceptType": "application/json",
+    "suppressErrors": [
+        409
+    ],
+    "body": [
+        {
+            "id": "Fraud_Decisioning_Administrator"
+        },
+        {
+            "id": "Fraud_Decisioning_Alert_Queues"
+        },
+        {
+            "id": "Fraud_Decisioning_Investigator"
+        },
+        {
+            "id": "Fraud_Decisioning_Manager"
+        },
+        {
+            "id": "Fraud_Decisioning_Sr_Investigator"
+        },
+        {
+            "id": "Fraud_Decisioning_Users_Triage_Card_Fraud"
+        },
+        {
+            "id": "Fraud_Decisioning_Users_Triage_MA_Fraud"
+        },
+        {
+            "id": "Fraud_Decisioning_Users_Triage_Payment_Fraud"
+        }
+    ]
+},{
+    "put": "/identities/groups/Fraud_Decisioning_Sr_Investigator/groupMembers/{id}",
+    "contentType": "application/vnd.sas.identity.group+json",
+    "acceptType": "application/json",
+    "suppressErrors": [
+        409
+    ],
+    "body": [
+        {
+            "id": "SAS-Alert-Triage"
+        }
+    ]
+}

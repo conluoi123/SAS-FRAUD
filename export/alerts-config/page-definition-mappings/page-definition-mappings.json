@@ -1,0 +1,168 @@
+{
+    "post": "/alerts/pageDefinitionMappings",
+    "contentType": "application/vnd.sas.collection.triage.page.definition.mapping+json",
+    "body": [
+        [
+            {
+                "definitionID": "sfd_company_x_payment_fraud",
+                "entityTypeID": "sfd_company",
+                "id": "0fac5566-1ed3-44bf-ad44-feda077b486e",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_debitcard_x_debit_card_fraud",
+                "entityTypeID": "sfd_debitcard",
+                "id": "138a394a-fd14-47df-b451-71a2c1de3612",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_debit_card_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_terminal_merchant_x_merchant",
+                "entityTypeID": "sfd_terminal",
+                "id": "1ecae9bf-5a4a-433f-9dcf-9ad097414abe",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_terminal_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_debitacc_x_vip_payment_fraud",
+                "entityTypeID": "sfd_debitacc",
+                "id": "1fbcfc9d-7668-4d0a-9127-a19c1d1e7115",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_vip_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_creditacc_x_payment_fraud",
+                "entityTypeID": "sfd_creditacc",
+                "id": "2aeb9a0d-aef4-4b36-9b62-776d99090b7d",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_debitacc_x_payment_fraud",
+                "entityTypeID": "sfd_debitacc",
+                "id": "39513b24-2c17-45cf-b8c4-8274594a81b4",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_other_merchant_x_merchant",
+                "entityTypeID": "sfd_merchant",
+                "id": "412f9eea-4001-499d-a2bb-9fee2ceb8368",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_med_merchant_x_merchant",
+                "entityTypeID": "sfd_terminal",
+                "id": "47a12ee9-611e-47e1-b0a6-cca10c2dee29",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_medium_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_high_merchant_x_merchant",
+                "entityTypeID": "sfd_merchant",
+                "id": "57a4ba82-3995-477a-82fc-e8f3c9a96758",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_high_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_creditacc_x_vip_payment_fraud",
+                "entityTypeID": "sfd_creditacc",
+                "id": "76884f76-4b05-478c-815e-6dc627a45641",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_vip_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_company_x_vip_payment_fraud",
+                "entityTypeID": "sfd_company",
+                "id": "7ed40f56-22d2-4a24-9a76-87e213654802",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_vip_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_creditcard_x_credit_card_fraud",
+                "entityTypeID": "sfd_creditcard",
+                "id": "82843d73-f8cb-4f0f-b752-399bacf9fa84",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_credit_card_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_batch_merchant_x_merchant",
+                "entityTypeID": "sfd_batch",
+                "id": "8d2fc0c3-3495-428e-8f61-3ae403cecf39",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_batch_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_debitcard_x_payment_fraud",
+                "entityTypeID": "sfd_debitcard",
+                "id": "a9ae28f7-8753-4aad-ad37-6c844c78d1d6",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_creditcard_x_payment_fraud",
+                "entityTypeID": "sfd_creditcard",
+                "id": "aa159e13-1089-414c-a795-cf362453d551",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_customer_x_payment_fraud",
+                "entityTypeID": "sfd_customer",
+                "id": "b29a85cd-3f4e-4394-b64e-50e69abb5651",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_other_merchant_x_terminal",
+                "entityTypeID": "sfd_terminal",
+                "id": "cc2b9cce-0991-4a2d-b433-dfa880478d70",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_other_merchant_x_batch",
+                "entityTypeID": "sfd_batch",
+                "id": "d894a204-2bfd-46ec-8f60-7cca2cbf6a1e",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_payment_fraud_merchant",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_customer_x_vip_payment_fraud",
+                "entityTypeID": "sfd_customer",
+                "id": "e83f44c5-7a1b-4f5e-af92-5e92b082b5b3",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_vip_payment_fraud",
+                "version": 1
+            },
+            {
+                "definitionID": "sfd_low_merchant_x_merchant",
+                "entityTypeID": "sfd_merchant",
+                "id": "f814bbee-3c9b-4dac-adb6-682e8469f90c",
+                "optLockVersion": -1,
+                "triageTypeID": "sfd_low_merchant",
+                "version": 1
+            }
+        ]
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "post": "/alertsTransaction/transactionMarks/messageConfigurations",
+    "contentType": "application/vnd.sas.triage.transaction.mark.message.config+json",
+    "body": [
+        {
+            "alertFields": [
+                "actionableEntityID",
+                "actionableEntityLabel"
+            ],
+            "domainId": "sfd_payment_fraud",
+            "enrichmentFields": null,
+            "headers": {
+                "alertFields": null,
+                "enrichmentFields": null,
+                "messageVariables": [
+                    "message.sas.system.organizationIdentifier"
+                ]
+            },
+            "messageVariables": [
+                "message.request.schemaName",
+                "message.sas.system.organizationName",
+                "message.request.messageClassificationName",
+                "message.sas.system.messageDtTmUtc"
+            ],
+            "optLockVersion": -1,
+            "version": 1
+        }
+    ]
+}

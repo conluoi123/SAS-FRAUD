@@ -1,0 +1,976 @@
+{
+    "post": "/alerts/enrichmentMappings",
+    "contentType": "application/vnd.sas.collection.triage.enrichment.mapping+json",
+    "body": [
+        [
+            {
+                "alertTypeID": "sfd_batch",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "demo_test",
+                "id": "app_orig_type_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_app_identifier_enrch",
+                "enrichmentVariablePathName": "message.application.identifier",
+                "id": "sfd_app_identifier_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_ca_number_enrch",
+                "enrichmentVariablePathName": "message.creditaccount.number",
+                "id": "sfd_ca_number_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_terminal",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_batch",
+                "enrichmentFieldID": "sfd_cf_cardPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.cardPresentInd",
+                "id": "sfd_cf_cardPresInd_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cf_currCode_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.currencyCode",
+                "id": "sfd_cf_currCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cf_currCode_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.currencyCode",
+                "id": "sfd_cf_currCode_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cf_currCode_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.currencyCode",
+                "id": "sfd_cf_currCode_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_cf_currCode_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.currencyCode",
+                "id": "sfd_cf_currCode_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cf_currCode_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.currencyCode",
+                "id": "sfd_cf_currCode_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cf_custPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.customerPresentInd",
+                "id": "sfd_cf_custPresInd_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cf_custPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.customerPresentInd",
+                "id": "sfd_cf_custPresInd_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cf_custPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.customerPresentInd",
+                "id": "sfd_cf_custPresInd_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_cf_custPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.customerPresentInd",
+                "id": "sfd_cf_custPresInd_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cf_custPresInd_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.customerPresentInd",
+                "id": "sfd_cf_custPresInd_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_terminal",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_batch",
+                "enrichmentFieldID": "sfd_cf_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.cardfinancial.usdAmount",
+                "id": "sfd_cf_usdAmt_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cmp_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.company.addressCountryCode",
+                "id": "sfd_cmp_addrCntryCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cmp_name_enrch",
+                "enrichmentVariablePathName": "message.company.name",
+                "id": "sfd_cmp_name_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cmp_type_enrch",
+                "enrichmentVariablePathName": "message.company.type",
+                "id": "sfd_cmp_type_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cst_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.customer.addressCountryCode",
+                "id": "sfd_cst_addrCntryCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cst_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.customer.addressCountryCode",
+                "id": "sfd_cst_addrCntryCode_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cst_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.customer.addressCountryCode",
+                "id": "sfd_cst_addrCntryCode_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_cst_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.customer.addressCountryCode",
+                "id": "sfd_cst_addrCntryCode_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_cst_addrCntryCode_enrch",
+                "enrichmentVariablePathName": "message.customer.addressCountryCode",
+                "id": "sfd_cst_addrCntryCode_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cst_surname_enrch",
+                "enrichmentVariablePathName": "message.customer.surname",
+                "id": "sfd_cst_surname_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cst_surname_enrch",
+                "enrichmentVariablePathName": "message.customer.surname",
+                "id": "sfd_cst_surname_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cst_surname_enrch",
+                "enrichmentVariablePathName": "message.customer.surname",
+                "id": "sfd_cst_surname_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_cst_surname_enrch",
+                "enrichmentVariablePathName": "message.customer.surname",
+                "id": "sfd_cst_surname_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_cst_surname_enrch",
+                "enrichmentVariablePathName": "message.customer.surname",
+                "id": "sfd_cst_surname_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.customer.type",
+                "id": "sfd_cst_type_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_da_number_enrch",
+                "enrichmentVariablePathName": "message.debitaccount.number",
+                "id": "sfd_da_number_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_terminal",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_batch",
+                "enrichmentFieldID": "sfd_dec_outcome_enrch",
+                "enrichmentVariablePathName": "message.sas.decision.outcome",
+                "id": "sfd_dec_outcome_9_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_mer_catCode_enrch",
+                "enrichmentVariablePathName": "message.merchant.categoryCode",
+                "id": "sfd_mer_catCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_mer_city_enrch",
+                "enrichmentVariablePathName": "message.merchant.city",
+                "id": "sfd_mer_city_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_mer_cntryCode_enrch",
+                "enrichmentVariablePathName": "message.merchant.countryCode",
+                "id": "sfd_mer_cntryCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_mer_name_enrch",
+                "enrichmentVariablePathName": "message.merchant.name",
+                "id": "sfd_mer_name_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_mer_state_enrch",
+                "enrichmentVariablePathName": "message.merchant.state",
+                "id": "sfd_mer_state_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_py_creditCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.creditCurrencyCode",
+                "id": "sfd_py_creditCurrCode_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_py_debitCurrCode_enrch",
+                "enrichmentVariablePathName": "message.payment.debitCurrencyCode",
+                "id": "sfd_py_debitCurrCode_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_py_usdAmt_enrch",
+                "enrichmentVariablePathName": "message.payment.usdAmount",
+                "id": "sfd_py_usdAmt_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_sol_activityType_enrch",
+                "enrichmentVariablePathName": "message.solution.activityType",
+                "id": "sfd_sol_activityType_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_sol_authType_enrch",
+                "enrichmentVariablePathName": "message.solution.authenticationType",
+                "id": "sfd_sol_authType_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_sol_chnType_enrch",
+                "enrichmentVariablePathName": "message.solution.channelType",
+                "id": "sfd_sol_chnType_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_sol_customerType_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_cst_type_enrch",
+                "enrichmentVariablePathName": "message.solution.customerType",
+                "id": "sfd_sol_customerType_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_customer",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_1_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitcard",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_2_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditcard",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_3_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_merchant",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_4_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_debitacc",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_5_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_creditacc",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_6_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "sfd_company",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_7_em",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "alertTypeID": "550978a4-1f18-406a-ad9e-d12a9086f630",
+                "enrichmentFieldID": "sfd_sol_origType_enrch",
+                "enrichmentVariablePathName": "message.solution.originationType",
+                "id": "sfd_sol_origType_8_em",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

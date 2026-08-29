@@ -1,0 +1,145 @@
+{
+    "post": "/alerts/triageTypes",
+    "contentType": "application/vnd.sas.collection.triage.triage.type+json",
+    "body": [
+        [
+            {
+                "defaultFlag": true,
+                "domainID": "app_fraud",
+                "id": "app_fraud",
+                "localizedName": "Application Fraud",
+                "name": "Application Fraud",
+                "optLockVersion": -1,
+                "servicePriority": 32767,
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud",
+                "groupID": "Fraud_Decisioning_Users_Triage_Card_Fraud",
+                "id": "sfd_credit_card_fraud",
+                "localizedName": "Credit Card Fraud",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+                "name": "Credit Card Fraud",
+                "optLockVersion": -1,
+                "servicePriority": 2,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud",
+                "groupID": "Fraud_Decisioning_Users_Triage_Card_Fraud",
+                "id": "sfd_debit_card_fraud",
+                "localizedName": "Debit Card Fraud",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+                "name": "Debit Card Fraud",
+                "optLockVersion": -1,
+                "servicePriority": 1,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "defaultFlag": true,
+                "domainID": "domain_default",
+                "id": "triage_type_default",
+                "localizedName": "Default Triage Type",
+                "name": "Default Triage Type",
+                "optLockVersion": -1,
+                "servicePriority": 32767,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud_merchant",
+                "groupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "id": "sfd_batch_merchant",
+                "localizedName": "Merchant Acquiring - Batch",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Merchant Acquiring - Batch",
+                "optLockVersion": -1,
+                "servicePriority": 10,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud_merchant",
+                "groupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "id": "sfd_high_merchant",
+                "localizedName": "Merchant Acquiring - High Priority",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Merchant Acquiring - High Priority",
+                "optLockVersion": -1,
+                "servicePriority": 6,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud_merchant",
+                "groupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "id": "sfd_low_merchant",
+                "localizedName": "Merchant Acquiring - Low Priority",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Merchant Acquiring - Low Priority",
+                "optLockVersion": -1,
+                "servicePriority": 8,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud_merchant",
+                "groupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "id": "sfd_medium_merchant",
+                "localizedName": "Merchant Acquiring - Medium Priority",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Merchant Acquiring - Medium Priority",
+                "optLockVersion": -1,
+                "servicePriority": 7,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud_merchant",
+                "groupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "id": "sfd_terminal_merchant",
+                "localizedName": "Merchant Acquiring - Terminal",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Merchant Acquiring - Terminal",
+                "optLockVersion": -1,
+                "servicePriority": 9,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "defaultFlag": true,
+                "domainID": "sfd_payment_fraud",
+                "id": "sfd_payment_fraud",
+                "localizedName": "Payment Fraud",
+                "name": "Payment Fraud",
+                "optLockVersion": -1,
+                "servicePriority": 32767,
+                "version": 1
+            },
+            {
+                "domainID": "sfd_payment_fraud",
+                "groupID": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+                "id": "sfd_vip_payment_fraud",
+                "localizedName": "Payment Fraud - VIP",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+                "name": "Payment Fraud - VIP",
+                "optLockVersion": -1,
+                "servicePriority": 3,
+                "triageMode": "MANUAL",
+                "version": 1
+            },
+            {
+                "defaultFlag": true,
+                "domainID": "sfd_payment_fraud_merchant",
+                "id": "sfd_payment_fraud_merchant",
+                "localizedName": "Payment Fraud Merchant",
+                "name": "Payment Fraud Merchant",
+                "optLockVersion": -1,
+                "servicePriority": 32767,
+                "version": 1
+            }
+        ]
+    ]
+}

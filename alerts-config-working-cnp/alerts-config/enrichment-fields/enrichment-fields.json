@@ -1,0 +1,371 @@
+{
+    "post": "/alerts/enrichmentFields",
+    "contentType": "application/vnd.sas.collection.triage.enrichment.field+json",
+    "body": [
+        [
+            {
+                "dataType": "string",
+                "displayOrder": 2,
+                "header": "Activity Type",
+                "id": "sfd_sol_activityType_enrch",
+                "localizedHeader": "Activity Type",
+                "localizedName": "Activity Type",
+                "name": "Activity Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 8,
+                "header": "Address Country Code",
+                "id": "sfd_cst_addrCntryCode_enrch",
+                "localizedHeader": "Address Country Code",
+                "localizedName": "Address Country Code",
+                "name": "Address Country Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 16,
+                "header": "Application ID",
+                "id": "sfd_app_identifier_enrch",
+                "localizedHeader": "Application ID",
+                "localizedName": "Application ID",
+                "name": "Application ID",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 17,
+                "header": "Product Type",
+                "id": "sfd_app_product_type",
+                "localizedHeader": "Product Type",
+                "localizedName": "Application Product Type",
+                "name": "Application Product Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 3,
+                "header": "Authentication Type",
+                "id": "sfd_sol_authType_enrch",
+                "localizedHeader": "Authentication Type",
+                "localizedName": "Authentication Type",
+                "name": "Authentication Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 9,
+                "header": "Card was Present Information",
+                "id": "sfd_cf_cardPresInd_enrch",
+                "localizedHeader": "Card was Present Information",
+                "localizedName": "Card was Present Information",
+                "name": "Card was Present Information",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 4,
+                "header": "Channel Type",
+                "id": "sfd_sol_chnType_enrch",
+                "localizedHeader": "Channel Type",
+                "localizedName": "Channel Type",
+                "name": "Channel Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Company Address Code",
+                "id": "sfd_cmp_addrCntryCode_enrch",
+                "localizedHeader": "Company Address Code",
+                "localizedName": "Company Address Code",
+                "name": "Company Address Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Company Name",
+                "id": "sfd_cmp_name_enrch",
+                "localizedHeader": "Company Name",
+                "localizedName": "Company Name",
+                "name": "Company Name",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Company Type",
+                "id": "sfd_cmp_type_enrch",
+                "localizedHeader": "Company Type",
+                "localizedName": "Company Type",
+                "name": "Company Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Credit Account Number",
+                "id": "sfd_ca_number_enrch",
+                "localizedHeader": "Credit Account Number",
+                "localizedName": "Credit Account Number",
+                "name": "Credit Account Number",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 6,
+                "header": "Customer",
+                "id": "sfd_cst_surname_enrch",
+                "localizedHeader": "Customer",
+                "localizedName": "Customer",
+                "name": "Customer",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Customer Type",
+                "id": "sfd_cst_type_enrch",
+                "localizedHeader": "Customer Type",
+                "localizedName": "Customer Type",
+                "name": "Customer Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 5,
+                "header": "Customer Type",
+                "id": "sfd_sol_customerType_enrch",
+                "localizedHeader": "Customer Type",
+                "localizedName": "Customer Type",
+                "name": "Customer Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 2,
+                "header": "Customer was Present Information",
+                "id": "sfd_cf_custPresInd_enrch",
+                "localizedHeader": "Customer was Present Information",
+                "localizedName": "Customer was Present Information",
+                "name": "Customer was Present Information",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Debit Account Number",
+                "id": "sfd_da_number_enrch",
+                "localizedHeader": "Debit Account Number",
+                "localizedName": "Debit Account Number",
+                "name": "Debit Account Number",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "integer",
+                "displayOrder": 15,
+                "header": "Decision Outcome",
+                "id": "sfd_dec_outcome_enrch",
+                "localizedHeader": "Decision Outcome",
+                "localizedName": "Decision Outcome",
+                "name": "Decision Outcome",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Merchant Category Code",
+                "id": "sfd_mer_catCode_enrch",
+                "localizedHeader": "Merchant Category Code",
+                "localizedName": "Merchant Category Code",
+                "name": "Merchant Category Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 4,
+                "header": "Merchant City",
+                "id": "sfd_mer_city_enrch",
+                "localizedHeader": "Merchant City",
+                "localizedName": "Merchant City",
+                "name": "Merchant City",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 2,
+                "header": "Merchant Country Code",
+                "id": "sfd_mer_cntryCode_enrch",
+                "localizedHeader": "Merchant Country Code",
+                "localizedName": "Merchant Country Code",
+                "name": "Merchant Country Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 3,
+                "header": "Merchant Name",
+                "id": "sfd_mer_name_enrch",
+                "localizedHeader": "Merchant Name",
+                "localizedName": "Merchant Name",
+                "name": "Merchant Name",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 5,
+                "header": "Merchant State",
+                "id": "sfd_mer_state_enrch",
+                "localizedHeader": "Merchant State",
+                "localizedName": "Merchant State",
+                "name": "Merchant State",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 1,
+                "header": "Origination Type",
+                "id": "sfd_sol_origType_enrch",
+                "localizedHeader": "Origination Type",
+                "localizedName": "Origination Type",
+                "name": "Origination Type",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 13,
+                "header": "Payment Credit Currency",
+                "id": "sfd_py_creditCurrCode_enrch",
+                "localizedHeader": "Payment Credit Currency",
+                "localizedName": "Payment Credit Currency",
+                "name": "Payment Credit Currency",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 12,
+                "header": "Payment Debit Currency Code",
+                "id": "sfd_py_debitCurrCode_enrch",
+                "localizedHeader": "Payment Debit Currency Code",
+                "localizedName": "Payment Debit Currency Code",
+                "name": "Payment Debit Currency Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "double",
+                "displayOrder": 14,
+                "header": "Payment USD amount",
+                "id": "sfd_py_usdAmt_enrch",
+                "localizedHeader": "Payment USD amount",
+                "localizedName": "Payment USD amount",
+                "name": "Payment USD amount",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "double",
+                "displayOrder": 10,
+                "header": "Transaction Amount USD",
+                "id": "sfd_cf_usdAmt_enrch",
+                "localizedHeader": "Transaction Amount USD",
+                "localizedName": "Transaction Amount USD",
+                "name": "Transaction Amount USD",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 11,
+                "header": "Transaction Currency Code",
+                "id": "sfd_cf_currCode_enrch",
+                "localizedHeader": "Transaction Currency Code",
+                "localizedName": "Transaction Currency Code",
+                "name": "Transaction Currency Code",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "double",
+                "displayOrder": 18,
+                "header": "Transaction Amount",
+                "id": "sfd_cf_amt_enrch",
+                "localizedHeader": "Transaction Amount",
+                "localizedName": "Transaction Amount",
+                "name": "Transaction Amount",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 19,
+                "header": "Authentication Decision",
+                "id": "sfd_auth_decision_enrch",
+                "localizedHeader": "Authentication Decision",
+                "localizedName": "Authentication Decision",
+                "name": "Authentication Decision",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 20,
+                "header": "Authentication Level",
+                "id": "sfd_auth_level_enrch",
+                "localizedHeader": "Authentication Level",
+                "localizedName": "Authentication Level",
+                "name": "Authentication Level",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 21,
+                "header": "E-commerce Authentication",
+                "id": "sfd_cf_ecomAuth_enrch",
+                "localizedHeader": "E-commerce Authentication",
+                "localizedName": "E-commerce Authentication",
+                "name": "E-commerce Authentication",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "dataType": "string",
+                "displayOrder": 22,
+                "header": "Device Identifier",
+                "id": "sfd_dev_identifier_enrch",
+                "localizedHeader": "Device Identifier",
+                "localizedName": "Device Identifier",
+                "name": "Device Identifier",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

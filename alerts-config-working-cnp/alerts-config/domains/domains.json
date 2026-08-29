@@ -1,0 +1,48 @@
+{
+    "post": "/alerts/domains",
+    "contentType": "application/vnd.sas.collection.triage.domain+json",
+    "body": [
+        [
+            {
+                "defaultFlag": false,
+                "description": "Domain for application fraud alerts",
+                "id": "app_fraud",
+                "listAdditionsManualDeploy": false,
+                "localizedDescription": "Domain for application fraud alerts",
+                "localizedName": "Application Fraud",
+                "name": "Application Fraud",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "defaultFlag": true,
+                "id": "domain_default",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Default Domain",
+                "name": "Default Domain",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "defaultFlag": false,
+                "id": "sfd_payment_fraud",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Payment Fraud",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+                "name": "Payment Fraud",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "defaultFlag": false,
+                "id": "sfd_payment_fraud_merchant",
+                "listAdditionsManualDeploy": false,
+                "localizedName": "Payment Fraud Merchant",
+                "managementGroupID": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+                "name": "Payment Fraud Merchant",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

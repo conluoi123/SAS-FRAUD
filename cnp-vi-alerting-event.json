@@ -1,0 +1,39 @@
+﻿{
+    "jsonLayout":  "nested",
+    "alertingEvents":  [
+                           {
+                               "alertingEventId":  "6025cc66-fe55-4514-96cf-c091ec92760e",
+                               "actionableEntityId":  "fb52c1d8-74e5-41ca-9095-5c2c0cbacaa3",
+                               "actionableEntityType":  "CNP_Debit_Account_Quoc",
+                               "alertOriginCode":  "AT",
+                               "scenarioFiredEvents":  [
+                                                           {
+                                                               "scenarioFiredEventId":  "6b6b1416-6072-4ad3-8827-7f6f79b7f9d1",
+                                                               "scenarioId":  "rule_cnp_new_device_weak_auth",
+                                                               "scenarioOriginCode":  "AT",
+                                                               "displayTypeCode":  "TEXT",
+                                                               "scenarioName":  "CNP New Device Weak Authentication",
+                                                               "displayFlag":  true,
+                                                               "ruleId":  "rule_cnp_new_device_weak_auth"
+                                                           }
+                                                       ],
+                               "domainId":  "svidomain",
+                               "enrichment":  {
+                                                  "ecommerceAuthentication":  "FAILED",
+                                                  "authenticationLevel":  "LOW",
+                                                  "sourceAlertId":  "539642637588672",
+                                                  "merchantName":  "ECOM DIGITAL STORE",
+                                                  "sourceEntityId":  "NKQ-23120347",
+                                                  "customerId":  "CUST-41127322",
+                                                  "ruleReason":  "CNP_NEW_DEVICE_WEAK_AUTH",
+                                                  "authenticationDecision":  "DENY",
+                                                  "transactionCurrency":  "USD",
+                                                  "ruleName":  "rule_cnp_new_device_weak_auth",
+                                                  "merchantCategoryCode":  "5411",
+                                                  "transactionAmount":  750
+                                              },
+                               "alertTriggerText":  "CNP + new device + weak authentication + amount \u003e 500",
+                               "alertTypeCode":  "CNP"
+                           }
+                       ]
+}

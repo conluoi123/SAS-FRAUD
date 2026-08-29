@@ -31,3 +31,19 @@ def test_scenario_renders_without_exception(scenario) -> None:
     at.sidebar.selectbox[1].set_value(scenario.label).run(timeout=30)
 
     assert list(at.exception) == []
+
+
+ALERT_LOG_PAGE_PATH = str(
+    Path(__file__).resolve().parent.parent
+    / "app"
+    / "streamlit_console"
+    / "pages"
+    / "1_Alert_Log.py"
+)
+
+
+def test_alert_log_page_renders_without_exception() -> None:
+    at = AppTest.from_file(ALERT_LOG_PAGE_PATH)
+    at.run(timeout=30)
+
+    assert list(at.exception) == []

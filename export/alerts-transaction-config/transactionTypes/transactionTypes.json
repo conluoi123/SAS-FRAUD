@@ -1,0 +1,762 @@
+{
+    "post": "/alertsTransaction/transactionTypes",
+    "contentType": "application/vnd.sas.triage.transaction.type+json",
+    "body": [
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "BH"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKBH",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Batch",
+            "name": "Checking Account - Batch",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKBH",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "BP"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKBP",
+            "indexableVariablePaths": "[\"message.batch.identifier\", \"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.merchant.terminalIdentifier\", \"message.company.identifier\"]",
+            "localizedName": "Checking Account - Bill Payment",
+            "name": "Checking Account - Bill Payment",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKBP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CH"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKCH",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Check Deposit",
+            "name": "Checking Account - Check Deposit",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKCH",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "FP"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKFP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Faster Payment",
+            "name": "Checking Account - Faster Payment",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKFP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "NM"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKNM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Other Non-Monetary",
+            "name": "Checking Account - Other Non-Monetary",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKNM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "PT"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKPT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Payment/Transfer Third Party",
+            "name": "Checking Account - Payment/Transfer Third Party",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKPT",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "ST"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKST",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Payment/Transfer self account",
+            "name": "Checking Account - Payment/Transfer self account",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKST",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "PP"
+                ],
+                "message.solution.originationType": [
+                    "CK"
+                ]
+            },
+            "id": "CKPP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Checking Account - Peer to Peer Payment",
+            "name": "Checking Account - Peer to Peer Payment",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CKPP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CT"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCCT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - ATM Cash Withdrawal",
+            "name": "Credit Card - ATM Cash Withdrawal",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCCT",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "AT"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCAT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Authentication",
+            "name": "Credit Card - Authentication",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCAT",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CA"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCCA",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Authorization",
+            "name": "Credit Card - Authorization",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCCA",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CW"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCCW",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Counter Cash Withdrawal",
+            "name": "Credit Card - Counter Cash Withdrawal",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCCW",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "DE"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCDE",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Demographics",
+            "name": "Credit Card - Demographics",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCDE",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "DP"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCDP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Deposit",
+            "name": "Credit Card - Deposit",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCDP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "NM"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCNM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Other Non-Monetary",
+            "name": "Credit Card - Other Non-Monetary",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCNM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CP"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCCP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Posting",
+            "name": "Credit Card - Posting",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCCP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CV"
+                ],
+                "message.solution.originationType": [
+                    "CC"
+                ]
+            },
+            "id": "CCCV",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Credit Card - Provisioning",
+            "name": "Credit Card - Provisioning",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CCCV",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "DE"
+                ],
+                "message.solution.originationType": [
+                    "CS"
+                ]
+            },
+            "id": "CSDE",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Customer - Demographics",
+            "name": "Customer - Demographics",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CSDE",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "NM"
+                ],
+                "message.solution.originationType": [
+                    "CS"
+                ]
+            },
+            "id": "CSNM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Customer - Other Non-Monetary",
+            "name": "Customer - Other Non-Monetary",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "CSNM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CT"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCCT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - ATM Cash Withdrawal",
+            "name": "Debit Card - ATM Cash Withdrawal",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCCT",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "AT"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCAT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Authentication",
+            "name": "Debit Card - Authentication",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCAT",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CA"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCCA",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Authorization",
+            "name": "Debit Card - Authorization",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCCA",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CW"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCCW",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Counter Cash Withdrawal",
+            "name": "Debit Card - Counter Cash Withdrawal",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCCW",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "DE"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCDE",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Demographics",
+            "name": "Debit Card - Demographics",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCDE",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "DP"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCDP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Deposit",
+            "name": "Debit Card - Deposit",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCDP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "NM"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCNM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Other Non-Monetary",
+            "name": "Debit Card - Other Non-Monetary",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCNM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CP"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCCP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Posting",
+            "name": "Debit Card - Posting",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCCP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CV"
+                ],
+                "message.solution.originationType": [
+                    "DC"
+                ]
+            },
+            "id": "DCCV",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Debit Card - Provisioning",
+            "name": "Debit Card - Provisioning",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "DCCV",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "BP"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MABP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Bill Payment",
+            "name": "Merchant Acquiring - Bill Payment",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MABP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CA"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MACA",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Card Authorization",
+            "name": "Merchant Acquiring - Card Authorization",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MACA",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CP"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MACP",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Card Posting",
+            "name": "Merchant Acquiring - Card Posting",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MACP",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "CB"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MACB",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Chargeback",
+            "name": "Merchant Acquiring - Chargeback",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MACB",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "FM"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MAFM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Financial Message",
+            "name": "Merchant Acquiring - Financial Message",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MAFM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "PP"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MANM",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Other Non-Monetary",
+            "name": "Merchant Acquiring - Other Non-Monetary",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MANM",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "ST"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MAST",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Payment/Transfer Self Account",
+            "name": "Merchant Acquiring - Payment/Transfer Self Account",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MAST",
+            "version": 1
+        },
+        {
+            "discriminators": {
+                "message.solution.activityType": [
+                    "PT"
+                ],
+                "message.solution.originationType": [
+                    "MA"
+                ]
+            },
+            "id": "MAPT",
+            "indexableVariablePaths": "[\"message.customer.identifier\", \"message.creditcard.number\", \"message.debitcard.number\", \"message.debitaccount.number\", \"message.creditaccount.number\", \"message.merchant.identifier\", \"message.company.identifier\", \"message.batch.identifier\", \"message.merchant.terminalIdentifier\"]",
+            "localizedName": "Merchant Acquiring - Payment/Transfer Third Party",
+            "name": "Merchant Acquiring - Payment/Transfer Third Party",
+            "optLockVersion": -1,
+            "partitionConfigId": "default_partition_config",
+            "retentionPeriod": 0,
+            "transactionDatetimePath": "message.sas.system.messageDtTmUtc",
+            "transactionIdPath": "message.sas.system.messageIdentifier",
+            "transactionTypeTableName": "MAPT",
+            "version": 1
+        }
+    ]
+}

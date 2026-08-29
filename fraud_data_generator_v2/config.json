@@ -1,0 +1,33 @@
+{
+  "simulation_run_id": "RUN_20260806_001",
+  "random_seed": 20260806,
+  "customer_count": 1000,
+  "avg_transactions_per_account": 12,
+  "loan_application_rate": 0.35,
+  "loan_fraud_rate": 0.03,
+  "output_dir": "output",
+  "generator_version": "2.0.0",
+  "scenario_counts": {
+    "TXN-01": 3,
+    "TXN-02": 3,
+    "TXN-03": 3,
+    "TXN-04": 3,
+    "TXN-05": 3,
+    "TXN-06": 2,
+    "TXN-07": 1,
+    "TXN-08": 1,
+    "TXN-09": 2,
+    "TXN-10": 2,
+    "LOAN-01": 3,
+    "LOAN-02": 3,
+    "LOAN-03": 3,
+    "LOAN-04": 3,
+    "LOAN-05": 3,
+    "LOAN-06": 1,
+    "LOAN-07": 1,
+    "LOAN-08": 1,
+    "LOAN-09": 2,
+    "LOAN-10": 1
+  },
+  "clean_false_positive_count": 6
+}

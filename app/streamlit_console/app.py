@@ -13,12 +13,14 @@ import streamlit as st
 from dotenv import load_dotenv
 
 try:
+    from .alert_log import record_alert
     from .payloads import build_payment_fraud_payload
     from .sas_client import SasRuntimeResponse, send_message
     from .sas_response import summarize_sas_response
     from .scenarios import STATUS_LABEL, families, scenarios_in_family
 except ImportError:
     # Streamlit executes this file as a script when launched from this directory.
+    from alert_log import record_alert
     from payloads import build_payment_fraud_payload
     from sas_client import SasRuntimeResponse, send_message
     from sas_response import summarize_sas_response
@@ -41,6 +43,43 @@ def _utc_string(selected_date: date, selected_time: time) -> str:
 def _new_transaction_id(customer_identifier: str) -> str:
     suffix = uuid.uuid4().hex[:8].upper()
     return f"TXN-{customer_identifier}-{suffix}"
+
+
+def _default_entity_state(customer_identifier: str) -> dict[str, str]:
+    suffix = customer_identifier.removeprefix("CUST-")
+    return {
+        "form_customer_identifier": customer_identifier,
+        "form_customer_surname": "Carlyle",
+        "form_customer_country": "US",
+        "form_credit_card_number": "4111111111111114",
+        "form_cardholder_country": "US",
+        "form_debit_account_number": f"DA-{customer_identifier}",
+        "form_debit_card_number": f"DC-{suffix}",
+        "form_transaction_identifier": _new_transaction_id(customer_identifier),
+    }
+
+
+def _ensure_entity_state() -> None:
+    for key, value in _default_entity_state("CUST-41127322").items():
+        st.session_state.setdefault(key, value)
+
+
+def _use_new_test_entity() -> None:
+    suffix = uuid.uuid4().hex[:8].upper()
+    st.session_state.update(_default_entity_state(f"CUST-RISKY-MCC-{suffix}"))
+
+
+def _use_new_transaction_id() -> None:
+    customer_identifier = st.session_state.get("form_customer_identifier", "CUST-41127322")
+    st.session_state["form_transaction_identifier"] = _new_transaction_id(customer_identifier)
+
+
+def _sync_entity_ids_from_customer() -> None:
+    customer_identifier = st.session_state.get("form_customer_identifier", "CUST-41127322")
+    suffix = customer_identifier.removeprefix("CUST-")
+    st.session_state["form_debit_account_number"] = f"DA-{customer_identifier}"
+    st.session_state["form_debit_card_number"] = f"DC-{suffix}"
+    st.session_state["form_transaction_identifier"] = _new_transaction_id(customer_identifier)
 
 
 def _response_package_version(parsed_body: dict[str, Any]) -> Any:
@@ -136,6 +175,28 @@ def _render_response(
         st.code(response.raw_body, language="text", wrap_lines=True)
 
 
+@st.dialog("Kết quả giao dịch")
+def _show_outcome_dialog(entry: dict[str, Any]) -> None:
+    is_blocked = entry.get("outcome_name") == "Decline"
+
+    if is_blocked:
+        st.markdown("## :material/block: Giao dịch bị chặn")
+    else:
+        st.markdown("## :material/warning: Giao dịch bị gắn cờ cảnh báo")
+
+    st.markdown(f"**Rule:** `{entry.get('rule_name', '')}` — `{entry.get('rule_reason', '')}`")
+    if entry.get("description"):
+        st.markdown(f"**Lý do:** {entry['description']}")
+    if entry.get("entity_text"):
+        st.markdown(f"**Entity bị ảnh hưởng:** {entry['entity_text']}")
+    if entry.get("transaction_identifier"):
+        st.caption(f"Transaction: {entry['transaction_identifier']}")
+
+    if st.button("Đóng", type="primary", use_container_width=True):
+        st.session_state["pending_outcome_dialog"] = None
+        st.rerun()
+
+
 def _select_scenario():
     st.sidebar.header("Scenario")
     family = st.sidebar.selectbox("Rule family", families())
@@ -201,19 +262,64 @@ def _form_values(scenario) -> dict[str, Any]:
         selected_time = first.time_input("Message time (UTC)", value=time(2, 20))
 
     with tab_by_name["Entities"]:
-        first, second = st.columns(2)
-        customer_identifier = first.text_input("Customer identifier", "CUST-41127322")
-        customer_surname = second.text_input("Customer surname", "Carlyle")
-        customer_country = first.text_input("Customer country", "US", max_chars=3)
-        credit_card_number = second.text_input("Credit card number", "4111111111111114")
-        cardholder_country = first.text_input("Cardholder country", "US", max_chars=3)
-        debit_account_number = second.text_input(
-            "Debit account number", "DA-CUST-41127322"
+        _ensure_entity_state()
+        st.caption(
+            "Entity IDs are kept in session state, so editing fields or switching tabs "
+            "will not regenerate them. Use the buttons below when you want fresh IDs."
         )
-        debit_card_number = second.text_input("Debit card number / profile key", "DC-41127322")
+        first_action, second_action, third_action = st.columns(3)
+        first_action.button(
+            "New test entity",
+            icon=":material/person_add:",
+            help=(
+                "Generate a new customer, debit account, debit card, and transaction ID "
+                "so Alert Triage does not merge the test into an old entity."
+            ),
+            on_click=_use_new_test_entity,
+            use_container_width=True,
+        )
+        second_action.button(
+            "New transaction ID",
+            icon=":material/refresh:",
+            help="Keep the same entity but send a new transaction identifier.",
+            on_click=_use_new_transaction_id,
+            use_container_width=True,
+        )
+        third_action.button(
+            "Sync IDs from customer",
+            icon=":material/sync:",
+            help="Rebuild debit account/card IDs from the current customer identifier.",
+            on_click=_sync_entity_ids_from_customer,
+            use_container_width=True,
+        )
+        first, second = st.columns(2)
+        customer_identifier = first.text_input(
+            "Customer identifier", key="form_customer_identifier"
+        )
+        customer_surname = second.text_input("Customer surname", key="form_customer_surname")
+        customer_country = first.text_input(
+            "Customer country", max_chars=3, key="form_customer_country"
+        )
+        credit_card_number = second.text_input(
+            "Credit card number", key="form_credit_card_number"
+        )
+        cardholder_country = first.text_input(
+            "Cardholder country", max_chars=3, key="form_cardholder_country"
+        )
+        debit_account_number = second.text_input(
+            "Debit account number",
+            key="form_debit_account_number",
+            help=(
+                "Current alert type is Debit Account, so this value is the Alert Triage "
+                "entity ID."
+            ),
+        )
+        debit_card_number = second.text_input(
+            "Debit card number / profile key", key="form_debit_card_number"
+        )
         transaction_identifier = st.text_input(
             "Transaction identifier",
-            value=_new_transaction_id(customer_identifier),
+            key="form_transaction_identifier",
             help="Use a new identifier when repeating a test to avoid duplicate behavior.",
         )
 
@@ -435,6 +541,10 @@ def main() -> None:
         "quyết định trả về."
     )
 
+    pending_dialog = st.session_state.get("pending_outcome_dialog")
+    if pending_dialog:
+        _show_outcome_dialog(pending_dialog)
+
     scenario = _select_scenario()
 
     with st.sidebar:
@@ -516,6 +626,41 @@ def main() -> None:
                     ca_bundle=ca_bundle or None,
                 )
             st.session_state["latest_sas_response"] = response
+
+            if response.parsed_body is not None:
+                summary = summarize_sas_response(response.parsed_body)
+                if summary.alert_created:
+                    entity_text = ", ".join(
+                        f"{item.get('outcomeEntity', '')} ({item.get('outcomeEntityType', '')})"
+                        for item in summary.alerted_entities
+                        if isinstance(item, dict)
+                    )
+                    record_alert(
+                        {
+                            "recorded_at": datetime.now(timezone.utc)
+                            .isoformat(timespec="seconds")
+                            .replace("+00:00", "Z"),
+                            "scenario_key": scenario.key,
+                            "scenario_label": scenario.label,
+                            "rule_name": scenario.rule_name,
+                            "rule_reason": scenario.rule_reason,
+                            "message_identifier": summary.message_identifier,
+                            "transaction_identifier": summary.transaction_identifier,
+                            "outcome_name": summary.outcome_name,
+                            "alerted_entities": summary.alerted_entities,
+                            "fired_rule_identifiers": [
+                                rule.get("ruleIdentifier") for rule in summary.fired_rules
+                            ],
+                        }
+                    )
+                    st.session_state["pending_outcome_dialog"] = {
+                        "outcome_name": summary.outcome_name,
+                        "rule_name": scenario.rule_name,
+                        "rule_reason": scenario.rule_reason,
+                        "description": scenario.description,
+                        "entity_text": entity_text,
+                        "transaction_identifier": summary.transaction_identifier,
+                    }
         except requests.RequestException as error:
             st.error(f"Could not reach SAS runtime: {error}")
         except ValueError as error:

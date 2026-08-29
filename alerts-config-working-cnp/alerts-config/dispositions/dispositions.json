@@ -1,0 +1,566 @@
+{
+    "post": "/alerts/dispositions",
+    "contentType": "application/vnd.sas.collection.triage.disposition+json",
+    "body": [
+        [
+            {
+                "actionGroupID": "AD_BUILT_IN_CLOSE",
+                "builtInFlag": true,
+                "bulkApplyFlag": true,
+                "description": "Close the alert immediately.",
+                "id": "AD_BUILT_IN_CLOSE",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Close the alert immediately.",
+                "localizedName": "Close Immediately",
+                "name": "Close Immediately",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_INDETERMINATE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_CLOSED_INDETER_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed indeterminate",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Closed indeterminate",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_PAYMENT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_INDETERMINATE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CODE_MERCHANT"
+                    }
+                ],
+                "id": "SFD_CLOSED_INDETER_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed indeterminate",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Closed indeterminate",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_MERCHANT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_INDETERMINATE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_CLOSED_INDETER_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed indeterminate",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_INDETER_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_CLOSED_INDETER_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Closed indeterminate",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_PRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_PROD_BLK_CODE_MERCHANT"
+                    }
+                ],
+                "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed productive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_PRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed productive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_MERCHANT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_PRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_PRODUCTIVE_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_CLOSED_PRODUCTIVE_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed productive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_PRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed productive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_PAYMENT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_PRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_PRODUCTIVE_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_CLOSED_PRODUCTIVE_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed productive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_PRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed productive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_UNPRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_UNPROD_BLK_CODE_MERCHANT"
+                    }
+                ],
+                "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed unproductive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_UNPRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed unproductive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_MERCHANT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_UNPRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_UNPRODUCT_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_CLOSED_UNPRODUCT_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed unproductive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_UNPRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed unproductive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_CLOSED_UNPRODUCTIVE",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_CLOSED_UNPRODUCT_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_CLOSED_UNPRODUCT_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Mark an alert status as SUSPENDED until a user-provided date/time and set productivity rating.",
+                "localizedName": "Closed unproductive",
+                "memos": [
+                    {
+                        "id": "SFD_CLOSED_UNPRODUCTIVE_CP_MEMO"
+                    }
+                ],
+                "name": "Closed unproductive",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_PAYMENT",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CNP",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CNP",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "localizedName": "Move to Queue - CNP",
+                "name": "Move to Queue - CNP",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CNP",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CNP",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "localizedName": "Move to Queue - CNP",
+                "name": "Move to Queue - CNP",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CP",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CP",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "localizedName": "Move to Queue - CP",
+                "name": "Move to Queue - CP",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CP",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CP",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Move the alert from one queue to another immediately for someone in that queue to work, needs to be able to select the queue to move it to.",
+                "localizedName": "Move to Queue - CP",
+                "name": "Move to Queue - CP",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_CARD",
+                "version": 1
+            },
+            {
+                "actionGroupID": "AD_BUILT_IN_REACTIVATE",
+                "builtInFlag": true,
+                "bulkApplyFlag": true,
+                "description": "Reactivate the alert immediately.",
+                "id": "AD_BUILT_IN_REACTIVATE",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Reactivate the alert immediately.",
+                "localizedName": "Reactivate Immediately",
+                "name": "Reactivate Immediately",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Set a date and time in a certain queue to resurface the alert.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CODE_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    }
+                ],
+                "id": "SFD_RESCHEDULE_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Set a date and time in a certain queue to resurface the alert.",
+                "localizedName": "Reschedule",
+                "memos": [
+                    {
+                        "id": "SFD_RESCHEDULE_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Reschedule",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Set a date and time in a certain queue to resurface the alert.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_RESCHEDULE_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Set a date and time in a certain queue to resurface the alert.",
+                "localizedName": "Reschedule",
+                "memos": [
+                    {
+                        "id": "SFD_RESCHEDULE_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Reschedule",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Set a date and time in a certain queue to resurface the alert.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_RESCHEDULE_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Set a date and time in a certain queue to resurface the alert.",
+                "localizedName": "Reschedule",
+                "memos": [
+                    {
+                        "id": "SFD_RESCHEDULE_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Reschedule",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Close alert at specified date and time.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SAVE_PEND_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_SAVE_PENDING_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Close alert at specified date and time.",
+                "localizedName": "Save pending",
+                "memos": [
+                    {
+                        "id": "SFD_SAVE_PENDING_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_SAVE_PENDING_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Save pending",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Close alert at specified date and time.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SAVE_PEND_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_SAVE_PENDING_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Close alert at specified date and time.",
+                "localizedName": "Save pending",
+                "memos": [
+                    {
+                        "id": "SFD_RESCHEDULE_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_RESCHEDULE_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Save pending",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Close alert at specified date and time.",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SAVE_PEND_BLK_CODE_MERCHANT"
+                    }
+                ],
+                "id": "SFD_SAVE_PENDING_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Close alert at specified date and time.",
+                "localizedName": "Save pending",
+                "memos": [
+                    {
+                        "id": "SFD_SAVE_PENDING_NO_BLK_CP_MEMO"
+                    },
+                    {
+                        "id": "SFD_SAVE_PENDING_BLK_CP_MEMO"
+                    }
+                ],
+                "name": "Save pending",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Interactive suspend and multi-kafka actions",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SEND_OUTBOUND_BLK_CODE_MERCHANT"
+                    }
+                ],
+                "id": "SFD_SEND_MULTI_M_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Interactive suspend and multi-kafka actions",
+                "localizedName": "Send outbound contact",
+                "name": "Send outbound contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Interactive suspend and multi-kafka actions",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SEND_OUTBOUND_BLK_CODE_CARD"
+                    }
+                ],
+                "id": "SFD_SEND_MULTI_C_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Interactive suspend and multi-kafka actions",
+                "localizedName": "Send outbound contact",
+                "name": "Send outbound contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_INTERACTIVE_SUSPEND",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "Interactive suspend and multi-kafka actions",
+                "dispositionActionGroups": [
+                    {
+                        "id": "SFD_MULTI_ACTION_GROUP"
+                    },
+                    {
+                        "id": "SFD_SEND_OUTBOUND_BLK_CODE_PYMT"
+                    }
+                ],
+                "id": "SFD_SEND_MULTI_P_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "Interactive suspend and multi-kafka actions",
+                "localizedName": "Send outbound contact",
+                "name": "Send outbound contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "actionGroupID": "SFD_SKIP_ALERT",
+                "builtInFlag": false,
+                "bulkApplyFlag": false,
+                "description": "skip to the next alert. the original alert stays in the queue.",
+                "id": "SFD_SKIP_ALERT_DISPOSITION",
+                "includeTxMarkingsFlag": false,
+                "localizedDescription": "skip to the next alert. the original alert stays in the queue.",
+                "localizedName": "Skip",
+                "name": "Skip",
+                "optLockVersion": -1,
+                "reasonCodeListID": "SFD_REASON_CODES_PAYMENT",
+                "version": 1
+            }
+        ]
+    ]
+}

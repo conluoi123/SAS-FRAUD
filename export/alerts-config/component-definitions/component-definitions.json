@@ -1,0 +1,472 @@
+{
+    "post": "/alerts/componentDefinitions",
+    "contentType": "application/vnd.sas.collection.triage.component.definition+json",
+    "body": [
+        [
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "config": {
+                                "fields": [
+                                    {
+                                        "defaultLabel": "Account",
+                                        "field": "sfd_account_data.account_type",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Number",
+                                        "field": "sfd_account_data.account_number",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Activated",
+                                        "field": "sfd_account_data.activated_date",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Opened",
+                                        "field": "sfd_account_data.opened_date",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Joint Accounts",
+                                        "field": "sfd_account_data.joint_acct_num",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Merchant Name",
+                                        "field": "sfd_account_data.merchant_name",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Unique Identifier",
+                                        "field": "sfd_account_data.unique_identifier",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Payment Channel",
+                                        "field": "sfd_account_data.payment_channel",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Tap Card or Inserted SIM",
+                                        "field": "sfd_account_data.tap_or_inserted_sim",
+                                        "type": "string"
+                                    }
+                                ],
+                                "numCols": 2
+                            },
+                            "datasources": [
+                                {
+                                    "externalUri": "/account/data/${contactEntityID}",
+                                    "id": "sfd_account_data"
+                                }
+                            ],
+                            "id": "sfd_account_kvps",
+                            "type": "EqualColumns"
+                        }
+                    ],
+                    "config": {
+                        "defaultLabel": "Account Information"
+                    },
+                    "type": "Pane"
+                },
+                "id": "sfd_account_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "config": {
+                                "fields": [
+                                    {
+                                        "defaultLabel": "Provider",
+                                        "field": "sfd_contact_data.provider",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Name",
+                                        "field": "sfd_contact_data.contact_full_name",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Date of Birth",
+                                        "field": "sfd_contact_data.dob",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Social Security Number",
+                                        "field": "sfd_contact_data.ssn",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Credit Score",
+                                        "field": "sfd_contact_data.credit_score",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "City",
+                                        "field": "sfd_contact_data.city",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "State/Province",
+                                        "field": "sfd_contact_data.state",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Street Address",
+                                        "field": "sfd_contact_data.street_address",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Email Address",
+                                        "field": "sfd_contact_data.email",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Phone",
+                                        "field": "sfd_contact_data.phone",
+                                        "type": "string"
+                                    }
+                                ],
+                                "numCols": 2
+                            },
+                            "datasources": [
+                                {
+                                    "externalUri": "/contact/data/${contactEntityID}",
+                                    "id": "sfd_contact_data"
+                                }
+                            ],
+                            "id": "sfd_contact_kvps",
+                            "type": "EqualColumns"
+                        }
+                    ],
+                    "config": {
+                        "defaultLabel": "Contact Information"
+                    },
+                    "type": "Pane"
+                },
+                "id": "sfd_contact_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "config": {
+                                "fields": [
+                                    {
+                                        "defaultLabel": "Joint Account Holder Names",
+                                        "field": "sfd_customer_data.joint_holder_names",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Primary Account Holder Bank Name",
+                                        "field": "sfd_customer_data.primary_holder_bank_name",
+                                        "type": "string"
+                                    }
+                                ],
+                                "numCols": 2
+                            },
+                            "datasources": [
+                                {
+                                    "externalUri": "/customer/data/${contactEntityID}",
+                                    "id": "sfd_customer_data"
+                                }
+                            ],
+                            "id": "sfd_customer_kvps",
+                            "type": "EqualColumns"
+                        }
+                    ],
+                    "config": {
+                        "defaultLabel": "Customer Information"
+                    },
+                    "type": "Pane"
+                },
+                "id": "sfd_customer_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "config": {
+                                "fields": [
+                                    {
+                                        "defaultLabel": "Department",
+                                        "field": "sfd_merchantContact_data.department",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Staff ID",
+                                        "field": "sfd_merchantContact_data.staff_id",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Company Email",
+                                        "field": "sfd_merchantContact_data.company_email",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Company Phone Number",
+                                        "field": "sfd_merchantContact_data.company_phone_number",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Company Address",
+                                        "field": "sfd_merchantContact_data.company_address",
+                                        "type": "string"
+                                    }
+                                ],
+                                "numCols": 2
+                            },
+                            "datasources": [
+                                {
+                                    "externalUri": "/merchantContact/data/${contactEntityID}",
+                                    "id": "sfd_merchantContact_data"
+                                }
+                            ],
+                            "id": "sfd_merchantContact_kvps",
+                            "type": "EqualColumns"
+                        }
+                    ],
+                    "config": {
+                        "defaultLabel": "Contact Details"
+                    },
+                    "type": "Pane"
+                },
+                "id": "sfd_merchant_contact_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "config": {
+                                "fields": [
+                                    {
+                                        "defaultLabel": "Merchant Name",
+                                        "field": "sfd_merchantInfo_data.name",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Legal Business Name",
+                                        "field": "sfd_merchantInfo_data.legal_business_name",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Geolocation (City, Country)",
+                                        "field": "sfd_merchantInfo_data.geolocation",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Account Age",
+                                        "field": "sfd_merchantInfo_data.account_age",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Merchant ID",
+                                        "field": "sfd_merchantInfo_data.merchant_id",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Merchant Category Code",
+                                        "field": "sfd_merchantInfo_data.merchant_category_code",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Merchant Registration Date",
+                                        "field": "sfd_merchantInfo_data.merchant_registration_date",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "defaultLabel": "Terminal ID",
+                                        "field": "sfd_merchantInfo_data.terminal_id",
+                                        "type": "string"
+                                    }
+                                ],
+                                "numCols": 2
+                            },
+                            "datasources": [
+                                {
+                                    "externalUri": "/merchantInfo/data/${contactEntityID}",
+                                    "id": "sfd_merchantInfo_data"
+                                }
+                            ],
+                            "id": "sfd_merchantInfo_kvps",
+                            "type": "EqualColumns"
+                        }
+                    ],
+                    "config": {
+                        "defaultLabel": "Merchant Information"
+                    },
+                    "type": "Pane"
+                },
+                "id": "sfd_merchant_info_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_batch_merchant",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_batch_merchant_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_ca_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_ca_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_cc_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_cc_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_cmp_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_cmp_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_creditcard",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_creditcard_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_cust_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_cust_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_da_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_da_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_dc_paymentFraud",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_dc_paymentFraud_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_debitcard",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_debitcard_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_merchant",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_merchant_pane",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_txViewer_terminal_merchant",
+                            "type": "Transactions"
+                        }
+                    ],
+                    "type": "Pane"
+                },
+                "id": "sfd_txViewer_terminal_merchant_pane",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

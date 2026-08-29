@@ -1,0 +1,141 @@
+{
+    "post": "/alertsTransaction/transactionMarkConfig",
+    "contentType": "application/vnd.sas.triage.transaction.mark.config+json",
+    "body": [
+        {
+            "id": "sfd_txMark_card_confirmedFraud",
+            "localizedTransactionMarkLabel": "Confirmed Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_CARD",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Confirmed Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_card_confirmedGenuine",
+            "localizedTransactionMarkLabel": "Confirmed Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Confirmed Genuine",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_card_needsReview",
+            "localizedTransactionMarkLabel": "Needs Review",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "marked_for_review",
+            "transactionMarkLabel": "Needs Review",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_card_suspectedFraud",
+            "localizedTransactionMarkLabel": "Suspected Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_CARD",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Suspected Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_card_suspectedGenuine",
+            "localizedTransactionMarkLabel": "Suspected Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Suspected Genuine",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_merchant_confirmedFraud",
+            "localizedTransactionMarkLabel": "Confirmed Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_MERCHANT",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Confirmed Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_merchant_confirmedGenuine",
+            "localizedTransactionMarkLabel": "Confirmed Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Confirmed Genuine",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_merchant_needsReview",
+            "localizedTransactionMarkLabel": "Needs Review",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "marked_for_review",
+            "transactionMarkLabel": "Needs Review",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_merchant_suspectedFraud",
+            "localizedTransactionMarkLabel": "Suspected Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_MERCHANT",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Suspected Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_merchant_suspectedGenuine",
+            "localizedTransactionMarkLabel": "Suspected Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Suspected Genuine",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_pymt_confirmedFraud",
+            "localizedTransactionMarkLabel": "Confirmed Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_PAYMENT",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Confirmed Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_pymt_confirmedGenuine",
+            "localizedTransactionMarkLabel": "Confirmed Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Confirmed Genuine",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_pymt_needsReview",
+            "localizedTransactionMarkLabel": "Needs Review",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "marked_for_review",
+            "transactionMarkLabel": "Needs Review",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_pymt_suspectedFraud",
+            "localizedTransactionMarkLabel": "Suspected Fraud",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_CODES_PAYMENT",
+            "rootMark": "confirm_invalid",
+            "transactionMarkLabel": "Suspected Fraud",
+            "version": 1
+        },
+        {
+            "id": "sfd_txMark_pymt_suspectedGenuine",
+            "localizedTransactionMarkLabel": "Suspected Genuine",
+            "optLockVersion": -1,
+            "reasonCodeListId": "SFD_REASON_MIN",
+            "rootMark": "confirm_valid",
+            "transactionMarkLabel": "Suspected Genuine",
+            "version": 1
+        }
+    ]
+}

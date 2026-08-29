@@ -1,0 +1,145 @@
+{
+    "post": "/alerts/triageTypes/sfd_vip_payment_fraud/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_PAYMENT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_terminal_merchant/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_medium_merchant/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_low_merchant/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_high_merchant/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_batch_merchant/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_debit_card_fraud/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_CARD_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/triageTypes/sfd_credit_card_fraud/defaultActions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "defaultActionGroups": [
+                {
+                    "id": "SFD_MULTI_ACTION_GROUP",
+                    "order": 1
+                },
+                {
+                    "id": "SFD_CARD_DEFAULT_ACTION_GROUP",
+                    "order": 2
+                }
+            ]
+        }
+    ]
+}

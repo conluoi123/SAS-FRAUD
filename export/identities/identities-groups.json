@@ -1,0 +1,87 @@
+{
+    "post": "/identities/groups",
+    "get": "/identities/groups",
+    "contentType": "application/vnd.sas.identity.group+json",
+    "body": [
+        {
+            "description": "Members of this group are associated with all Merchant Acquiring Fraud queues in Alert Triage",
+            "id": "Fraud_Decisioning_Users_Triage_MA_Fraud",
+            "name": "Decisioning Users Triage Merchant Acquiring Fraud",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Members of this group are associated with all Queues in Alert Triage",
+            "id": "Fraud_Decisioning_Alert_Queues",
+            "name": "Decisioning Alert Queues",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Access to all functions and features of Fraud Decisioning",
+            "id": "Fraud_Decisioning_Administrator",
+            "name": "Decisioning Administrator",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Administration access to all functions and features of Fraud Decisioning",
+            "id": "Fraud_Decisioning_Manager",
+            "name": "Decisioning Manager",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Members of this group are associated with all Payment Fraud queues in Alert Triage",
+            "id": "Fraud_Decisioning_Users_Triage_Payment_Fraud",
+            "name": "Decisioning Users Triage Payment Fraud",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Members of this group are associated with all Card Fraud queues in Alert Triage",
+            "id": "Fraud_Decisioning_Users_Triage_Card_Fraud",
+            "name": "Decisioning Users Triage Card Fraud",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Investigation access to Fraud Decisioning, to search for, and work alerts",
+            "id": "Fraud_Decisioning_Investigator",
+            "name": "Decisioning Investigator",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "description": "Senior investigation access to Fraud Decisioning, to search for, and work alerts",
+            "id": "Fraud_Decisioning_Sr_Investigator",
+            "name": "Decisioning Sr Investigator",
+            "providerId": "local",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "id": "SAS-Alert-Triage",
+            "name": "SAS-Alert-Triage",
+            "providerId": "ldap",
+            "state": "active",
+            "type": "group",
+            "version": 1
+        }
+    ]
+}

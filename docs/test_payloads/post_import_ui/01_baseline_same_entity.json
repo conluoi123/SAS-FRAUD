@@ -1,0 +1,74 @@
+{
+  "message": {
+    "solution": {
+      "originationType": "DC",
+      "activityType": "CA",
+      "authenticationType": "CVV",
+      "channelType": "WEB",
+      "customerType": "INDIVIDUAL"
+    },
+    "request": {
+      "command": "Execute",
+      "decisioningInd": 1,
+      "schemaName": "Payment Fraud",
+      "messageClassificationName": "GLOBAL",
+      "restResponseFlg": 1,
+      "messageDtTm": "2026-08-21T17:09:00Z"
+    },
+    "sas": {
+      "system": {
+        "transactionIdentifier": "TXN-UI-SEED-20260821-01",
+        "messageDtTmUtc": "2026-08-21T17:09:00Z"
+      }
+    },
+    "customer": {
+      "identifier": "CUST-CNP-UI-2108-A",
+      "surname": "Carlyle",
+      "addressCountryCode": "US",
+      "type": "INDIVIDUAL"
+    },
+    "creditcard": {
+      "number": "4111111111111114",
+      "limit": 5000.0,
+      "cardholderCountryCode": "US"
+    },
+    "transaction": {
+      "transactionIdentifier": "TXN-UI-SEED-20260821-01",
+      "amount": 100.0,
+      "currencyCode": "USD",
+      "transactionDateTime": "2026-08-21T17:09:00Z"
+    },
+    "cardfinancial": {
+      "amount": 100.0,
+      "usdAmount": 100.0,
+      "currencyCode": "USD",
+      "cardPresentInd": "1",
+      "customerPresentInd": "1",
+      "ecommerceAuthentication": "SUCCESS"
+    },
+    "authentication": {
+      "decision": "ACCEPT",
+      "level": "HIGH",
+      "result": ["SUCCESS"],
+      "type": "3DS_V2"
+    },
+    "device": {
+      "identifier": "DEV-SEED-UI-2108-A",
+      "fingerprint": ["FP-SEED-UI-2108-A"],
+      "fingerprintType": ["SAS"],
+      "ipAddress": "203.0.113.42"
+    },
+    "payment": {
+      "debitCurrencyCode": "USD",
+      "creditCurrencyCode": "USD",
+      "usdAmount": 100.0
+    },
+    "merchant": {
+      "name": "BASELINE GROCERY",
+      "categoryCode": "5411",
+      "country": "US"
+    },
+    "debitcard": { "number": "NKQ-23120347-A" },
+    "debitaccount": { "number": "NKQ-23120347-A" }
+  }
+}

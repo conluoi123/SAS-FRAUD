@@ -44,6 +44,7 @@ wandb/
 logs/
 *.log
 *.pid
+app/streamlit_console/.alert_log.json
 
 # Test and coverage outputs
 .pytest_cache/

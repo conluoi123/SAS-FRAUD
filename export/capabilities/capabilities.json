@@ -1,0 +1,516 @@
+{
+    "post": "/authorization/capabilities/triage.alert.work/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.unmask/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.search/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.remove_from_list/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.priority_servicing/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.never_mask/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.management/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.lock_override/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.list_membership_visibility/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.import_config/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.generate_pdf/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.external_disposition/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.external_data/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.export_config/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.entity.search/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.enhanced_triage_type_management/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.enhanced_queue_management/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.direct_servicing/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.bulk_disposition/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.batch_alert_creation/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.alert_creation/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.administrator/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+},{
+    "post": "/authorization/capabilities/triage.alert.add_to_list/groups",
+    "contentType": "application/json",
+    "body": [
+        {
+            "name": "SASAdministrators",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Administrator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Sr_Investigator",
+            "type": "group",
+            "version": 1
+        },
+        {
+            "name": "Fraud_Decisioning_Manager",
+            "type": "group",
+            "version": 1
+        }
+    ]
+}

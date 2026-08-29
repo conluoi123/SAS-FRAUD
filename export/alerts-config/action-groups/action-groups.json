@@ -1,0 +1,1351 @@
+{
+    "post": "/alerts/actions/groups",
+    "contentType": "application/vnd.sas.collection.triage.action.group+json",
+    "body": [
+        [
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": true,
+                "description": "Built-in close",
+                "id": "AD_BUILT_IN_CLOSE",
+                "localizedDescription": "Built-in close",
+                "localizedName": "Built-in close",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "close-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{ \"name\": \"productivityRating\", \"value\": \"UNPRODUCTIVE\"}]",
+                        "id": "set-productivity-rating",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Built-in close",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": true,
+                "description": "Built-in re-activate",
+                "id": "AD_BUILT_IN_REACTIVATE",
+                "localizedDescription": "Built-in re-activate",
+                "localizedName": "Built-in re-activate",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "reactivate-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Built-in re-activate",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_RESCHEDULE_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Card Block\"},{\"name\": \"actionType\", \"value\": \"CRDBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Card Block",
+                        "name": "Card Block",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Card\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Card",
+                        "name": "Cancel Card",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Reissue Card\"},{\"name\": \"actionType\", \"value\": \"REICRD\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Reissue Card",
+                        "name": "Reissue Card",
+                        "order": 5,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CARD_DEFAULT_ACTION_GROUP",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"At Risk\"},{\"name\": \"actionType\", \"value\": \"ATRSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "At Risk",
+                        "name": "At Risk",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Card Block\"},{\"name\": \"actionType\", \"value\": \"CRDBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Card Block",
+                        "name": "Card Block",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Card\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Card",
+                        "name": "Cancel Card",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 5,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"No Risk\"},{\"name\": \"actionType\", \"value\": \"NORSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "No Risk",
+                        "name": "No Risk",
+                        "order": 6,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Reissue Card\"},{\"name\": \"actionType\", \"value\": \"REICRD\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Reissue Card",
+                        "name": "Reissue Card",
+                        "order": 7,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 8,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_UNPRODUCT_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"No Risk\"},{\"name\": \"actionType\", \"value\": \"NORSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "No Risk",
+                        "name": "No Risk",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_INDETER_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 1,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_PRODUCTIVE_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Card Block\"},{\"name\": \"actionType\", \"value\": \"CRDBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Card Block",
+                        "name": "Card Block",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Card\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Card",
+                        "name": "Cancel Card",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Reissue Card\"},{\"name\": \"actionType\", \"value\": \"REICRD\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Reissue Card",
+                        "name": "Reissue Card",
+                        "order": 5,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SEND_OUTBOUND_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"At Risk\"},{\"name\": \"actionType\", \"value\": \"ATRSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "At Risk",
+                        "name": "At Risk",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Card Block\"},{\"name\": \"actionType\", \"value\": \"CRDBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Card Block",
+                        "name": "Card Block",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SAVE_PEND_BLK_CODE_CARD",
+                "localizedName": "Card Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"At Risk\"},{\"name\": \"actionType\", \"value\": \"ATRSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "At Risk",
+                        "name": "At Risk",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Card Block\"},{\"name\": \"actionType\", \"value\": \"CRDBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Card Block",
+                        "name": "Card Block",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Card Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_INDETERMINATE",
+                "localizedName": "Closed Indeterminate",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"productivityRating\", \"value\": \"INDETERMINATE\"}]",
+                        "id": "set-productivity-rating",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-auto-close-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 3,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Closed Indeterminate",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_PRODUCTIVE",
+                "localizedName": "Closed Productive",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"productivityRating\", \"value\": \"PRODUCTIVE\"}]",
+                        "id": "set-productivity-rating",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-auto-close-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 3,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Closed Productive",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_UNPRODUCTIVE",
+                "localizedName": "Closed Unproductive",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"productivityRating\", \"value\": \"UNPRODUCTIVE\"}]",
+                        "id": "set-productivity-rating",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-auto-close-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 3,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Closed Unproductive",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_INDETER_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 1,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SAVE_PEND_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Terminal\"},{\"name\": \"actionType\", \"value\": \"TERBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Terminal",
+                        "name": "Block Terminal",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_MERCHANT_DEFAULT_ACTION_GROUP",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Terminal\"},{\"name\": \"actionType\", \"value\": \"TERBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Terminal",
+                        "name": "Block Terminal",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"No Risk\"},{\"name\": \"actionType\", \"value\": \"NORSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "No Risk",
+                        "name": "No Risk",
+                        "order": 5,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 6,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SEND_OUTBOUND_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Terminal\"},{\"name\": \"actionType\", \"value\": \"TERBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Terminal",
+                        "name": "Block Terminal",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_PROD_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Terminal\"},{\"name\": \"actionType\", \"value\": \"TERBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Terminal",
+                        "name": "Block Terminal",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_UNPROD_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"No Risk\"},{\"name\": \"actionType\", \"value\": \"NORSK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "No Risk",
+                        "name": "No Risk",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_RESCHEDULE_BLK_CODE_MERCHANT",
+                "localizedName": "Merchant Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Terminal\"},{\"name\": \"actionType\", \"value\": \"TERBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Terminal",
+                        "name": "Block Terminal",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Merchant Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CNP",
+                "localizedName": "Move to Queue - CNP",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-move-to-queue",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": "[{\"name\": \"validQueueIDs\", \"value\": \"sfd_credit_card_not_present\"}]"
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Move to Queue - CNP",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CP",
+                "localizedName": "Move to Queue - CP",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-move-to-queue",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": "[{\"name\": \"validQueueIDs\", \"value\": \"sfd_credit_card_present\"}]"
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Move to Queue - CP",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CP",
+                "localizedName": "Move to Queue - Debit Card",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-move-to-queue",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": "[{\"name\": \"validQueueIDs\", \"value\": \"sfd_debit_card_present\"}]"
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Move to Queue - Debit Card",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CNP",
+                "localizedName": "Move to Queue - Debit Card",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-move-to-queue",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": "[{\"name\": \"validQueueIDs\", \"value\": \"sfd_debit_card_not_present\"}]"
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Move to Queue - Debit Card",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_MULTI_ACTION_GROUP",
+                "localizedName": "Multi Action Group",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Send Text\"},{\"name\": \"actionType\", \"value\": \"send-text\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Send Text",
+                        "name": "Send Text",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Send Email\"},{\"name\": \"actionType\", \"value\": \"send-email\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Send Email",
+                        "name": "Send Email",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Push Notification\"},{\"name\": \"actionType\", \"value\": \"push-notification\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Push Notification",
+                        "name": "Push Notification",
+                        "order": 3,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Multi Action Group",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_INDETER_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Release\"},{\"name\": \"actionType\", \"value\": \"RELEASE\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Release",
+                        "name": "Release",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_RESCHEDULE_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Stop Payment\"},{\"name\": \"actionType\", \"value\": \"STP\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Stop Payment",
+                        "name": "Stop Payment",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 5,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SAVE_PEND_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Stop Payment\"},{\"name\": \"actionType\", \"value\": \"STP\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Stop Payment",
+                        "name": "Stop Payment",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Payment\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Payment",
+                        "name": "Cancel Payment",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 4,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SEND_OUTBOUND_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Stop Payment\"},{\"name\": \"actionType\", \"value\": \"STP\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Stop Payment",
+                        "name": "Stop Payment",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 5,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_PRODUCTIVE_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Stop Payment\"},{\"name\": \"actionType\", \"value\": \"STP\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Stop Payment",
+                        "name": "Stop Payment",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Payment\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Payment",
+                        "name": "Cancel Payment",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 5,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_CLOSED_UNPRODUCT_BLK_CODE_PYMT",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Release\"},{\"name\": \"actionType\", \"value\": \"RELEASE\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Release",
+                        "name": "Release",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_PAYMENT_DEFAULT_ACTION_GROUP",
+                "localizedName": "Payment Action",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Account\"},{\"name\": \"actionType\", \"value\": \"ACCBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Account",
+                        "name": "Block Account",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Block Customer\"},{\"name\": \"actionType\", \"value\": \"CSTBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Block Customer",
+                        "name": "Block Customer",
+                        "order": 2,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Cancel Payment\"},{\"name\": \"actionType\", \"value\": \"CNCL\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Cancel Payment",
+                        "name": "Cancel Payment",
+                        "order": 3,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Clear Block\"},{\"name\": \"actionType\", \"value\": \"UNBLK\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Clear Block",
+                        "name": "Clear Block",
+                        "order": 4,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Release\"},{\"name\": \"actionType\", \"value\": \"RELEASE\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Release",
+                        "name": "Release",
+                        "order": 5,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Stop Payment\"},{\"name\": \"actionType\", \"value\": \"STP\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Stop Payment",
+                        "name": "Stop Payment",
+                        "order": 6,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Suspend Payment\"},{\"name\": \"actionType\", \"value\": \"SUSPND\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Suspend Payment",
+                        "name": "Suspend Payment",
+                        "order": 7,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "[{\"name\": \"label\", \"value\": \"Temporary Inhibit\"},{\"name\": \"actionType\", \"value\": \"TMPINH\"},{\"name\": \"topic\", \"value\": \"sas-alert-topic-outbound\"}]",
+                        "id": "external-send-to-kafka",
+                        "localizationKey": "",
+                        "localizedName": "Temporary Inhibit",
+                        "name": "Temporary Inhibit",
+                        "order": 8,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Payment Action",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_INTERACTIVE_SUSPEND",
+                "localizedName": "Reschedule",
+                "members": [
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-suspend-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Reschedule",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "autoEnactedFlag": false,
+                "builtInFlag": false,
+                "id": "SFD_SKIP_ALERT",
+                "localizedName": "Skip",
+                "members": [
+                    {
+                        "argumentsJSON": "[{\"name\": \"suspendDuration\", \"value\": 120}]",
+                        "id": "suspend-alert",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 1,
+                        "validationJSON": ""
+                    },
+                    {
+                        "argumentsJSON": "",
+                        "id": "interactive-set-reason-code",
+                        "localizationKey": "",
+                        "name": "",
+                        "order": 2,
+                        "validationJSON": ""
+                    }
+                ],
+                "name": "Skip",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

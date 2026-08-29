@@ -1,0 +1,74 @@
+{
+  "message": {
+    "solution": {
+      "originationType": "DC",
+      "activityType": "CA",
+      "authenticationType": "CVV",
+      "channelType": "WEB",
+      "customerType": "INDIVIDUAL"
+    },
+    "request": {
+      "command": "Execute",
+      "decisioningInd": 1,
+      "schemaName": "Payment Fraud",
+      "messageClassificationName": "GLOBAL",
+      "restResponseFlg": 1,
+      "messageDtTm": "2026-08-21T03:53:17Z"
+    },
+    "sas": {
+      "system": {
+        "transactionIdentifier": "TXN-HEALTH-20260821-001",
+        "messageDtTmUtc": "2026-08-21T03:53:17Z"
+      }
+    },
+    "customer": {
+      "identifier": "CUST-41127322",
+      "surname": "Carlyle",
+      "addressCountryCode": "US",
+      "type": "INDIVIDUAL"
+    },
+    "creditcard": {
+      "number": "4111111111111114",
+      "limit": 5000.0,
+      "cardholderCountryCode": "US"
+    },
+    "transaction": {
+      "transactionIdentifier": "TXN-HEALTH-20260821-001",
+      "amount": 100.0,
+      "currencyCode": "USD",
+      "transactionDateTime": "2026-08-21T03:53:17Z"
+    },
+    "cardfinancial": {
+      "amount": 100.0,
+      "usdAmount": 100.0,
+      "currencyCode": "USD",
+      "cardPresentInd": "0",
+      "customerPresentInd": "1",
+      "ecommerceAuthentication": "SUCCESS"
+    },
+    "authentication": {
+      "decision": "ACCEPT",
+      "level": "HIGH",
+      "result": ["SUCCESS"],
+      "type": "3DS_V2"
+    },
+    "device": {
+      "identifier": "DEV-HEALTH-20260821-001",
+      "fingerprint": ["FP-HEALTH-20260821-001"],
+      "fingerprintType": ["SAS"],
+      "ipAddress": "203.0.113.42"
+    },
+    "payment": {
+      "debitCurrencyCode": "USD",
+      "creditCurrencyCode": "USD",
+      "usdAmount": 100.0
+    },
+    "merchant": {
+      "name": "BASELINE GROCERY",
+      "categoryCode": "5411",
+      "country": "US"
+    },
+    "debitcard": {"number": "DC-41127322"},
+    "debitaccount": {"number": "DA-CUST-41127322"}
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "message": {
+    "solution": {
+      "originationType": "DC",
+      "activityType": "CA",
+      "authenticationType": "CVV",
+      "channelType": "WEB",
+      "customerType": "INDIVIDUAL"
+    },
+    "request": {
+      "command": "Execute",
+      "decisioningInd": 1,
+      "schemaName": "Payment Fraud",
+      "messageClassificationName": "GLOBAL",
+      "restResponseFlg": 1,
+      "messageDtTm": "2026-08-21T16:51:12Z"
+    },
+    "sas": {
+      "system": {
+        "transactionIdentifier": "TXN-UI-CNP1200-20260821-01",
+        "messageDtTmUtc": "2026-08-21T16:51:12Z"
+      }
+    },
+    "customer": {
+      "identifier": "CUST-CNP-UI-2108-B",
+      "surname": "Carlyle",
+      "addressCountryCode": "US",
+      "type": "INDIVIDUAL"
+    },
+    "creditcard": {
+      "number": "4111111111111114",
+      "limit": 5000.0,
+      "cardholderCountryCode": "US"
+    },
+    "transaction": {
+      "transactionIdentifier": "TXN-UI-CNP1200-20260821-01",
+      "amount": 1200.0,
+      "currencyCode": "USD",
+      "transactionDateTime": "2026-08-21T16:51:12Z"
+    },
+    "cardfinancial": {
+      "amount": 1200.0,
+      "usdAmount": 1200.0,
+      "currencyCode": "USD",
+      "cardPresentInd": "1",
+      "customerPresentInd": "1",
+      "ecommerceAuthentication": "FAILED"
+    },
+    "authentication": {
+      "decision": "DENY",
+      "level": "LOW",
+      "result": ["FAILURE"],
+      "type": "3DS_V2"
+    },
+    "device": {
+      "identifier": "DEV-CNP1200-UI-2108-B",
+      "fingerprint": ["FP-CNP1200-UI-2108-B"],
+      "fingerprintType": ["SAS"],
+      "ipAddress": "203.0.113.42"
+    },
+    "payment": {
+      "debitCurrencyCode": "USD",
+      "creditCurrencyCode": "USD",
+      "usdAmount": 1200.0
+    },
+    "merchant": {
+      "name": "ECOM DIGITAL STORE",
+      "categoryCode": "5411",
+      "country": "US"
+    },
+    "debitcard": { "number": "NKQ-23120347_v2" },
+    "debitaccount": { "number": "NKQ-23120347_v2" }
+  }
+}

@@ -1,7 +1,11 @@
 # Rule 3 — CNP + Subscription/Recurring-billing Card Testing
 
-> Trạng thái: **Prototype** — chưa deploy. Cần Thái xác nhận 2 điểm ở mục "Cần xác nhận
-> trên SAS" trước khi build thật trên môi trường.
+> Trạng thái: **Prototype — đã tạo trong SAS Business Rules Manager (khác server/hệ với
+> SAS Fraud Decisioning "SAS Debit Card Fraud" mà Rule 1/2 dùng)**, chưa deploy vào runtime
+> thật. Ruleset `CNP_Subscription_Testing` (id `c05e16b6-f105-4047-862f-36456c7e9d1a`,
+> revision 1.1) chứa 2 rule: `rule_var_track_subscription`, `rule_cnp_subscription_testing`
+> — xem mục "Ghi chú triển khai qua MCP (20/08/2026)" bên dưới. Cần Thái xác nhận 2 điểm ở
+> mục "Cần xác nhận trên SAS" trước khi build thật trên môi trường SAS Fraud Decisioning.
 
 ## Mô tả nghiệp vụ
 
@@ -124,6 +128,31 @@ end;
    `cardPresentInd = '1'` = CNP là đúng trên môi trường này (Thái xác nhận trực tiếp).
    Bảng mô tả Schema mô tả theo chuẩn chung, không khớp mapping thực tế — không cần sửa
    gì trong rule này.
+
+## Ghi chú triển khai qua MCP (20/08/2026)
+
+Đã dùng `mcp__sas-execution-mcp` để tạo rule trên **SAS Business Rules Manager**
+(`create_business_ruleset` / `create_business_rule` / `lock_business_ruleset_revision`).
+**Quan trọng:** `list_business_rulesets`/`list_decision_flows` trên server MCP này cho thấy
+đây là hệ thống khác với "SAS Debit Card Fraud" (SAS Fraud Decisioning, `OPERATE -> Rules`)
+mà Rule 1/2 thực sự chạy — 2 decision flow duy nhất ở đây (`Debit Card Fraud Decision`,
+`...GBM Decision`) là model-score flow, không liên quan. Streamlit console test tới SAS
+Fraud Decisioning, **không** đọc ruleset này. Nghĩa là rule dưới đây **tồn tại nhưng chưa
+có tác dụng thật** cho đến khi build lại bằng tay trên đúng UI SAS Fraud Decisioning
+(theo mẫu "Hướng dẫn setup từ đầu" của Rule 2), hoặc xác nhận có server MCP khác trỏ đúng
+hệ đó.
+
+- Ruleset: `CNP_Subscription_Testing`, id `c05e16b6-f105-4047-862f-36456c7e9d1a`, revision
+  1.1 (locked).
+- Signature làm phẳng mảng `[1..3]` thành scalar do API không hỗ trợ kiểu array:
+  `recentSubscriptionId1/2/3` (string), `recentSubscriptionDtTm1/2/3` (datetime).
+- `rule_var_track_subscription`: 9 điều kiện AND (origination/activity/CNP/subscription
+  hợp lệ/ecommerceAuthentication in FAILED,ATTEMPTED/dedupe 3 slot) + 6 action gán tuần tự
+  mô phỏng dịch chuyển LRU y hệt bản DS2 gốc.
+- `rule_cnp_subscription_testing`: điều kiện đủ 3 slot khác rỗng + chênh lệch thời gian
+  `messageDtTm - recentSubscriptionDtTm3 < 1800` (giây, tương đương `dhms(0,0,30,0)`) →
+  gán `alertFlag = 1`. Đây là output boolean thay thế cho `detection.Alert()` (API Business
+  Rules Manager không có khái niệm alert trực tiếp).
 
 ## Test dự kiến (positive + negative)
 

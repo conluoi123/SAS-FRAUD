@@ -1,0 +1,17 @@
+{
+    "post": "/alertsTransaction/transactionAccessControlRules",
+    "contentType": "application/vnd.sas.collection.triage.transaction.access.control.rules+json",
+    "body": [
+        [
+            {
+                "id": "defaultRuleId",
+                "optLockVersion": -1,
+                "transactionAccessControlValue": "*",
+                "userGroups": [
+                    "SASTriageUsers"
+                ],
+                "version": 1
+            }
+        ]
+    ]
+}

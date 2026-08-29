@@ -1,0 +1,617 @@
+{
+    "post": "/alertsTransaction/transactionViewerConfig",
+    "contentType": "application/vnd.sas.triage.transaction.viewer.config+json",
+    "body": [
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_batch_merchant",
+            "indexableVariablePath": "message.batch.identifier",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_merAuthTx_merchant"
+                },
+                {
+                    "displayOrderVal": 4,
+                    "id": "sfd_events_merchant"
+                },
+                {
+                    "displayOrderVal": 3,
+                    "id": "sfd_chgBkTx_merchant"
+                },
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_merPostTx_merchant"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_merchant"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_merchant_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_ca_paymentFraud",
+            "indexableVariablePath": "message.creditaccount.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_cc_paymentFraud",
+            "indexableVariablePath": "message.creditcard.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_cmp_paymentFraud",
+            "indexableVariablePath": "message.company.identifier",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_creditcard",
+            "indexableVariablePath": "message.creditcard.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_cardfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_cardfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_ccTx_cardfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_card_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_card_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_card_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_card_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_card_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_cust_paymentFraud",
+            "indexableVariablePath": "message.customer.identifier",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_da_paymentFraud",
+            "indexableVariablePath": "message.debitaccount.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_cnpReview_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 3,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_dc_paymentFraud",
+            "indexableVariablePath": "message.debitcard.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_paymentfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_paymentTx_paymentfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_pymt_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_pymt_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_pymt_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_debitcard",
+            "indexableVariablePath": "message.debitcard.number",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_events_cardfraud"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_cardfraud"
+                },
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_dcTx_cardfraud"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_card_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_card_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_card_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_card_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_card_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_merchant",
+            "indexableVariablePath": "message.merchant.identifier",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_merAuthTx_merchant"
+                },
+                {
+                    "displayOrderVal": 4,
+                    "id": "sfd_events_merchant"
+                },
+                {
+                    "displayOrderVal": 3,
+                    "id": "sfd_chgBkTx_merchant"
+                },
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_merPostTx_merchant"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_merchant"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_merchant_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        },
+        {
+            "alertFieldValuePath": "actionableEntityID",
+            "id": "sfd_txViewer_terminal_merchant",
+            "indexableVariablePath": "message.merchant.terminalIdentifier",
+            "optLockVersion": -1,
+            "transactionGridDefinitionConfigs": [
+                {
+                    "displayOrderVal": 1,
+                    "id": "sfd_merAuthTx_merchant"
+                },
+                {
+                    "displayOrderVal": 4,
+                    "id": "sfd_events_merchant"
+                },
+                {
+                    "displayOrderVal": 3,
+                    "id": "sfd_chgBkTx_merchant"
+                },
+                {
+                    "displayOrderVal": 2,
+                    "id": "sfd_merPostTx_merchant"
+                },
+                {
+                    "displayOrderVal": 0,
+                    "id": "sfd_allTx_merchant"
+                }
+            ],
+            "transactionMarkConfigs": [
+                {
+                    "id": "sfd_txMark_merchant_confirmedFraud",
+                    "localizedTransactionMarkLabel": "Confirmed Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Confirmed Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedFraud",
+                    "localizedTransactionMarkLabel": "Suspected Fraud",
+                    "rootMark": "confirm_invalid",
+                    "transactionMarkLabel": "Suspected Fraud"
+                },
+                {
+                    "id": "sfd_txMark_merchant_confirmedGenuine",
+                    "localizedTransactionMarkLabel": "Confirmed Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Confirmed Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_suspectedGenuine",
+                    "localizedTransactionMarkLabel": "Suspected Genuine",
+                    "rootMark": "confirm_valid",
+                    "transactionMarkLabel": "Suspected Genuine"
+                },
+                {
+                    "id": "sfd_txMark_merchant_needsReview",
+                    "localizedTransactionMarkLabel": "Needs Review",
+                    "rootMark": "marked_for_review",
+                    "transactionMarkLabel": "Needs Review"
+                }
+            ],
+            "version": 1
+        }
+    ]
+}

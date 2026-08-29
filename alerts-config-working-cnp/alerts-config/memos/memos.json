@@ -1,0 +1,184 @@
+{
+    "post": "/alerts/memos",
+    "contentType": "application/vnd.sas.collection.triage.memo+json",
+    "body": [
+        [
+            {
+                "description": "Closed Indeterminate Block",
+                "id": "SFD_CLOSED_INDETER_BLK_CP_MEMO",
+                "localizedDescription": "Closed Indeterminate Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "localizedName": "No Contact Block",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Indeterminate Block",
+                "id": "SFD_CLOSED_INDETER_BLK_MER_MEMO",
+                "localizedDescription": "Closed Indeterminate Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "localizedName": "No Contact Block",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Indeterminate No Block",
+                "id": "SFD_CLOSED_INDETER_NO_BLK_CP_MEMO",
+                "localizedDescription": "Closed Indeterminate No Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Indeterminate No Block",
+                "id": "SFD_CLOSED_INDETER_NO_BLK_MER_MEMO",
+                "localizedDescription": "Closed Indeterminate No Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Productive",
+                "id": "SFD_CLOSED_PRODUCTIVE_CP_MEMO",
+                "localizedDescription": "Closed Productive",
+                "localizedMemo": "Customer confirmed that activity from {date} was unrecognized. Temporary block applied. Customer passed to specialist team.",
+                "localizedName": "Pending",
+                "memo": "Customer confirmed that activity from {date} was unrecognized. Temporary block applied. Customer passed to specialist team.",
+                "name": "Pending",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Productive",
+                "id": "SFD_CLOSED_PRODUCTIVE_MER_MEMO",
+                "localizedDescription": "Closed Productive",
+                "localizedMemo": "Customer representative confirmed that activity from {date} was unrecognized. Temporary block applied. Customer representative passed to specialist team.",
+                "localizedName": "Pending",
+                "memo": "Customer representative confirmed that activity from {date} was unrecognized. Temporary block applied. Customer representative passed to specialist team.",
+                "name": "Pending",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Unproductive",
+                "id": "SFD_CLOSED_UNPRODUCTIVE_CP_MEMO",
+                "localizedDescription": "Closed Unproductive",
+                "localizedMemo": "Customer confirms that transactions from {date} are genuine. No further action.",
+                "localizedName": "Genuine",
+                "memo": "Customer confirms that transactions from {date} are genuine. No further action.",
+                "name": "Genuine",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Closed Unproductive",
+                "id": "SFD_CLOSED_UNPRODUCTIVE_MER_MEMO",
+                "localizedDescription": "Closed Unproductive",
+                "localizedMemo": "Customer representative confirms that the activity on {date} is genuine. No further action.",
+                "localizedName": "Genuine",
+                "memo": "Customer representative confirms that the activity on {date} is genuine. No further action.",
+                "name": "Genuine",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Reschedule Block",
+                "id": "SFD_RESCHEDULE_BLK_CP_MEMO",
+                "localizedDescription": "Reschedule Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "localizedName": "No Contact Block",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Reschedule Block",
+                "id": "SFD_RESCHEDULE_BLK_MER_MEMO",
+                "localizedDescription": "Reschedule Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "localizedName": "No Contact Block",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Reschedule No Block",
+                "id": "SFD_RESCHEDULE_NO_BLK_CP_MEMO",
+                "localizedDescription": "Reschedule No Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Reschedule No Block",
+                "id": "SFD_RESCHEDULE_NO_BLK_MER_MEMO",
+                "localizedDescription": "Reschedule No Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Save Pending Block",
+                "id": "SFD_SAVE_PENDING_BLK_CP_MEMO",
+                "localizedDescription": "Save Pending Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Save Pending Block",
+                "id": "SFD_SAVE_PENDING_BLK_MER_MEMO",
+                "localizedDescription": "Save Pending Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "localizedName": "No Contact Block",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied.",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Save Pending No Block",
+                "id": "SFD_SAVE_PENDING_NO_BLK_CP_MEMO",
+                "localizedDescription": "Save Pending No Block",
+                "localizedMemo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "localizedName": "No Contact Block",
+                "memo": "Customer could not be contacted. Messages left on cellular; home and work voicemails to initiate a response. Upon contact please confirm transactions from {date}. {XX} Block applied",
+                "name": "No Contact Block",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "description": "Save Pending No Block",
+                "id": "SFD_SAVE_PENDING_NO_BLK_MER_MEMO",
+                "localizedDescription": "Save Pending No Block",
+                "localizedMemo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "localizedName": "No Contact",
+                "memo": "Customer representative could not be contacted. Messages left on cellular, home, and work voicemails to initiate a response. Upon contact please confirm transactions from {date}.",
+                "name": "No Contact",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

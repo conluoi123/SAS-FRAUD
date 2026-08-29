@@ -1,0 +1,66 @@
+{
+  "dataset_type": "raw_normalized_transaction_tables",
+  "joined_dataset_created": false,
+  "split_created": false,
+  "run_count": 5,
+  "runs": [
+    {
+      "simulation_run_id": "RUN_TXN_TRAIN_001",
+      "random_seed": 20260828,
+      "output_dir": "output_training_raw/runs/run_001"
+    },
+    {
+      "simulation_run_id": "RUN_TXN_TRAIN_002",
+      "random_seed": 20260829,
+      "output_dir": "output_training_raw/runs/run_002"
+    },
+    {
+      "simulation_run_id": "RUN_TXN_TRAIN_003",
+      "random_seed": 20260830,
+      "output_dir": "output_training_raw/runs/run_003"
+    },
+    {
+      "simulation_run_id": "RUN_TXN_TRAIN_004",
+      "random_seed": 20260831,
+      "output_dir": "output_training_raw/runs/run_004"
+    },
+    {
+      "simulation_run_id": "RUN_TXN_TRAIN_005",
+      "random_seed": 20260832,
+      "output_dir": "output_training_raw/runs/run_005"
+    }
+  ],
+  "row_counts": {
+    "account_change_events.csv": 2588,
+    "accounts.csv": 9425,
+    "alerts.csv": 1900,
+    "applicant_declared_profiles.csv": 0,
+    "application_documents.csv": 0,
+    "auth_events.csv": 40265,
+    "beneficiaries.csv": 20674,
+    "cases.csv": 1900,
+    "credit_bureau_snapshots.csv": 0,
+    "customers.csv": 7500,
+    "decision_outcomes.csv": 1900,
+    "devices.csv": 10625,
+    "disbursement_accounts.csv": 0,
+    "employment_income_profiles.csv": 0,
+    "fraud_ground_truth.csv": 1900,
+    "loan_applications.csv": 0,
+    "loan_repayment_outcomes.csv": 0,
+    "login_sessions.csv": 26861,
+    "reference_contacts.csv": 0,
+    "rule_hits.csv": 2700,
+    "rules.csv": 9,
+    "sales_agents.csv": 0,
+    "sales_points.csv": 0,
+    "scenario_event_entities.csv": 4097,
+    "scenario_manifest.csv": 1900,
+    "simulation_runs.csv": 5,
+    "transaction_features.csv": 112565,
+    "transactions.csv": 112565,
+    "verification_results.csv": 1900
+  },
+  "label_bridge": "scenario_event_entities.csv",
+  "split_recommendation": "split by customer_id or account_id after your own joins"
+}

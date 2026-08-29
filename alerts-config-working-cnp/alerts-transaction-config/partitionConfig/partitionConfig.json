@@ -1,0 +1,13 @@
+{
+    "post": "/alertsTransaction/partitionConfig",
+    "contentType": "application/vnd.sas.triage.transaction.partition.config+json",
+    "body": [
+        {
+            "futurePartitionCount": 10,
+            "id": "default_partition_config",
+            "optLockVersion": -1,
+            "partitionFrequency": 1,
+            "version": 1
+        }
+    ]
+}

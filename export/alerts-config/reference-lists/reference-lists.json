@@ -1,0 +1,696 @@
+{
+    "post": "/alerts/referenceLists",
+    "contentType": "application/vnd.sas.collection.triage.reference.list+json",
+    "body": [
+        [
+            {
+                "builtInFlag": false,
+                "columns": [
+                    {
+                        "id": "SFD_CARD_ACS",
+                        "localizedName": "Plastic card - ATM cash shortage",
+                        "name": "Plastic card - ATM cash shortage",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_ACT",
+                        "localizedName": "Plastic card - ATM card trap",
+                        "name": "Plastic card - ATM card trap",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AES",
+                        "localizedName": "Plastic card - ATM electronic or software",
+                        "name": "Plastic card - ATM electronic or software",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AFF",
+                        "localizedName": "Plastic Card - ATM false front end",
+                        "name": "Plastic Card - ATM false front end",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AFI",
+                        "localizedName": "Plastic Card - application fictitious identity",
+                        "name": "Plastic Card - application fictitious identity",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AHN",
+                        "localizedName": "Plastic Card - ATM high notes replaced by lower notes",
+                        "name": "Plastic Card - ATM high notes replaced by lower notes",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AHW",
+                        "localizedName": "Plastic Card - ATM hardware",
+                        "name": "Plastic Card - ATM hardware",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_AIT",
+                        "localizedName": "Plastic Card - application identity theft (impersonation)",
+                        "name": "Plastic Card - application identity theft (impersonation)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_APS",
+                        "localizedName": "Plastic Card - application suspicious",
+                        "name": "Plastic Card - application suspicious",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_BO",
+                        "localizedName": "Plastic Card - Bustout",
+                        "name": "Plastic Card - Bustout",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CMC",
+                        "localizedName": "Plastic Card - collusive merchant: counterfeit card",
+                        "name": "Plastic Card - collusive merchant: counterfeit card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CMF",
+                        "localizedName": "Plastic Card - collusive merchant: application fraud card",
+                        "name": "Plastic Card - collusive merchant: application fraud card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CML",
+                        "localizedName": "Plastic Card - collusive merchant: lost card",
+                        "name": "Plastic Card - collusive merchant: lost card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CMN",
+                        "localizedName": "Plastic Card - collusive merchant: NRI card",
+                        "name": "Plastic Card - collusive merchant: NRI card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CMS",
+                        "localizedName": "Plastic Card - collusive merchant: stolen card",
+                        "name": "Plastic Card - collusive merchant: stolen card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CMT",
+                        "localizedName": "Plastic Card - collusive merchant: ATO",
+                        "name": "Plastic Card - collusive merchant: ATO",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CNP",
+                        "localizedName": "Plastic Card - card not present, mail order or telephone order, or internet",
+                        "name": "Plastic Card - card not present, mail order or telephone order, or internet",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_CO",
+                        "localizedName": "Plastic Card - counterfeit or skimming",
+                        "name": "Plastic Card - counterfeit or skimming",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_LO",
+                        "localizedName": "Plastic Card - lost",
+                        "name": "Plastic Card - lost",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_NR",
+                        "localizedName": "Plastic Card - card not received",
+                        "name": "Plastic Card - card not received",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_OAR",
+                        "localizedName": "Other - account review",
+                        "name": "Other - account review",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_OIS",
+                        "localizedName": "Other - insurance fraud",
+                        "name": "Other - insurance fraud",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_OMS",
+                        "localizedName": "Other - miscellaneous",
+                        "name": "Other - miscellaneous",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_OOF",
+                        "localizedName": "Other - toll fraud",
+                        "name": "Other - toll fraud",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_OTF",
+                        "localizedName": "Other - trade fraud",
+                        "name": "Other - trade fraud",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_PS",
+                        "localizedName": "Plastic card - protective savings",
+                        "name": "Plastic card - protective savings",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_ST",
+                        "localizedName": "Plastic card - stolen",
+                        "name": "Plastic card - stolen",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_TK",
+                        "localizedName": "Plastic card - account takeover",
+                        "name": "Plastic card - account takeover",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_UAL",
+                        "localizedName": "Unauthorized access - logical",
+                        "name": "Unauthorized access - logical",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_UAP",
+                        "localizedName": "Unauthorized access - physical",
+                        "name": "Unauthorized access - physical",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_UNC",
+                        "localizedName": "Plastic card - unknown card fraud type",
+                        "name": "Plastic card - unknown card fraud type",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    },
+                    {
+                        "id": "SFD_CARD_UNN",
+                        "localizedName": "Non-card fraud type",
+                        "name": "Non-card fraud type",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_CARD"
+                    }
+                ],
+                "description": "Reason Codes for Cards",
+                "id": "SFD_REASON_CODES_CARD",
+                "localizedDescription": "Reason Codes for Cards",
+                "localizedName": "Reason Codes for Cards",
+                "name": "Reason Codes for Cards",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "builtInFlag": false,
+                "columns": [
+                    {
+                        "id": "SFD_MERCHANT_CMC",
+                        "localizedName": "Plastic card - collusive merchant: counterfeit card",
+                        "name": "Plastic card - collusive merchant: counterfeit card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CMF",
+                        "localizedName": "Plastic card - collusive merchant: application card fraud",
+                        "name": "Plastic card - collusive merchant: application card fraud",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CML",
+                        "localizedName": "Plastic card - collusive merchant: lost card",
+                        "name": "Plastic card - collusive merchant: lost card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CMN",
+                        "localizedName": "Plastic card - collusive merchant: NRI card",
+                        "name": "Plastic card - collusive merchant: NRI card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CMS",
+                        "localizedName": "Plastic card - collusive merchant: stolen card",
+                        "name": "Plastic card - collusive merchant: stolen card",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CMT",
+                        "localizedName": "Plastic card - collusive merchant: ATO",
+                        "name": "Plastic card - collusive merchant: ATO",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CNP",
+                        "localizedName": "Plastic card - card not present, mail order or telephone order, or internet",
+                        "name": "Plastic card - card not present, mail order or telephone order, or internet",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_CO",
+                        "localizedName": "Plastic card - counterfeit or skimming",
+                        "name": "Plastic card - counterfeit or skimming",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_AIT",
+                        "localizedName": "Plastic card - application identity theft (impersonation)",
+                        "name": "Plastic card - application identity theft (impersonation)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_APS",
+                        "localizedName": "Plastic card - application suspicious",
+                        "name": "Plastic card - application suspicious",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_BO",
+                        "localizedName": "Bustout",
+                        "name": "Bustout",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_UNC",
+                        "localizedName": "Plastic card - unknown card fraud type",
+                        "name": "Plastic card - unknown card fraud type",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_UNN",
+                        "localizedName": "Non-card fraud type",
+                        "name": "Non-card fraud type",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    },
+                    {
+                        "id": "SFD_MERCHANT_SCO",
+                        "localizedName": "Scam-bogus, shell banks, or companies",
+                        "name": "Scam-bogus, shell banks, or companies",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_MERCHANT"
+                    }
+                ],
+                "description": "Reason Codes for Merchant",
+                "id": "SFD_REASON_CODES_MERCHANT",
+                "localizedDescription": "Reason Codes for Merchant",
+                "localizedName": "Reason Codes for Merchant",
+                "name": "Reason Codes for Merchant",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "builtInFlag": false,
+                "columns": [
+                    {
+                        "id": "SFD_PAYMENT_ECI",
+                        "localizedName": "Social engineering - customer information",
+                        "name": "Social engineering - customer information",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_EEI",
+                        "localizedName": "Social engineering - employee information",
+                        "name": "Social engineering - employee information",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_FEM",
+                        "localizedName": "Phishing - email",
+                        "name": "Phishing - email",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_FPH",
+                        "localizedName": "Phishing - phone",
+                        "name": "Phishing - phone",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_FPO",
+                        "localizedName": "Phishing - postal",
+                        "name": "Phishing - postal",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_FWB",
+                        "localizedName": "Phishing - website",
+                        "name": "Phishing - website",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PBP",
+                        "localizedName": "Payment - standard or bill payment",
+                        "name": "Payment - standard or bill payment",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PBT",
+                        "localizedName": "Payment - batch",
+                        "name": "Payment - batch",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PCA",
+                        "localizedName": "Payment - forged encashment (non-check or check)",
+                        "name": "Payment - forged encashment (non-check or check)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PNT",
+                        "localizedName": "Payment - forged currency notes",
+                        "name": "Payment - forged currency notes",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PPA",
+                        "localizedName": "Payment - preauthorized",
+                        "name": "Payment - preauthorized",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PPT",
+                        "localizedName": "Payment - priority payment",
+                        "name": "Payment - priority payment",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_PXF",
+                        "localizedName": "Payment - electronic funds transfer (EFT)",
+                        "name": "Payment - electronic funds transfer (EFT)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SBL",
+                        "localizedName": "Scam - boiler rooms",
+                        "name": "Scam - boiler rooms",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SCO",
+                        "localizedName": "Scam - bogus, shell banks, or companies",
+                        "name": "Scam - bogus, shell banks, or companies",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SDC",
+                        "localizedName": "Scam - fake bank documents",
+                        "name": "Scam - fake bank documents",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SEA",
+                        "localizedName": "Scam - elder abuse",
+                        "name": "Scam - elder abuse",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SFE",
+                        "localizedName": "Scam - advance fee",
+                        "name": "Scam - advance fee",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SFS",
+                        "localizedName": "Scam - phishing",
+                        "name": "Scam - phishing",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SIM",
+                        "localizedName": "Scam - internet mules",
+                        "name": "Scam - internet mules",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SIN",
+                        "localizedName": "Scam - high yield investments",
+                        "name": "Scam - high yield investments",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SLO",
+                        "localizedName": "Scam - unusual large business offer",
+                        "name": "Scam - unusual large business offer",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SOS",
+                        "localizedName": "Scam - other scam",
+                        "name": "Scam - other scam",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SPC",
+                        "localizedName": "Scam - malicious code (personal PC)",
+                        "name": "Scam - malicious code (personal PC)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SPM",
+                        "localizedName": "Scam - pharming",
+                        "name": "Scam - pharming",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_SPU",
+                        "localizedName": "Scam - malicious code (public PC)",
+                        "name": "Scam - malicious code (public PC)",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_STD",
+                        "localizedName": "Scam - telephone deception",
+                        "name": "Scam - telephone deception",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_TCD",
+                        "localizedName": "Account takeover - change of address",
+                        "name": "Account takeover - change of address",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_TMC",
+                        "localizedName": "Account takeover - multiple changes",
+                        "name": "Account takeover - multiple changes",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_TPH",
+                        "localizedName": "Account takeover - change of telephone number",
+                        "name": "Account takeover - change of telephone number",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_TTK",
+                        "localizedName": "Account takeover - change of security credentials",
+                        "name": "Account takeover - change of security credentials",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_UAL",
+                        "localizedName": "Unauthorized access - logical",
+                        "name": "Unauthorized access - logical",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_UAP",
+                        "localizedName": "Unauthorized access - physical",
+                        "name": "Unauthorized access - physical",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    },
+                    {
+                        "id": "SFD_PAYMENT_UNN",
+                        "localizedName": "Non-card fraud type",
+                        "name": "Non-card fraud type",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_CODES_PAYMENT"
+                    }
+                ],
+                "description": "Reason Codes for Payment",
+                "id": "SFD_REASON_CODES_PAYMENT",
+                "localizedDescription": "Reason Codes for Payment",
+                "localizedName": "Reason Codes for Payment",
+                "name": "Reason Codes for Payment",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "builtInFlag": false,
+                "columns": [
+                    {
+                        "id": "SFD_MIN",
+                        "localizedName": "No reason code",
+                        "name": "No reason code",
+                        "optLockVersion": -1,
+                        "refListID": "SFD_REASON_MIN"
+                    }
+                ],
+                "description": "Reason Codes Minimum",
+                "id": "SFD_REASON_MIN",
+                "localizedDescription": "Reason Codes Minimum",
+                "localizedName": "Reason Codes Minimum",
+                "name": "Reason Codes Minimum",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "builtInFlag": true,
+                "columns": [
+                    {
+                        "id": "ACTIVE",
+                        "localizedName": "Active",
+                        "name": "Active",
+                        "optLockVersion": -1,
+                        "refListID": "alert-status"
+                    },
+                    {
+                        "id": "CLOSED",
+                        "localizedName": "Closed",
+                        "name": "Closed",
+                        "optLockVersion": -1,
+                        "refListID": "alert-status"
+                    },
+                    {
+                        "id": "SUSPENDED",
+                        "localizedName": "Suspended",
+                        "name": "Suspended",
+                        "optLockVersion": -1,
+                        "refListID": "alert-status"
+                    },
+                    {
+                        "id": "AUTO_CLOSE",
+                        "localizedName": "Auto-close",
+                        "name": "Auto-close",
+                        "optLockVersion": -1,
+                        "refListID": "alert-status"
+                    }
+                ],
+                "description": "Alert status",
+                "id": "alert-status",
+                "localizedDescription": "Alert status",
+                "localizedName": "Alert Status",
+                "name": "Alert Status",
+                "optLockVersion": -1,
+                "version": 1
+            },
+            {
+                "builtInFlag": true,
+                "columns": [
+                    {
+                        "id": "PRODUCTIVE",
+                        "localizedName": "Productive",
+                        "name": "Productive",
+                        "optLockVersion": -1,
+                        "refListID": "productivity-ratings"
+                    },
+                    {
+                        "id": "UNPRODUCTIVE",
+                        "localizedName": "Unproductive",
+                        "name": "Unproductive",
+                        "optLockVersion": -1,
+                        "refListID": "productivity-ratings"
+                    },
+                    {
+                        "id": "INDETERMINATE",
+                        "localizedName": "Indeterminate",
+                        "name": "Indeterminate",
+                        "optLockVersion": -1,
+                        "refListID": "productivity-ratings"
+                    }
+                ],
+                "description": "Alert productivity ratings",
+                "id": "productivity-ratings",
+                "localizedDescription": "Alert productivity ratings",
+                "localizedName": "Productivity Ratings",
+                "name": "Productivity Ratings",
+                "optLockVersion": -1,
+                "version": 1
+            }
+        ]
+    ]
+}

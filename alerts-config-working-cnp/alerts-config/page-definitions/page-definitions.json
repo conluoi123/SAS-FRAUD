@@ -1,0 +1,892 @@
+{
+    "post": "/alerts/pageDefinitions",
+    "contentType": "application/vnd.sas.collection.triage.page.definition+json",
+    "body": [
+        [
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_batch_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_batch_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_batch_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_cmp_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_company_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_company_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_cmp_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_company_x_vip_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_company_x_vip_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_ca_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_creditacc_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_creditacc_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_ca_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_creditacc_x_vip_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_creditacc_x_vip_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_creditcard_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_creditcard_x_credit_card_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_creditcard_x_credit_card_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_cc_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_creditcard_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_creditcard_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_cust_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_customer_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_customer_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_cust_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_customer_x_vip_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_customer_x_vip_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "35%"
+                        },
+                        {
+                            "configID": "sfd_cnp_risk_signals_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "40%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_da_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_debitacc_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_debitacc_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_da_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_debitacc_x_vip_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_debitacc_x_vip_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_debitcard_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_debitcard_x_debit_card_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_debitcard_x_debit_card_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_account_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_customer_pane",
+                            "coordinates": [
+                                0,
+                                2
+                            ],
+                            "defaultSize": "25%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_dc_paymentFraud_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_debitcard_x_payment_fraud_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_debitcard_x_payment_fraud",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_high_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_high_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_low_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_low_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_terminal_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_med_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_med_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_batch_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_other_merchant_x_batch_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_other_merchant_x_batch",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_other_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_other_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_terminal_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_other_merchant_x_terminal_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_other_merchant_x_terminal",
+                "optLockVersion": -1,
+                "version": 2
+            },
+            {
+                "definitionData": {
+                    "childComponents": [
+                        {
+                            "configID": "sfd_merchant_info_pane",
+                            "coordinates": [
+                                0,
+                                0
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_merchant_contact_pane",
+                            "coordinates": [
+                                0,
+                                1
+                            ],
+                            "defaultSize": "50%"
+                        },
+                        {
+                            "configID": "sfd_txViewer_terminal_merchant_pane",
+                            "coordinates": [
+                                1,
+                                0
+                            ]
+                        }
+                    ],
+                    "config": {
+                        "showToolbar": true,
+                        "splitbarType": "horizontalCollapseUp"
+                    },
+                    "id": "sfd_terminal_merchant_x_merchant_defn",
+                    "type": "Splitter",
+                    "version": 2
+                },
+                "id": "sfd_terminal_merchant_x_merchant",
+                "optLockVersion": -1,
+                "version": 2
+            }
+        ]
+    ]
+}

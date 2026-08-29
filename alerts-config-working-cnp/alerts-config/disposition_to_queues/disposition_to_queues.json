@@ -1,0 +1,416 @@
+{
+    "post": "/alerts/queues/sfd_terminal_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_medium_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_low_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_high_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_batch_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_other_merchant/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_M_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_M_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_vip_payment_fraud/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_P_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_high_other_payment_fraud/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_P_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_high_payment_fraud/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_P_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_P_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_debit_card_present/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CNP"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_C_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_credit_card_present/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CNP"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_debit_card_not_present/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_INTERACTIVE_MOVE_TO_Q_DEBIT_CP"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_C_DISPOSITION"
+                }
+            ]
+        }
+    ]
+},{
+    "post": "/alerts/queues/sfd_credit_card_not_present/dispositions",
+    "contentType": "application/json",
+    "acceptType": "application/json",
+    "body": [
+        {
+            "dispositions": [
+                {
+                    "id": "SFD_SKIP_ALERT_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SEND_MULTI_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_PRODUCTIVE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_UNPRODUCT_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_CLOSED_INDETER_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_RESCHEDULE_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_SAVE_PENDING_C_DISPOSITION"
+                },
+                {
+                    "id": "SFD_INTERACTIVE_MOVE_TO_Q_CREDIT_CP"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,78 @@
+{
+  "message": {
+    "solution": {
+      "originationType": "DC",
+      "activityType": "CA",
+      "authenticationType": "CVV",
+      "channelType": "WEB",
+      "customerType": "INDIVIDUAL"
+    },
+    "request": {
+      "command": "Execute",
+      "decisioningInd": 1,
+      "schemaName": "Payment Fraud",
+      "messageClassificationName": "GLOBAL",
+      "restResponseFlg": 1,
+      "messageDtTm": "2026-08-21T04:22:07Z"
+    },
+    "sas": {
+      "system": {
+        "transactionIdentifier": "TXN-ROUTE-FRESH-20260821-001",
+        "messageDtTmUtc": "2026-08-21T04:22:07Z"
+      }
+    },
+    "customer": {
+      "identifier": "CUST-ROUTE-FRESH-001",
+      "surname": "RoutingTest",
+      "addressCountryCode": "US",
+      "type": "INDIVIDUAL"
+    },
+    "creditcard": {
+      "number": "4555555555555501",
+      "limit": 5000.0,
+      "cardholderCountryCode": "US"
+    },
+    "transaction": {
+      "transactionIdentifier": "TXN-ROUTE-FRESH-20260821-001",
+      "amount": 1200.0,
+      "currencyCode": "USD",
+      "transactionDateTime": "2026-08-21T04:22:07Z"
+    },
+    "cardfinancial": {
+      "amount": 1200.0,
+      "usdAmount": 1200.0,
+      "currencyCode": "USD",
+      "cardPresentInd": "1",
+      "customerPresentInd": "1",
+      "ecommerceAuthentication": "SUCCESS"
+    },
+    "authentication": {
+      "decision": "ACCEPT",
+      "level": "HIGH",
+      "result": ["SUCCESS"],
+      "type": "3DS_V2"
+    },
+    "device": {
+      "identifier": "DEV-ROUTE-FRESH-001",
+      "fingerprint": ["FP-ROUTE-FRESH-001"],
+      "fingerprintType": ["SAS"],
+      "ipAddress": "203.0.113.84"
+    },
+    "payment": {
+      "debitCurrencyCode": "USD",
+      "creditCurrencyCode": "USD",
+      "usdAmount": 1200.0
+    },
+    "merchant": {
+      "name": "HIGH RISK MCC FRESH TEST",
+      "categoryCode": "7995",
+      "country": "US"
+    },
+    "debitcard": {
+      "number": "DC-ROUTE-FRESH-001"
+    },
+    "debitaccount": {
+      "number": "DA-ROUTE-FRESH-001"
+    }
+  }
+}
