@@ -19,12 +19,20 @@ ENV/
 
 # Jupyter
 .ipynb_checkpoints/
+.jupyter_cache/
+notebooks/**/*_executed.ipynb
+notebooks/**/*.nbconvert.ipynb
+notebooks/figures/
 
 # Data artifacts
 data/raw/
 data/interim/
 data/processed/
 data/external/
+fraud_data_generator_v2/output/
+fraud_data_generator_v2/output_training_transaction/
+fraud_data_generator_v2/output_training_raw/runs/
+fraud_data_generator_v2/output_training_raw/_configs/
 *.csv
 *.tsv
 *.xlsx
@@ -37,6 +45,7 @@ data/external/
 models/
 artifacts/
 reports/figures/
+reports/generated/
 mlruns/
 wandb/
 
@@ -45,6 +54,9 @@ logs/
 *.log
 *.pid
 app/streamlit_console/.alert_log.json
+sas-token.txt
+*-token.txt
+cnp-import-response.txt
 
 # Test and coverage outputs
 .pytest_cache/
