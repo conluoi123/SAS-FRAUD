@@ -132,6 +132,20 @@ for x in data.get("loan_repayment_outcomes", []):
     d90 = x["dpd_90_flag"] == "true"
     if (d60 and not d30) or (d90 and not d60):
         err.append("DPD invalid")
+
+# Business constraint: a per-transaction transfer limit cannot exceed the
+# account's total daily transfer limit.
+invalid_account_limits = [
+    x["account_id"]
+    for x in data.get("accounts", [])
+    if float(x["single_txn_limit"]) > float(x["daily_transfer_limit"])
+]
+if invalid_account_limits:
+    err.append(
+        "accounts: "
+        f"{len(invalid_account_limits)} rows with single_txn_limit "
+        "> daily_transfer_limit"
+    )
 # timeline causality: session must precede/cover the transaction, beneficiary must predate it
 ses_by_id = {x["session_id"]: x for x in data.get("login_sessions", [])}
 ben_by_id = {x["beneficiary_id"]: x for x in data.get("beneficiaries", [])}

@@ -683,6 +683,14 @@ def g_accounts():
             od = date.fromisoformat(c["onboarding_date"]) + timedelta(
                 days=r.randint(0, 90)
             )
+            daily_transfer_limit = r.choice([50000000, 100000000, 300000000])
+            single_txn_limit = r.choice(
+                [
+                    limit
+                    for limit in [20000000, 50000000, 100000000]
+                    if limit <= daily_transfer_limit
+                ]
+            )
             out.append(
                 dict(
                     account_id=aid,
@@ -698,8 +706,8 @@ def g_accounts():
                         ["branch", "ekyc", "partner", "migration"]
                     ),
                     home_province=c["province"],
-                    daily_transfer_limit=r.choice([50000000, 100000000, 300000000]),
-                    single_txn_limit=r.choice([20000000, 50000000, 100000000]),
+                    daily_transfer_limit=daily_transfer_limit,
+                    single_txn_limit=single_txn_limit,
                     average_balance=r.randint(500000, 200000000),
                     dormant_since=(
                         dt(BASE - timedelta(days=r.randint(190, 500)))
