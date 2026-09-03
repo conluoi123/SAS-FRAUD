@@ -434,6 +434,33 @@ def add_auth(
     return aid
 
 
+def add_scenario_account(s, tag, source_account, opened_on):
+    """Create a scenario-only account without rewriting existing account history."""
+    rows = s.rows("accounts")
+    account_id = f"{RUN}_SCN_ACC_{tag}"
+    if any(x["account_id"] == account_id for x in rows):
+        raise RuntimeError(f"duplicate scenario account_id: {account_id}")
+    account = dict(source_account)
+    account.update(
+        account_id=account_id,
+        account_no_hash=h(account_id),
+        open_date=ds(opened_on),
+        status="active",
+        dormant_since="",
+        created_at=dt(BASE),
+    )
+    rows.append(account)
+    return account
+
+
+def random_transaction_anchor(r, reserve_hours=1):
+    """Sample an anchor inside the background window, leaving room for its event chain."""
+    window_start = BASE - timedelta(days=29)
+    window_end = BASE - timedelta(days=1, hours=reserve_hours)
+    available_seconds = int((window_end - window_start).total_seconds())
+    return window_start + timedelta(seconds=r.randint(0, available_seconds))
+
+
 def choose_accounts(s, n, exclude=set()):
     return [a for a in s.rows("accounts") if a["account_id"] not in exclude][:n]
 
@@ -453,7 +480,7 @@ def inject_transaction(s, man, entities):
     # TXN-01 Impossible Travel
     for i in range(COUNTS["TXN-01"]):
         a = take()
-        t = BASE + timedelta(days=1, hours=i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         origin, destination = r.choice(
             [
                 (PROV[0], PROV[1]),
@@ -518,7 +545,7 @@ def inject_transaction(s, man, entities):
         a["status"] = "dormant"
         a["dormant_since"] = dt(BASE - timedelta(days=r.randint(365, 1200)))
         d = add_device(s, f"T02_{i}", risk=90)
-        t = BASE + timedelta(days=2, hours=i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         sid = add_session(s, f"T02_{i}", a, d, t, newdev=True, newloc=True, risk=94)
         b = add_bene(s, f"T02_{i}", a, t)
         transfer_delay = r.randint(2, 30)
@@ -562,7 +589,7 @@ def inject_transaction(s, man, entities):
     # TXN-03 brute force; auth events tied to session to respect exact-one context
     for i in range(COUNTS["TXN-03"]):
         a = take()
-        t = BASE + timedelta(days=3, hours=23, minutes=i)
+        t = random_transaction_anchor(r)
         d = add_device(s, f"T03_{i}", risk=92)
         sid = add_session(s, f"T03_{i}", a, d, t, newdev=True, newloc=True, risk=95)
         failed_attempts = r.randint(3, 7)
@@ -608,7 +635,7 @@ def inject_transaction(s, man, entities):
     # TXN-04 velocity burst
     for i in range(COUNTS["TXN-04"]):
         a = take()
-        t = BASE + timedelta(days=4, hours=i)
+        t = random_transaction_anchor(r)
         d = add_device(s, f"T04_{i}", risk=70)
         sid = add_session(s, f"T04_{i}", a, d, t, newdev=False, newloc=False, risk=50)
         b = add_bene(s, f"T04_{i}", a, t - timedelta(days=30))
@@ -661,7 +688,7 @@ def inject_transaction(s, man, entities):
     # TXN-05 new beneficiary rapid transfer
     for i in range(COUNTS["TXN-05"]):
         a = take()
-        t = BASE + timedelta(days=5, hours=i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         d = add_device(s, f"T05_{i}", risk=10)
         sid = add_session(s, f"T05_{i}", a, d, t, newdev=False, newloc=False, risk=15)
         beneficiary_delay = r.randint(1, 20)
@@ -707,7 +734,7 @@ def inject_transaction(s, man, entities):
     # TXN-06 full ATO
     for i in range(COUNTS["TXN-06"]):
         a = take()
-        t = BASE + timedelta(days=6, hours=i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         d = add_device(s, f"T06_{i}", risk=98)
         sid = add_session(
             s, f"T06_{i}", a, d, t, newdev=True, newloc=True, vpn=True, risk=99
@@ -770,16 +797,25 @@ def inject_transaction(s, man, entities):
         )
     # TXN-07 mule ring one ring, 3 mules + 5 victims
     for ring in range(COUNTS["TXN-07"]):
-        mules = [take() for _ in range(3)]
+        mule_sources = [take() for _ in range(3)]
         victims = [take() for _ in range(5)]
-        t = BASE + timedelta(days=7)
+        t = random_transaction_anchor(r, reserve_hours=2)
         cluster = f"RING_{ring + 1:02d}"
+        mules = [
+            add_scenario_account(
+                s,
+                f"T07_{ring}_{index}",
+                source,
+                (t - timedelta(days=20)).date(),
+            )
+            for index, source in enumerate(mule_sources)
+        ]
+        used.update(a["account_id"] for a in mules)
         for a in mules:
             cust = next(
                 c for c in s.rows("customers") if c["customer_id"] == a["customer_id"]
             )
             cust["is_mule_candidate_seed"] = "true"
-            a["open_date"] = ds((BASE - timedelta(days=20)).date())
         primary = ""
         ring_tids = []
         # victim credits into mule A modeled as credit transactions on mule A from different counterparties
@@ -877,7 +913,7 @@ def inject_transaction(s, man, entities):
     # TXN-08 bot farm
     for farm in range(COUNTS["TXN-08"]):
         targets = [take() for _ in range(10)]
-        t = BASE + timedelta(days=8)
+        t = random_transaction_anchor(r, reserve_hours=2)
         successful = ""
         successful_tids = []
         for k, a in enumerate(targets):
@@ -949,7 +985,7 @@ def inject_transaction(s, man, entities):
     for i in range(COUNTS["TXN-09"]):
         victim = take()
         receiver = take()
-        t = BASE + timedelta(days=9, hours=19 + i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         d = add_device(s, f"T09_INT_{i}", risk=55)
         # change device type
         for x in s.rows("devices"):
@@ -1036,7 +1072,7 @@ def inject_transaction(s, man, entities):
     # TXN-10 SIM swap
     for i in range(COUNTS["TXN-10"]):
         a = take()
-        t = BASE + timedelta(days=10, hours=i)
+        t = random_transaction_anchor(r, reserve_hours=2)
         oldd = add_device(s, f"T10_OLD_{i}", risk=5)
         add_session(
             s,
@@ -1371,7 +1407,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-01: distant logins are many hours apart, so travel is plausible.
     for i in range(count("HN-TXN-01")):
         a = take()
-        t = BASE + timedelta(days=31, hours=i % 20)
+        t = random_transaction_anchor(r, reserve_hours=13)
         d1, d2 = (
             add_device(s, f"HN01A_{i}", risk=18),
             add_device(s, f"HN01B_{i}", risk=22),
@@ -1425,7 +1461,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     for i in range(count("HN-TXN-02")):
         a = take()
         a["dormant_since"] = ds((BASE - timedelta(days=r.randint(100, 220))).date())
-        t = BASE + timedelta(days=32, hours=i % 18)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN02_{i}", risk=12)
         next(x for x in s.rows("devices") if x["device_id"] == dev).update(
             device_type="internal_terminal",
@@ -1463,7 +1499,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-03: failed password attempts followed by biometric recovery.
     for i in range(count("HN-TXN-03")):
         a = take()
-        t = BASE + timedelta(days=33, hours=i % 18)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN03_{i}", risk=28)
         sid = add_session(
             s, f"HN03_{i}", a, dev, t, newdev=False, newloc=False, risk=32
@@ -1515,7 +1551,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-04: legitimate batch payments create velocity without fraud.
     for i in range(count("HN-TXN-04")):
         a = take()
-        t = BASE + timedelta(days=34, hours=i % 16)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN04_{i}", risk=15)
         sid = add_session(
             s, f"HN04_{i}", a, dev, t, newdev=False, newloc=False, risk=20
@@ -1550,7 +1586,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-05: new beneficiary, but cooling period and low value are respected.
     for i in range(count("HN-TXN-05")):
         a = take()
-        added = BASE + timedelta(days=35, hours=i % 18)
+        added = random_transaction_anchor(r, reserve_hours=75)
         t = added + timedelta(hours=r.randint(24, 72))
         dev = add_device(s, f"HN05_{i}", risk=20)
         bid = add_bene(s, f"HN05_{i}", a, added, risk="Low")
@@ -1581,7 +1617,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-06: sensitive change is followed by cooling and a small transfer.
     for i in range(count("HN-TXN-06")):
         a = take()
-        changed = BASE + timedelta(days=36, hours=i % 18)
+        changed = random_transaction_anchor(r, reserve_hours=100)
         dev = add_device(s, f"HN06_{i}", risk=25)
         change = add_change(
             s, f"HN06_{i}", a, dev, changed, r.choice(["phone", "email", "password"])
@@ -1626,7 +1662,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-07: legitimate merchant fan-in followed by an ATM withdrawal.
     for i in range(count("HN-TXN-07")):
         a = take()
-        t = BASE + timedelta(days=37, hours=i % 18)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN07_{i}", risk=18)
         next(x for x in s.rows("devices") if x["device_id"] == dev).update(
             device_type="atm", os="ATM OS", trust_status="trusted"
@@ -1678,7 +1714,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-08: emulator/proxy QA session with a low-value approved payment.
     for i in range(count("HN-TXN-08")):
         a = take()
-        t = BASE + timedelta(days=38, hours=i % 18)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN08_{i}", emulator=True, risk=72)
         sid = add_session(
             s, f"HN08_{i}", a, dev, t, newdev=True, newloc=False, proxy=True, risk=68
@@ -1709,7 +1745,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-09: legitimate internal-terminal transaction at a branch.
     for i in range(count("HN-TXN-09")):
         a = take()
-        t = BASE + timedelta(days=39, hours=i % 18)
+        t = random_transaction_anchor(r, reserve_hours=2)
         dev = add_device(s, f"HN09_{i}", risk=10)
         next(x for x in s.rows("devices") if x["device_id"] == dev).update(
             device_type="internal_terminal",
@@ -1747,7 +1783,7 @@ def inject_transaction_hard_negatives(s, man, entities):
     # HN-TXN-10: device/phone maintenance followed by a delayed normal payment.
     for i in range(count("HN-TXN-10")):
         a = take()
-        changed = BASE + timedelta(days=40, hours=i % 18)
+        changed = random_transaction_anchor(r, reserve_hours=75)
         dev = add_device(s, f"HN10_{i}", risk=28)
         add_change(s, f"HN10_{i}", a, dev, changed, "phone")
         t = changed + timedelta(hours=r.randint(24, 72))

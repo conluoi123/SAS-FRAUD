@@ -1,5 +1,6 @@
 import csv
 import sys
+from datetime import date, datetime
 from pathlib import Path
 from generators.engine import CFG, M, ORDER, OUT, RUN
 
@@ -145,6 +146,24 @@ if invalid_account_limits:
         "accounts: "
         f"{len(invalid_account_limits)} rows with single_txn_limit "
         "> daily_transfer_limit"
+    )
+
+account_open_dates = {
+    x["account_id"]: date.fromisoformat(x["open_date"])
+    for x in data.get("accounts", [])
+    if x.get("open_date")
+}
+transactions_before_account_open = [
+    x["transaction_id"]
+    for x in data.get("transactions", [])
+    if x.get("account_id") in account_open_dates
+    and datetime.fromisoformat(x["transaction_at"]).date()
+    < account_open_dates[x["account_id"]]
+]
+if transactions_before_account_open:
+    err.append(
+        "transactions: "
+        f"{len(transactions_before_account_open)} rows occur before account open_date"
     )
 # timeline causality: session must precede/cover the transaction, beneficiary must predate it
 ses_by_id = {x["session_id"]: x for x in data.get("login_sessions", [])}
