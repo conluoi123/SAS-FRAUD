@@ -25,9 +25,11 @@ def _flatten(entry: dict) -> dict:
         for item in entities
         if isinstance(item, dict)
     )
-    rules = entry.get("fired_rule_identifiers") or []
+    rules = entry.get("fired_rules") or entry.get("fired_rule_identifiers") or []
     return {
         "Recorded at (UTC)": entry.get("recorded_at", ""),
+        "Domain": entry.get("fraud_domain", entry.get("domain", "Payment Fraud")),
+        "Schema": entry.get("schema_name", "Payment Fraud"),
         "Scenario": entry.get("scenario_label", ""),
         "Rule name": entry.get("rule_name", ""),
         "Rule reason": entry.get("rule_reason", ""),
@@ -35,6 +37,12 @@ def _flatten(entry: dict) -> dict:
         "Entity": entity_text,
         "Fired rule IDs": ", ".join(str(r) for r in rules if r),
         "Transaction": entry.get("transaction_identifier", ""),
+        "Application": entry.get("application_identifier", ""),
+        "Customer": entry.get("customer_identifier", ""),
+        "Expected alert": entry.get("expected_alert", ""),
+        "Actual alert": entry.get("actual_alert", ""),
+        "Expected rules": ", ".join(entry.get("expected_rules") or []),
+        "HTTP status": entry.get("http_status", ""),
         "Message ID": entry.get("message_identifier", ""),
     }
 
@@ -61,7 +69,10 @@ def main() -> None:
     if by_rule:
         st.markdown("**Theo rule:**")
         st.dataframe(
-            [{"Rule": rule, "Số lần fire": count} for rule, count in sorted(by_rule.items())],
+            [
+                {"Rule": rule, "Số lần fire": count}
+                for rule, count in sorted(by_rule.items())
+            ],
             use_container_width=True,
             hide_index=True,
         )
@@ -69,7 +80,9 @@ def main() -> None:
     st.divider()
 
     if not alerts:
-        st.info("Chưa có alert nào được ghi. Gửi 1 message trigger ở trang console để xem.")
+        st.info(
+            "Chưa có alert nào được ghi. Gửi 1 message trigger ở trang console để xem."
+        )
     else:
         st.dataframe(
             [_flatten(entry) for entry in alerts],

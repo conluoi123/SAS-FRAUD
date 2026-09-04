@@ -194,9 +194,29 @@ def summarize_sas_response(parsed: Any) -> SasDecisionSummary:
     alerted = sas.get("alerted", []) if isinstance(sas, dict) else []
     timings = sas.get("timings", {}) if isinstance(sas, dict) else {}
 
-    rules = rules if isinstance(rules, list) else []
-    alerted = alerted if isinstance(alerted, list) else []
-    fired_rules = [rule for rule in rules if isinstance(rule, dict) and rule.get("firedFlg")]
+    rules = (
+        rules
+        if isinstance(rules, list)
+        else ([rules] if isinstance(rules, dict) else [])
+    )
+    alerted_signal = bool(alerted)
+    alerted = (
+        alerted
+        if isinstance(alerted, list)
+        else ([alerted] if isinstance(alerted, dict) else [])
+    )
+
+    def flag(value: Any) -> bool:
+        if isinstance(value, str):
+            return value.strip().lower() in {"1", "true", "yes", "y"}
+        return bool(value)
+
+    fired_rules = [
+        rule
+        for rule in rules
+        if isinstance(rule, dict)
+        and (flag(rule.get("firedFlg")) or flag(rule.get("alertFlg")))
+    ]
 
     return SasDecisionSummary(
         message_identifier=system.get("messageIdentifier"),
@@ -204,9 +224,40 @@ def summarize_sas_response(parsed: Any) -> SasDecisionSummary:
         outcome=decision.get("outcome"),
         outcome_name=decision.get("outcomeName"),
         reference_identifier=decision.get("referenceIdentifier"),
-        alert_created=bool(alerted) or any(rule.get("alertFlg") for rule in fired_rules),
+        alert_created=alerted_signal
+        or any(flag(rule.get("alertFlg")) for rule in fired_rules),
         alerted_entities=[item for item in alerted if isinstance(item, dict)],
         fired_rules=fired_rules,
         evaluated_rule_count=len(rules),
         timings=timings if isinstance(timings, dict) else {},
     )
+
+
+def extract_return_fields(parsed: Any) -> dict[str, Any]:
+    """Extract optional return metadata from the response shapes seen in SAS."""
+
+    result = {"returnType": None, "returnDesc": None, "returnDetails": None}
+    if not isinstance(parsed, dict):
+        return result
+
+    message = parsed.get("message")
+    message = message if isinstance(message, dict) else {}
+    sas = message.get("sas")
+    sas = sas if isinstance(sas, dict) else {}
+    system = sas.get("system")
+    system = system if isinstance(system, dict) else {}
+    response = parsed.get("response")
+    response = response if isinstance(response, dict) else {}
+    message_response = message.get("response")
+    message_response = message_response if isinstance(message_response, dict) else {}
+    candidates = (system, parsed, message, sas, response, message_response)
+    for field_name in result:
+        result[field_name] = next(
+            (
+                candidate[field_name]
+                for candidate in candidates
+                if field_name in candidate
+            ),
+            None,
+        )
+    return result

@@ -2,6 +2,7 @@ import json
 
 from app.streamlit_console.payloads import build_payment_fraud_payload
 from app.streamlit_console.sas_response import (
+    extract_return_fields,
     parse_sas_response,
     summarize_sas_response,
 )
@@ -19,8 +20,8 @@ def test_parse_sas_text_response_and_summarize_alert() -> None:
         'firedFlg:true,elapsed:10,ruleIdentifier:"RULE-1"},{alertFlg:false,'
         'firedFlg:false,elapsed:2,ruleIdentifier:"RULE-2"}],system:{'
         'messageIdentifier:"MSG-1",transactionIdentifier:"TXN-1"},timings:{'
-        'profileFetch:150,rules:54,total:1329}}},profiles:{SAS_CreditCard:{'
-        'currentMessageDtTm:2026-06-05T02:20:00.000000000Z,lastMessageDtTm:null}}}'
+        "profileFetch:150,rules:54,total:1329}}},profiles:{SAS_CreditCard:{"
+        "currentMessageDtTm:2026-06-05T02:20:00.000000000Z,lastMessageDtTm:null}}}"
     )
     parsed = parse_sas_response(json.dumps(inner))
     summary = summarize_sas_response(parsed)
@@ -38,6 +39,42 @@ def test_parse_sas_text_response_and_summarize_alert() -> None:
 
 def test_parse_standard_json_response() -> None:
     assert parse_sas_response('{"status":"ok"}') == {"status": "ok"}
+
+
+def test_summary_accepts_alerted_and_rule_alert_flags() -> None:
+    parsed = {
+        "message": {
+            "sas": {
+                "alerted": {
+                    "outcomeEntity": "APP-1",
+                    "outcomeEntityType": "sfd_application",
+                },
+                "rulefired": [{"alertFlg": True, "ruleIdentifier": "AF_DR_TEST"}],
+            }
+        }
+    }
+
+    summary = summarize_sas_response(parsed)
+
+    assert summary.alert_created is True
+    assert summary.alerted_entities[0]["outcomeEntity"] == "APP-1"
+    assert summary.fired_rules[0]["ruleIdentifier"] == "AF_DR_TEST"
+
+
+def test_extract_return_fields_from_sas_system() -> None:
+    parsed = {
+        "message": {
+            "sas": {
+                "system": {"returnType": 0, "returnDesc": "OK", "returnDetails": "Done"}
+            }
+        }
+    }
+
+    assert extract_return_fields(parsed) == {
+        "returnType": 0,
+        "returnDesc": "OK",
+        "returnDetails": "Done",
+    }
 
 
 def test_build_payment_fraud_payload_keeps_profile_and_transaction_keys() -> None:
@@ -146,7 +183,11 @@ BASE_VALUES = {
 
 
 def test_build_payment_fraud_payload_includes_optional_fields_when_present() -> None:
-    values = {**BASE_VALUES, "subscription_identifier": "SUB-001", "ip_country_code": "VN"}
+    values = {
+        **BASE_VALUES,
+        "subscription_identifier": "SUB-001",
+        "ip_country_code": "VN",
+    }
 
     payload = build_payment_fraud_payload(values)
     message = payload["message"]
@@ -155,7 +196,9 @@ def test_build_payment_fraud_payload_includes_optional_fields_when_present() -> 
     assert message["digital"]["ipCountryCode"] == "VN"
 
 
-def test_build_payment_fraud_payload_includes_chargeback_when_reference_present() -> None:
+def test_build_payment_fraud_payload_includes_chargeback_when_reference_present() -> (
+    None
+):
     values = {
         **BASE_VALUES,
         "activity_type": "CB",
@@ -188,7 +231,9 @@ def test_chargeback_abuse_checks_fail_on_wrong_activity_type() -> None:
         "chargeback_reference_number": "REF-0001",
     }
     checks = scenario.checks(values)
-    routing_check = next(check for check in checks if check["Condition"].startswith("Chargeback routing"))
+    routing_check = next(
+        check for check in checks if check["Condition"].startswith("Chargeback routing")
+    )
     assert routing_check["Pass"] is False
 
 

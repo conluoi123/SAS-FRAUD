@@ -4,23 +4,31 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import uuid
 from datetime import date, datetime, time, timezone
+from pathlib import Path
 from typing import Any
 
 import requests
 import streamlit as st
 from dotenv import load_dotenv
 
-try:
+if __package__:
     from .alert_log import record_alert
+    from .application_ui import render_application_console, select_application_scenario
     from .payloads import build_payment_fraud_payload
     from .sas_client import SasRuntimeResponse, send_message
     from .sas_response import summarize_sas_response
     from .scenarios import STATUS_LABEL, families, scenarios_in_family
-except ImportError:
-    # Streamlit executes this file as a script when launched from this directory.
+else:
+    # Streamlit/AppTest execute this entry point as a standalone script.
+    script_directory = str(Path(__file__).resolve().parent)
+    if script_directory not in sys.path:
+        sys.path.insert(0, script_directory)
+
     from alert_log import record_alert
+    from application_ui import render_application_console, select_application_scenario
     from payloads import build_payment_fraud_payload
     from sas_client import SasRuntimeResponse, send_message
     from sas_response import summarize_sas_response
@@ -70,16 +78,24 @@ def _use_new_test_entity() -> None:
 
 
 def _use_new_transaction_id() -> None:
-    customer_identifier = st.session_state.get("form_customer_identifier", "CUST-41127322")
-    st.session_state["form_transaction_identifier"] = _new_transaction_id(customer_identifier)
+    customer_identifier = st.session_state.get(
+        "form_customer_identifier", "CUST-41127322"
+    )
+    st.session_state["form_transaction_identifier"] = _new_transaction_id(
+        customer_identifier
+    )
 
 
 def _sync_entity_ids_from_customer() -> None:
-    customer_identifier = st.session_state.get("form_customer_identifier", "CUST-41127322")
+    customer_identifier = st.session_state.get(
+        "form_customer_identifier", "CUST-41127322"
+    )
     suffix = customer_identifier.removeprefix("CUST-")
     st.session_state["form_debit_account_number"] = f"DA-{customer_identifier}"
     st.session_state["form_debit_card_number"] = f"DC-{suffix}"
-    st.session_state["form_transaction_identifier"] = _new_transaction_id(customer_identifier)
+    st.session_state["form_transaction_identifier"] = _new_transaction_id(
+        customer_identifier
+    )
 
 
 def _response_package_version(parsed_body: dict[str, Any]) -> Any:
@@ -133,15 +149,21 @@ def _render_response(
                 filter(
                     None,
                     [
-                        f"Message: {summary.message_identifier}"
-                        if summary.message_identifier
-                        else None,
-                        f"Transaction: {summary.transaction_identifier}"
-                        if summary.transaction_identifier
-                        else None,
-                        f"Decision reference: {summary.reference_identifier}"
-                        if summary.reference_identifier
-                        else None,
+                        (
+                            f"Message: {summary.message_identifier}"
+                            if summary.message_identifier
+                            else None
+                        ),
+                        (
+                            f"Transaction: {summary.transaction_identifier}"
+                            if summary.transaction_identifier
+                            else None
+                        ),
+                        (
+                            f"Decision reference: {summary.reference_identifier}"
+                            if summary.reference_identifier
+                            else None
+                        ),
                     ],
                 )
             )
@@ -153,7 +175,9 @@ def _render_response(
 
         if summary.alerted_entities:
             st.markdown("#### Alerted entities")
-            st.dataframe(summary.alerted_entities, use_container_width=True, hide_index=True)
+            st.dataframe(
+                summary.alerted_entities, use_container_width=True, hide_index=True
+            )
 
         parsed_tab, profiles_tab, timings_tab = st.tabs(
             ["Parsed response", "Profiles", "Timings"]
@@ -184,7 +208,9 @@ def _show_outcome_dialog(entry: dict[str, Any]) -> None:
     else:
         st.markdown("## :material/warning: Giao dịch bị gắn cờ cảnh báo")
 
-    st.markdown(f"**Rule:** `{entry.get('rule_name', '')}` — `{entry.get('rule_reason', '')}`")
+    st.markdown(
+        f"**Rule:** `{entry.get('rule_name', '')}` — `{entry.get('rule_reason', '')}`"
+    )
     if entry.get("description"):
         st.markdown(f"**Lý do:** {entry['description']}")
     if entry.get("entity_text"):
@@ -234,7 +260,14 @@ def _form_values(scenario) -> dict[str, Any]:
         "ecommerce_authentication": "FAILED",
     }
 
-    tab_names = ["Routing", "Entities", "Amounts", "Device", "Authentication", "Merchant"]
+    tab_names = [
+        "Routing",
+        "Entities",
+        "Amounts",
+        "Device",
+        "Authentication",
+        "Merchant",
+    ]
     extra_tab_titles = {
         "device_known": "Known devices",
         "subscription": "Subscription",
@@ -296,7 +329,9 @@ def _form_values(scenario) -> dict[str, Any]:
         customer_identifier = first.text_input(
             "Customer identifier", key="form_customer_identifier"
         )
-        customer_surname = second.text_input("Customer surname", key="form_customer_surname")
+        customer_surname = second.text_input(
+            "Customer surname", key="form_customer_surname"
+        )
         customer_country = first.text_input(
             "Customer country", max_chars=3, key="form_customer_country"
         )
@@ -369,9 +404,15 @@ def _form_values(scenario) -> dict[str, Any]:
                 "profile qua các lần gửi trước."
             )
             known_first, known_second, known_third = st.columns(3)
-            known_device_1 = known_first.text_input("knownDeviceFingerprint[1]", "DEV-KNOWN-001")
-            known_device_2 = known_second.text_input("knownDeviceFingerprint[2]", "DEV-KNOWN-002")
-            known_device_3 = known_third.text_input("knownDeviceFingerprint[3]", "DEV-KNOWN-003")
+            known_device_1 = known_first.text_input(
+                "knownDeviceFingerprint[1]", "DEV-KNOWN-001"
+            )
+            known_device_2 = known_second.text_input(
+                "knownDeviceFingerprint[2]", "DEV-KNOWN-002"
+            )
+            known_device_3 = known_third.text_input(
+                "knownDeviceFingerprint[3]", "DEV-KNOWN-003"
+            )
 
     with tab_by_name["Authentication"]:
         first, second = st.columns(2)
@@ -450,7 +491,9 @@ def _form_values(scenario) -> dict[str, Any]:
                 "Preview field — chưa xác nhận SAS nhận message login/session riêng, xem "
                 "docs/rules/rule_06_login_impossible_travel_DRAFT.md."
             )
-            ip_country_code = st.text_input("digital.ipCountryCode (session)", "VN", max_chars=3)
+            ip_country_code = st.text_input(
+                "digital.ipCountryCode (session)", "VN", max_chars=3
+            )
 
     chargeback_reference_number = ""
     chargeback_identifier = ""
@@ -473,7 +516,10 @@ def _form_values(scenario) -> dict[str, Any]:
                 "Payment ID (giao dịch gốc)", "PMT-0001", max_chars=100
             )
             chargeback_amount = first.number_input(
-                "Chargeback amount (giao dịch gốc)", min_value=0.0, value=750.0, step=10.0
+                "Chargeback amount (giao dịch gốc)",
+                min_value=0.0,
+                value=750.0,
+                step=10.0,
             )
             chargeback_payment_method = second.text_input(
                 "Payment method (giao dịch gốc)", "1", max_chars=1
@@ -481,7 +527,9 @@ def _form_values(scenario) -> dict[str, Any]:
             chargeback_purchase_dttm = first.text_input(
                 "purchaseDtTm (giao dịch gốc, ISO 8601)", "2026-05-01T10:00:00Z"
             )
-            chargeback_misc_data = second.text_input("Miscellaneous data", "", max_chars=100)
+            chargeback_misc_data = second.text_input(
+                "Miscellaneous data", "", max_chars=100
+            )
 
     return {
         "origination_type": origination_type,
@@ -541,22 +589,34 @@ def main() -> None:
         "quyết định trả về."
     )
 
-    pending_dialog = st.session_state.get("pending_outcome_dialog")
-    if pending_dialog:
-        _show_outcome_dialog(pending_dialog)
-
-    scenario = _select_scenario()
+    domain = st.sidebar.radio(
+        "Fraud domain",
+        ["Payment Fraud", "Application Fraud"],
+        key="fraud_domain_selector",
+    )
+    if domain == "Payment Fraud":
+        pending_dialog = st.session_state.get("pending_outcome_dialog")
+        if pending_dialog:
+            _show_outcome_dialog(pending_dialog)
+        scenario = _select_scenario()
+    else:
+        scenario = select_application_scenario()
 
     with st.sidebar:
         st.divider()
         st.header("Runtime")
         endpoint = st.text_input("Decision endpoint", value=DEFAULT_ENDPOINT)
         timeout_seconds = st.number_input(
-            "Timeout (seconds)", min_value=1, max_value=300, value=int(os.getenv("SAS_REQUEST_TIMEOUT_SECONDS", "30"))
+            "Timeout (seconds)",
+            min_value=1,
+            max_value=300,
+            value=int(os.getenv("SAS_REQUEST_TIMEOUT_SECONDS", "30")),
         )
         verify_default = os.getenv("SAS_TLS_VERIFY", "false").lower() == "true"
         verify_tls = st.toggle("Verify TLS certificate", value=verify_default)
-        ca_bundle = st.text_input("CA bundle path", value=os.getenv("SAS_CA_BUNDLE", ""))
+        ca_bundle = st.text_input(
+            "CA bundle path", value=os.getenv("SAS_CA_BUNDLE", "")
+        )
         expected_package_version = st.text_input(
             "Expected package version",
             value=os.getenv("SAS_EXPECTED_PACKAGE_VERSION", ""),
@@ -567,9 +627,32 @@ def main() -> None:
             st.warning("TLS verification is disabled for this test environment.")
         st.divider()
         st.markdown("**Target rule**")
-        st.code(f"{scenario.rule_name}\n{scenario.rule_reason}", language="text")
+        if domain == "Payment Fraud":
+            st.code(f"{scenario.rule_name}\n{scenario.rule_reason}", language="text")
+        else:
+            st.code(
+                "\n".join(scenario.expected_rules) or "No alert expected",
+                language="text",
+            )
         st.markdown("**Routing**")
-        st.code("SAS Debit Card Fraud\nPayment Fraud\nGLOBAL", language="text")
+        if domain == "Payment Fraud":
+            st.code("SAS Debit Card Fraud\nPayment Fraud\nGLOBAL", language="text")
+        else:
+            st.code(
+                "Application Fraud\nGLOBAL\nAlert: app_fraud_app\nEntity: sfd_application",
+                language="text",
+            )
+
+    if domain == "Application Fraud":
+        render_application_console(
+            scenario,
+            endpoint=endpoint,
+            timeout_seconds=float(timeout_seconds),
+            verify_tls=verify_tls,
+            ca_bundle=ca_bundle or None,
+            render_response=_render_response,
+        )
+        return
 
     values = _form_values(scenario)
     payload = build_payment_fraud_payload(values)
@@ -587,7 +670,12 @@ def main() -> None:
     st.dataframe(checks, use_container_width=True, hide_index=True)
 
     st.subheader("Payload")
-    mode = st.segmented_control("Edit mode", ["Form payload", "Raw JSON"], default="Form payload")
+    mode = st.radio(
+        "Edit mode",
+        ["Form payload", "Raw JSON"],
+        horizontal=True,
+        key="payment_payload_edit_mode",
+    )
     raw_payload = st.text_area(
         "JSON sent to SAS",
         value=json.dumps(payload, indent=2),
@@ -601,7 +689,10 @@ def main() -> None:
     if mode == "Raw JSON":
         try:
             payload_to_send = json.loads(raw_payload)
-            if not isinstance(payload_to_send, dict) or "message" not in payload_to_send:
+            if (
+                not isinstance(payload_to_send, dict)
+                or "message" not in payload_to_send
+            ):
                 validation_error = "The root object must contain 'message'."
         except json.JSONDecodeError as error:
             validation_error = f"Invalid JSON: {error}"
@@ -649,7 +740,8 @@ def main() -> None:
                             "outcome_name": summary.outcome_name,
                             "alerted_entities": summary.alerted_entities,
                             "fired_rule_identifiers": [
-                                rule.get("ruleIdentifier") for rule in summary.fired_rules
+                                rule.get("ruleIdentifier")
+                                for rule in summary.fired_rules
                             ],
                         }
                     )
