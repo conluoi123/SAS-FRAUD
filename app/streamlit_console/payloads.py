@@ -2,9 +2,27 @@
 
 from __future__ import annotations
 
+import math
 import uuid
 from datetime import datetime, timezone
 from typing import Any
+
+try:
+    from .application_config import (
+        APPLICATION_ACTIVITY_TYPE,
+        APPLICATION_AUTHENTICATION_TYPE,
+        APPLICATION_CUSTOMER_TYPE,
+        APPLICATION_ORIGINATION_TYPE,
+        application_channel_type,
+    )
+except ImportError:
+    from application_config import (
+        APPLICATION_ACTIVITY_TYPE,
+        APPLICATION_AUTHENTICATION_TYPE,
+        APPLICATION_CUSTOMER_TYPE,
+        APPLICATION_ORIGINATION_TYPE,
+        application_channel_type,
+    )
 
 
 APPLICATION_FRAUD_SCHEMA = "Application Fraud"
@@ -18,16 +36,9 @@ APPLICATION_RISK_STRING_FIELDS = (
 )
 APPLICATION_RISK_INTEGER_FIELDS = (
     "disbAcctOwnerMatchInd",
-    "disbAcctCustCnt30d",
-    "refPhoneCustCnt30d",
     "employerUnverifiedInd",
-    "incomeMismatchInd",
-    "addressCustCnt30d",
-    "clusterCustCnt30d",
-    "salesAgentAppCnt30d",
-    "salesAgentLocRiskInd",
-    "identityMismatchInd",
 )
+APPLICATION_RISK_FIELDS = APPLICATION_RISK_STRING_FIELDS + APPLICATION_RISK_INTEGER_FIELDS
 
 
 def _utc_iso8601(value: Any) -> str:
@@ -75,6 +86,8 @@ def build_application_fraud_payload(values: dict[str, Any]) -> dict[str, Any]:
     """Build the dedicated Application Fraud message contract."""
 
     message_datetime = _utc_iso8601(values.get("message_datetime"))
+    application_channel = str(values.get("application_channel") or "").strip().upper()
+    solution_channel_type = application_channel_type(application_channel)
     application_identifier = str(
         values.get("application_identifier")
         or _new_application_identifier(message_datetime)
@@ -82,9 +95,34 @@ def build_application_fraud_payload(values: dict[str, Any]) -> dict[str, Any]:
     transaction_identifier = str(
         values.get("transaction_identifier") or _new_transaction_identifier()
     ).strip()
-    app_risk = dict(values.get("app_risk") or {})
+    supplied_risk = dict(values.get("app_risk") or {})
+    app_risk = {
+        field_name: supplied_risk.get(field_name)
+        for field_name in APPLICATION_RISK_FIELDS
+        if supplied_risk.get(field_name) is not None
+    }
+
+    applicant = _object(
+        identifier=values.get("applicant_identifier"),
+        name=values.get("applicant_name"),
+        monthlyRegularIncome=values.get("monthly_regular_income"),
+        outstandingDebt=values.get("outstanding_debt"),
+    )
+    employment = _object(
+        employerName=values.get("employer_name"),
+        status=values.get("employment_status"),
+    )
+    if employment:
+        applicant["employment"] = [employment]
 
     message = {
+        "solution": {
+            "originationType": APPLICATION_ORIGINATION_TYPE,
+            "activityType": APPLICATION_ACTIVITY_TYPE,
+            "authenticationType": APPLICATION_AUTHENTICATION_TYPE,
+            "channelType": solution_channel_type,
+            "customerType": APPLICATION_CUSTOMER_TYPE,
+        },
         "request": {
             "command": "Execute",
             "decisioningInd": 1,
@@ -104,17 +142,12 @@ def build_application_fraud_payload(values: dict[str, Any]) -> dict[str, Any]:
             type=values.get("application_type"),
             amount=values.get("application_amount"),
             currencyCode=values.get("currency_code"),
-            channel=values.get("application_channel"),
+            channel=application_channel,
             purpose=values.get("application_purpose"),
             status=values.get("application_status"),
             stage=values.get("application_stage"),
         ),
-        "applicant": _object(
-            identifier=values.get("applicant_identifier"),
-            name=values.get("applicant_name"),
-            monthlyRegularIncome=values.get("monthly_regular_income"),
-            outstandingDebt=values.get("outstanding_debt"),
-        ),
+        "applicant": applicant,
         "customer": _object(
             identifier=values.get("customer_identifier"),
             surname=values.get("customer_name"),
@@ -124,20 +157,12 @@ def build_application_fraud_payload(values: dict[str, Any]) -> dict[str, Any]:
         "identification": _object(number=values.get("identification_number")),
         "emailaddress": _object(fullEmail=values.get("email")),
         "phone": _object(full=values.get("phone")),
-        "employment": _object(
-            employerName=values.get("employer_name"),
-            status=values.get("employment_status"),
-        ),
         "location": _object(monthsAtLocation=values.get("months_at_location")),
         "device": _object(
             identifier=values.get("device_identifier"),
             ipAddress=values.get("device_ip_address"),
         ),
-        "cic": {
-            "inquiryCount7Days": values.get("cic_inquiry_count_7_days"),
-            "inquiryCount30Days": values.get("cic_inquiry_count_30_days"),
-        },
-        # Do not clean this object: SAS Profile must receive explicit zero values.
+        # Only raw inputs are sent. SAS profiles/Variable Rules own 7/30-day windows.
         "appRisk": app_risk,
     }
     return {"message": message}
@@ -153,7 +178,24 @@ def _value_at(root: dict[str, Any], *path: str) -> Any:
 
 
 def _is_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and (not isinstance(value, float) or math.isfinite(value))
+    )
+
+
+def _contains_null_literal(value: Any) -> bool:
+    if isinstance(value, dict):
+        return any(_contains_null_literal(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_contains_null_literal(item) for item in value)
+    return isinstance(value, str) and value.strip().lower() in {
+        "nan",
+        "none",
+        "null",
+        "<na>",
+    }
 
 
 def validate_application_fraud_payload(payload: dict[str, Any]) -> list[str]:
@@ -164,10 +206,23 @@ def validate_application_fraud_payload(payload: dict[str, Any]) -> list[str]:
 
     errors: list[str] = []
     message = payload["message"]
+    if _contains_null_literal(message):
+        errors.append('Payload must not contain literal "nan", "None", or null strings.')
     request = message.get("request", {})
     system = _value_at(message, "sas", "system") or {}
-    if message.get("solution") is not None or "solution" in message:
-        errors.append("Application Fraud payload must not contain message.solution.")
+    solution = message.get("solution")
+    if not isinstance(solution, dict):
+        errors.append("solution must be an object.")
+        solution = {}
+    expected_solution = {
+        "originationType": APPLICATION_ORIGINATION_TYPE,
+        "activityType": APPLICATION_ACTIVITY_TYPE,
+        "authenticationType": APPLICATION_AUTHENTICATION_TYPE,
+        "customerType": APPLICATION_CUSTOMER_TYPE,
+    }
+    for field_name, expected in expected_solution.items():
+        if solution.get(field_name) != expected:
+            errors.append(f'solution.{field_name} must be "{expected}".')
     if request.get("schemaName") != APPLICATION_FRAUD_SCHEMA:
         errors.append('request.schemaName must be "Application Fraud".')
     if request.get("messageClassificationName") != APPLICATION_FRAUD_CLASSIFICATION:
@@ -199,14 +254,23 @@ def validate_application_fraud_payload(payload: dict[str, Any]) -> list[str]:
     if application_identifier and application_identifier == transaction_identifier:
         errors.append("Application ID and transaction ID must be different.")
 
+    application_channel = required_text["application.channel"]
+    try:
+        expected_channel_type = application_channel_type(application_channel)
+    except ValueError as error:
+        errors.append(str(error))
+    else:
+        if solution.get("channelType") != expected_channel_type:
+            errors.append(
+                "application.channel and solution.channelType must use the configured mapping."
+            )
+
     for path, value in {
         "application.amount": _value_at(message, "application", "amount"),
         "applicant.monthlyRegularIncome": _value_at(
             message, "applicant", "monthlyRegularIncome"
         ),
         "applicant.outstandingDebt": _value_at(message, "applicant", "outstandingDebt"),
-        "cic.inquiryCount7Days": _value_at(message, "cic", "inquiryCount7Days"),
-        "cic.inquiryCount30Days": _value_at(message, "cic", "inquiryCount30Days"),
     }.items():
         if not _is_number(value):
             errors.append(f"{path} must be numeric.")
@@ -236,9 +300,6 @@ def validate_application_fraud_payload(payload: dict[str, Any]) -> list[str]:
         value = app_risk.get(field_name)
         if not isinstance(value, int) or isinstance(value, bool):
             errors.append(f"appRisk.{field_name} must be an integer.")
-    risk_rate = app_risk.get("salesAgentRiskRate30d")
-    if not _is_number(risk_rate):
-        errors.append("appRisk.salesAgentRiskRate30d must be numeric.")
     return errors
 
 

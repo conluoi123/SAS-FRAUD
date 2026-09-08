@@ -631,7 +631,7 @@ def main() -> None:
             st.code(f"{scenario.rule_name}\n{scenario.rule_reason}", language="text")
         else:
             st.code(
-                "\n".join(scenario.expected_rules) or "No alert expected",
+                "Kết luận lấy từ phản hồi thực của SAS Runtime",
                 language="text",
             )
         st.markdown("**Routing**")

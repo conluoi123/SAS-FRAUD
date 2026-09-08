@@ -1,9 +1,27 @@
 from __future__ import annotations
 
+import csv
+import io
 import json
 from datetime import datetime, timezone
 
+import requests
+
 from app.streamlit_console import alert_log
+from app.streamlit_console.application_batch import (
+    application_csv_template,
+    claim_batch_run,
+    execute_application_batch,
+    invalid_batch_results,
+    map_application_csv_row,
+    parse_application_csv,
+    payload_contains_null_strings,
+    results_to_csv,
+)
+from app.streamlit_console.application_config import (
+    AF_CIC_PROFILE_CAPACITY,
+    APPLICATION_CHANNELS,
+)
 from app.streamlit_console.application_scenarios import (
     APPLICATION_SCENARIOS,
     calculate_30d_counts,
@@ -15,6 +33,7 @@ from app.streamlit_console.payloads import (
     build_application_fraud_payload,
     validate_application_fraud_payload,
 )
+from app.streamlit_console.sas_client import SasRuntimeResponse
 
 
 BASE_RISK = {
@@ -73,17 +92,28 @@ def test_application_payload_matches_contract_and_keeps_zero_values() -> None:
 
     assert message["request"]["schemaName"] == "Application Fraud"
     assert message["request"]["messageClassificationName"] == "GLOBAL"
-    assert "solution" not in message
+    assert message["solution"] == {
+        "originationType": "AP",
+        "activityType": "SB",
+        "authenticationType": "NA",
+        "channelType": "WB",
+        "customerType": "IN",
+    }
     assert message["application"]["identifier"].startswith("APP-20260904-")
     assert message["customer"]["identifier"] == "CUST-41127322"
     assert message["applicant"]["identifier"] == "APL-BANKA-0001"
     assert message["identification"]["number"] == "079099009999"
     assert message["applicant"]["monthlyRegularIncome"] == 25_000_000.0
-    assert message["employment"]["employerName"] == "Demo Company"
+    assert message["applicant"]["employment"] == [
+        {"employerName": "Demo Company", "status": "EMPLOYED"}
+    ]
+    assert "employment" not in message
     assert message["device"]["ipAddress"] == "203.0.113.42"
-    assert message["cic"] == {"inquiryCount7Days": 0, "inquiryCount30Days": 0}
-    assert message["appRisk"]["incomeMismatchInd"] == 0
-    assert message["appRisk"]["salesAgentRiskRate30d"] == 0.0
+    assert "cic" not in message
+    assert "CIC" not in message
+    assert "disbAcctCustCnt30d" not in message["appRisk"]
+    assert "incomeMismatchInd" not in message["appRisk"]
+    assert message["appRisk"]["employerUnverifiedInd"] == 0
     assert validate_application_fraud_payload(payload) == []
 
 
@@ -156,16 +186,245 @@ def test_scenario_counts_include_the_current_application() -> None:
         assert tuple(counts.values()) == expected_counts[scenario.key]
 
 
-def test_validator_rejects_negative_amount_and_solution() -> None:
+def test_validator_rejects_negative_amount_and_channel_mismatch() -> None:
     payload = build_application_fraud_payload(
         {**BASE_VALUES, "application_amount": -1.0}
     )
-    payload["message"]["solution"] = {"channelType": "WEB"}
 
+    payload["message"]["solution"]["channelType"] = "MA"
     errors = validate_application_fraud_payload(payload)
 
     assert any("application.amount must not be negative" in error for error in errors)
-    assert any("must not contain message.solution" in error for error in errors)
+    assert any("configured mapping" in error for error in errors)
+
+
+def test_all_application_channels_map_in_sync() -> None:
+    expected = {
+        "MOBILE_APP": "MA",
+        "WEB": "WB",
+        "BRANCH": "BR",
+        "SALES_AGENT": "SA",
+        "PARTNER": "PT",
+        "CALL_CENTER": "CC",
+    }
+    assert {
+        name: config["solution_channel_type"]
+        for name, config in APPLICATION_CHANNELS.items()
+    } == expected
+    for channel, channel_type in expected.items():
+        message = build_application_fraud_payload(
+            {**BASE_VALUES, "application_channel": channel}
+        )["message"]
+        assert message["application"]["channel"] == channel
+        assert message["solution"]["channelType"] == channel_type
+
+
+def test_invalid_application_channel_is_rejected() -> None:
+    try:
+        build_application_fraud_payload(
+            {**BASE_VALUES, "application_channel": "UNSUPPORTED"}
+        )
+    except ValueError as error:
+        assert "application.channel must be one of" in str(error)
+    else:
+        raise AssertionError("invalid channel was accepted")
+
+
+def test_cic_profile_capacity_stays_at_ten_and_is_not_an_input() -> None:
+    assert AF_CIC_PROFILE_CAPACITY == 10
+    header = application_csv_template().decode("utf-8-sig").splitlines()[0]
+    for excluded in (
+        "cicApplicationIds",
+        "cicInquiryDtTms",
+        "solutionChannelType",
+        "transactionIdentifier",
+        "messageDtTmUtc",
+        "firedFlg",
+        "alertFlg",
+    ):
+        assert excluded not in header
+
+
+def _two_row_csv() -> bytes:
+    source = application_csv_template().decode("utf-8-sig")
+    rows = list(csv.DictReader(io.StringIO(source)))
+    second = dict(rows[0])
+    second["applicationIdentifier"] = "APP-000002"
+    second["customerIdentifier"] = "CUST-000002"
+    second["applicationChannel"] = "CALL_CENTER"
+    output = io.StringIO(newline="")
+    writer = csv.DictWriter(output, fieldnames=rows[0].keys(), lineterminator="\n")
+    writer.writeheader()
+    writer.writerows([rows[0], second])
+    return output.getvalue().encode("utf-8-sig")
+
+
+def test_csv_parser_preserves_leading_zeros_and_never_emits_nan() -> None:
+    validation = parse_application_csv(application_csv_template())
+    assert validation.errors == []
+    assert len(validation.valid_rows) == 1
+    payload = map_application_csv_row(validation.valid_rows[0])
+    assert payload["message"]["identification"]["number"] == "079099009999"
+    assert payload["message"]["phone"]["full"] == "0901234567"
+    assert payload["message"]["appRisk"]["disbAcctNumber"] == "09704000012345"
+    assert payload_contains_null_strings(payload) is False
+
+
+def test_csv_parser_rejects_invalid_channel_and_duplicate_application_id() -> None:
+    source = _two_row_csv().decode("utf-8-sig")
+    rows = list(csv.DictReader(io.StringIO(source)))
+    rows[1]["applicationIdentifier"] = rows[0]["applicationIdentifier"]
+    rows[1]["applicationChannel"] = "MOBILE"
+    output = io.StringIO(newline="")
+    writer = csv.DictWriter(output, fieldnames=rows[0].keys(), lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows)
+
+    validation = parse_application_csv(output.getvalue().encode("utf-8"))
+
+    reasons = [item["reason"] for item in validation.errors]
+    assert any("Duplicate application ID" in reason for reason in reasons)
+    assert any("outside APPLICATION_CHANNELS" in reason for reason in reasons)
+    assert len(validation.valid_rows) == 1
+
+
+def test_csv_parser_reports_blank_rows_and_duplicate_headers() -> None:
+    with_blank_row = application_csv_template().decode("utf-8-sig") + "\n"
+    validation = parse_application_csv(with_blank_row.encode("utf-8"))
+    assert any(item["reason"] == "Blank row" for item in validation.errors)
+    assert invalid_batch_results(validation)[0]["requestStatus"] == (
+        "Payload không hợp lệ"
+    )
+
+    duplicate_header = b"applicationIdentifier,applicationIdentifier\nAPP-1,APP-2\n"
+    duplicate_validation = parse_application_csv(duplicate_header)
+    assert any(
+        item["reason"] == "Duplicate CSV header"
+        for item in duplicate_validation.errors
+    )
+
+
+def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
+    validation = parse_application_csv(_two_row_csv())
+    sent_ids: list[str] = []
+    sleeps: list[float] = []
+
+    def sender(**kwargs):
+        application_id = kwargs["payload"]["message"]["application"]["identifier"]
+        sent_ids.append(application_id)
+        has_alert = application_id == "APP-000002"
+        parsed = {
+            "message": {
+                "sas": {
+                    "system": {"returnType": 0},
+                    "decision": {"outcomeName": "Review" if has_alert else "Continue"},
+                    "rulefired": [
+                        {
+                            "ruleIdentifier": "AF_TEST",
+                            "firedFlg": has_alert,
+                            "alertFlg": has_alert,
+                        }
+                    ],
+                    "alerted": ([{"outcomeEntity": application_id}] if has_alert else []),
+                }
+            }
+        }
+        return SasRuntimeResponse(200, 12, {}, "{}", parsed, None)
+
+    results = execute_application_batch(
+        validation.valid_rows,
+        endpoint="https://runtime.example/detection/decision/execute",
+        timeout_seconds=10,
+        verify_tls=True,
+        ca_bundle=None,
+        delay_seconds=0.5,
+        sender=sender,
+        sleep=sleeps.append,
+    )
+
+    assert sent_ids == ["APP-000001", "APP-000002"]
+    assert sleeps == [0.5]
+    assert results[0]["requestStatus"] == "Request thành công"
+    assert results[0]["firedFlg"] is False
+    assert results[0]["alertFlg"] is False
+    assert results[1]["firedFlg"] is True
+    assert results[1]["alertFlg"] is True
+
+
+def test_batch_does_not_retry_http_response() -> None:
+    validation = parse_application_csv(application_csv_template())
+    calls = 0
+
+    def sender(**kwargs):
+        nonlocal calls
+        calls += 1
+        return SasRuntimeResponse(500, 8, {}, "failure", None, "invalid response")
+
+    results = execute_application_batch(
+        validation.valid_rows,
+        endpoint="https://runtime.example/detection/decision/execute",
+        timeout_seconds=10,
+        verify_tls=True,
+        ca_bundle=None,
+        delay_seconds=0,
+        sender=sender,
+    )
+
+    assert calls == 1
+    assert results[0]["errorType"] == "HTTP 5xx"
+
+
+def test_batch_classifies_timeout_and_stops_when_requested() -> None:
+    validation = parse_application_csv(_two_row_csv())
+    calls = 0
+
+    def sender(**kwargs):
+        nonlocal calls
+        calls += 1
+        raise requests.Timeout("runtime timed out")
+
+    results = execute_application_batch(
+        validation.valid_rows,
+        endpoint="https://runtime.example/detection/decision/execute",
+        timeout_seconds=10,
+        verify_tls=True,
+        ca_bundle=None,
+        delay_seconds=0,
+        stop_on_error=True,
+        sender=sender,
+    )
+
+    assert calls == 1
+    assert len(results) == 1
+    assert results[0]["errorType"] == "Timeout"
+
+
+def test_batch_run_guard_blocks_rerun_and_double_click() -> None:
+    state: dict[str, object] = {}
+    assert claim_batch_run(state, "file-a") is True
+    assert claim_batch_run(state, "file-a") is False
+    state["af_batch_running"] = False
+    state["af_batch_completed_fingerprint"] = "file-a"
+    assert claim_batch_run(state, "file-a") is False
+
+
+def test_result_csv_keeps_sensitive_identifiers_as_strings() -> None:
+    validation = parse_application_csv(application_csv_template())
+    payload = map_application_csv_row(validation.valid_rows[0])
+    exported = results_to_csv(
+        [
+            {
+                "rowNumber": 2,
+                "applicationIdentifier": "APP-000001",
+                "_request": payload,
+                "_rawResponse": "{}",
+            }
+        ]
+    ).decode("utf-8-sig")
+
+    assert "079099009999" in exported
+    assert "0901234567" in exported
+    assert "09704000012345" in exported
 
 
 def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:

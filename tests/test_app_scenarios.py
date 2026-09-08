@@ -17,9 +17,6 @@ pytest.importorskip("streamlit")
 
 from streamlit.testing.v1 import AppTest  # noqa: E402
 
-from app.streamlit_console.application_scenarios import (  # noqa: E402
-    APPLICATION_SCENARIOS,
-)
 from app.streamlit_console.scenarios import SCENARIOS  # noqa: E402
 
 APP_PATH = str(
@@ -38,17 +35,11 @@ def test_scenario_renders_without_exception(scenario) -> None:
     assert list(at.exception) == []
 
 
-@pytest.mark.parametrize(
-    "scenario",
-    APPLICATION_SCENARIOS,
-    ids=[scenario.key for scenario in APPLICATION_SCENARIOS],
-)
-def test_application_scenario_renders_without_exception(scenario) -> None:
+def test_application_workspace_renders_without_exception() -> None:
     at = AppTest.from_file(APP_PATH)
     at.run(timeout=30)
 
     at.sidebar.radio[0].set_value("Application Fraud").run(timeout=30)
-    at.sidebar.selectbox[0].set_value(scenario.label).run(timeout=30)
 
     assert list(at.exception) == []
 
