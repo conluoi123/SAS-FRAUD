@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sas-fraud-console",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "streamlit",
+        "run",
+        "app/streamlit_console/app.py",
+        "--server.address",
+        "127.0.0.1",
+        "--server.port",
+        "$PORT",
+        "--server.headless",
+        "true"
+      ],
+      "port": 8501,
+      "autoPort": true
+    }
+  ]
+}

@@ -31,12 +31,18 @@ try:
         APPLICATION_CUSTOMER_TYPE,
         APPLICATION_ORIGINATION_TYPE,
     )
+    from .application_demo import DEMO_SPECS, DemoSpec, run_demo_steps
     from .payloads import (
         build_application_fraud_payload,
         validate_application_fraud_payload,
     )
     from .sas_client import SasRuntimeResponse, send_message
-    from .sas_response import extract_return_fields, summarize_sas_response
+    from .sas_response import (
+        ApplicationFiredRule,
+        extract_application_fired_rules,
+        extract_return_fields,
+        summarize_sas_response,
+    )
 except ImportError:
     from alert_log import record_alert
     from application_batch import (
@@ -58,12 +64,18 @@ except ImportError:
         APPLICATION_CUSTOMER_TYPE,
         APPLICATION_ORIGINATION_TYPE,
     )
+    from application_demo import DEMO_SPECS, DemoSpec, run_demo_steps
     from payloads import (
         build_application_fraud_payload,
         validate_application_fraud_payload,
     )
     from sas_client import SasRuntimeResponse, send_message
-    from sas_response import extract_return_fields, summarize_sas_response
+    from sas_response import (
+        ApplicationFiredRule,
+        extract_application_fired_rules,
+        extract_return_fields,
+        summarize_sas_response,
+    )
 
 
 ALERT_TYPE_CODE = "app_fraud_app"
@@ -96,6 +108,10 @@ def _initialize_state() -> None:
         "af_batch_running": False,
         "af_batch_completed_fingerprint": None,
         "af_batch_filter": "Tất cả",
+        "af_pending_result_dialog": None,
+        "af_demo1_result": None,
+        "af_demo2_result": None,
+        "af_demo3_result": None,
     }
     for key, value in defaults.items():
         st.session_state.setdefault(key, value)
@@ -148,41 +164,90 @@ def _utc_string(selected_date: Any, selected_time: Any) -> str:
     )
 
 
-def _rule_flags(response: SasRuntimeResponse) -> tuple[bool, bool, list[str]]:
-    if not isinstance(response.parsed_body, dict):
-        return False, False, []
-    message = response.parsed_body.get("message", {})
-    sas = message.get("sas", {}) if isinstance(message, dict) else {}
-    rules = sas.get("rulefired", []) if isinstance(sas, dict) else []
-    rules = rules if isinstance(rules, list) else ([rules] if isinstance(rules, dict) else [])
-
-    def flag(value: Any) -> bool:
-        return (
-            value.strip().lower() in {"1", "true", "yes", "y"}
-            if isinstance(value, str)
-            else bool(value)
-        )
-
-    fired = [rule for rule in rules if isinstance(rule, dict) and flag(rule.get("firedFlg"))]
-    names = [
-        str(
-            rule.get("ruleIdentifier")
-            or rule.get("ruleName")
-            or rule.get("ruleReference")
-            or ""
-        )
-        for rule in fired
+def _fired_rules_table_rows(fired_rules: list[ApplicationFiredRule]) -> list[dict[str, Any]]:
+    return [
+        {
+            "Rule": rule.display_name,
+            "Reason": rule.reason or "—",
+            "Alert": "Yes" if rule.alert else "No",
+            "Entity": rule.entity or "—",
+            "Entity type": rule.entity_type or "—",
+            "Reference / Identifier": rule.rule_reference or rule.rule_identifier or "—",
+        }
+        for rule in fired_rules
     ]
-    alert = summarize_sas_response(response.parsed_body).alert_created
-    return bool(fired), alert, [name for name in names if name]
 
 
-def _record_alert_if_created(payload: dict[str, Any], response: SasRuntimeResponse) -> None:
-    fired, alert, rules = _rule_flags(response)
-    if not alert:
+def _render_fired_rules_table(fired_rules: list[ApplicationFiredRule]) -> None:
+    if not fired_rules:
+        st.info("Không có Decision Rule nào fire.")
         return
-    message = payload["message"]
+    st.dataframe(_fired_rules_table_rows(fired_rules), use_container_width=True, hide_index=True)
+
+
+def _render_alerted_entities_section(alerted_entities: list[dict[str, Any]]) -> None:
+    if not alerted_entities:
+        return
+    _section("Alerted entities")
+    st.dataframe(
+        [
+            {
+                "Entity": item.get("outcomeEntity", ""),
+                "Entity type": item.get("outcomeEntityType", ""),
+            }
+            for item in alerted_entities
+            if isinstance(item, dict)
+        ],
+        use_container_width=True,
+        hide_index=True,
+    )
+
+
+def _rule_matches_target(rule: ApplicationFiredRule, target_rule: str) -> bool:
+    candidates = (rule.rule_name, rule.rule_reference, rule.display_name)
+    return any(
+        isinstance(candidate, str) and candidate.strip() == target_rule
+        for candidate in candidates
+    )
+
+
+@st.dialog("Kết quả hồ sơ")
+def _show_application_result_dialog(entry: dict[str, Any]) -> None:
+    outcome_name = str(entry.get("outcome_name") or "").lower()
+    if "declin" in outcome_name or "reject" in outcome_name:
+        st.markdown("## :material/block: Hồ sơ bị từ chối")
+    else:
+        st.markdown("## :material/warning: Hồ sơ có cảnh báo")
+
+    fired_rules = entry.get("fired_rules") or []
+    if fired_rules:
+        for rule in fired_rules:
+            st.markdown(f"**Rule:** `{rule.get('name', '')}`")
+            if rule.get("reason"):
+                st.markdown(f"**Lý do:** {rule['reason']}")
+    else:
+        st.caption("SAS không trả về tên rule cụ thể kèm alert này.")
+
+    st.caption(f"Application: {entry.get('application_identifier', '')}")
+    st.caption(f"Customer: {entry.get('customer_identifier', '')}")
+    st.markdown("**Alert:** Đã tạo")
+
+    if st.button("Đóng", type="primary", use_container_width=True):
+        st.session_state["af_pending_result_dialog"] = None
+        st.rerun()
+
+
+def _record_alert_if_created(
+    payload: dict[str, Any], response: SasRuntimeResponse, *, show_dialog: bool = True
+) -> None:
+    if response.parsed_body is None:
+        return
     summary = summarize_sas_response(response.parsed_body)
+    if not summary.alert_created:
+        return
+
+    fired_rules = extract_application_fired_rules(response.parsed_body)
+    message = payload["message"]
     record_alert(
         {
             "recorded_at": datetime.now(timezone.utc)
@@ -194,15 +259,26 @@ def _record_alert_if_created(payload: dict[str, Any], response: SasRuntimeRespon
             "application_identifier": message["application"]["identifier"],
             "customer_identifier": message["customer"]["identifier"],
             "transaction_identifier": message["sas"]["system"]["transactionIdentifier"],
-            "actual_alert": alert,
-            "fired_rules": rules,
-            "fired_rule_identifiers": rules,
+            "actual_alert": summary.alert_created,
+            "fired_rules": [rule.display_name for rule in fired_rules],
+            "fired_rule_identifiers": [
+                rule.rule_identifier or rule.display_name for rule in fired_rules
+            ],
             "http_status": response.status_code,
             "outcome_name": summary.outcome_name,
             "alerted_entities": summary.alerted_entities,
-            "rule_fired": fired,
+            "rule_fired": bool(fired_rules),
         }
     )
+    if show_dialog:
+        st.session_state["af_pending_result_dialog"] = {
+            "outcome_name": summary.outcome_name,
+            "application_identifier": message["application"]["identifier"],
+            "customer_identifier": message["customer"]["identifier"],
+            "fired_rules": [
+                {"name": rule.display_name, "reason": rule.reason} for rule in fired_rules
+            ],
+        }
 
 
 def _render_single_result(result: dict[str, Any]) -> None:
@@ -214,7 +290,12 @@ def _render_single_result(result: dict[str, Any]) -> None:
         if response.parsed_body is not None
         else None
     )
-    fired, alert, rules = _rule_flags(response)
+    fired_rules = (
+        extract_application_fired_rules(response.parsed_body)
+        if response.parsed_body is not None
+        else []
+    )
+    alert = summary.alert_created if summary else False
     request_ok = 200 <= response.status_code < 300 and response.parse_error is None
 
     _section("Kết quả xử lý")
@@ -222,18 +303,17 @@ def _render_single_result(result: dict[str, Any]) -> None:
     status_columns[0].metric(
         "Request", "Thành công" if request_ok else "Gửi thất bại"
     )
-    status_columns[1].metric("Rule", "Đã fire" if fired else "Không fire")
+    status_columns[1].metric("Rule", "Đã fire" if fired_rules else "Không fire")
     status_columns[2].metric("Alert", "Đã tạo" if alert else "Không cảnh báo")
 
     detail_columns = st.columns(4)
     detail_columns[0].metric("HTTP status", response.status_code)
-    detail_columns[1].metric("Thời gian xử lý", f"{response.elapsed_ms} ms")
+    detail_columns[1].metric("Round trip", f"{response.elapsed_ms} ms")
     detail_columns[2].metric("returnType", return_fields.get("returnType"))
     detail_columns[3].metric(
         "Decision",
         (summary.outcome_name or summary.outcome) if summary else "—",
     )
-    st.write("Rule đã fire:", ", ".join(rules) if rules else "Không có")
     if return_fields.get("returnDesc") or return_fields.get("returnDetails"):
         st.caption(
             " | ".join(
@@ -245,6 +325,13 @@ def _render_single_result(result: dict[str, Any]) -> None:
                 if value is not None
             )
         )
+
+    _section("Fired rules")
+    _render_fired_rules_table(fired_rules)
+
+    if summary:
+        _render_alerted_entities_section(summary.alerted_entities)
+
     profiles = (
         response.parsed_body.get("profiles")
         if isinstance(response.parsed_body, dict)
@@ -253,7 +340,7 @@ def _render_single_result(result: dict[str, Any]) -> None:
     if profiles is not None:
         with st.expander("Profile trả về", expanded=False):
             st.json(profiles, expanded=False)
-    with st.expander("Chi tiết phản hồi", expanded=False):
+    with st.expander("Chi tiết phản hồi (raw SAS response)", expanded=False):
         if response.parse_error:
             st.error(f"Invalid JSON response: {response.parse_error}")
         st.code(response.raw_body, language="text", wrap_lines=True)
@@ -444,7 +531,8 @@ def _render_single(
             st.error("Dữ liệu chưa hợp lệ; request chưa được gửi.")
         else:
             st.session_state["af_single_sending"] = True
-            st.session_state["af_single_last_transaction"] = transaction_id
+            st.session_state["af_single_result"] = None
+
             try:
                 with st.spinner("Đang chờ SAS Fraud Runtime..."):
                     response = send_message(
@@ -458,6 +546,12 @@ def _render_single(
                     "payload": payload,
                     "response": response,
                 }
+                if 200 <= response.status_code < 300:
+                    st.session_state["af_single_last_transaction"] = transaction_id
+                else:
+                    # HTTP 4xx/5xx must remain retryable.
+                    st.session_state["af_single_last_transaction"] = None
+
                 _record_alert_if_created(payload, response)
             except requests.exceptions.SSLError as error:
                 st.session_state["af_single_last_transaction"] = None
@@ -721,11 +815,164 @@ def _render_batch(
         _render_batch_results(results)
 
 
+PROFILE_COUNT_FIELDS = (
+    "disbAcctCustCnt30d",
+    "refPhoneCustCnt30d",
+    "addressCustCnt30d",
+    "clusterCustCnt30d",
+)
+
+
+def _find_profile_counts(profiles: Any) -> dict[str, Any]:
+    """Pull the well-known 30-day counters out of whatever shape SAS returned."""
+
+    found: dict[str, Any] = {}
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key in PROFILE_COUNT_FIELDS and key not in found:
+                    found[key] = value
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(profiles)
+    return found
+
+
+def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
+    _section(spec.title)
+
+    step_rows = []
+    progression_rows = []
+    for entry in results:
+        response: SasRuntimeResponse | None = entry.get("response")
+        fired_rules = (
+            extract_application_fired_rules(response.parsed_body)
+            if response is not None and response.parsed_body is not None
+            else []
+        )
+        step_rows.append(
+            {
+                "Bước": entry["label"],
+                "HTTP": response.status_code if response is not None else "—",
+                "Rule đã fire": ", ".join(r.display_name for r in fired_rules) or "—",
+                "Alert": "Yes" if any(r.alert for r in fired_rules) else "No",
+            }
+        )
+        profiles = (
+            response.parsed_body.get("profiles")
+            if response is not None and isinstance(response.parsed_body, dict)
+            else None
+        )
+        counts = _find_profile_counts(profiles) if profiles else {}
+        if counts:
+            progression_rows.append({"Bước": entry["label"], **counts})
+
+    st.dataframe(step_rows, use_container_width=True, hide_index=True)
+
+    last_entry = results[-1]
+    if last_entry.get("errors"):
+        st.error("Payload không hợp lệ: " + " | ".join(last_entry["errors"]))
+        return
+    last_response: SasRuntimeResponse | None = last_entry.get("response")
+    if last_response is None:
+        st.warning("Chuỗi demo dừng do một bước trước đó gửi thất bại.")
+        return
+    if not (200 <= last_response.status_code < 300):
+        st.error(
+            f"Request cuối trả về HTTP {last_response.status_code}; chuỗi demo dừng ở đây."
+        )
+
+    fired_rules = (
+        extract_application_fired_rules(last_response.parsed_body)
+        if last_response.parsed_body is not None
+        else []
+    )
+    target_hit = any(_rule_matches_target(rule, spec.target_rule) for rule in fired_rules)
+
+    st.markdown(f"**Target rule:** `{spec.target_rule}`")
+    if target_hit:
+        st.success("Target rule result: PASS")
+    else:
+        st.warning(f"Target rule result: NO HIT — {spec.no_hit_message}")
+
+    st.markdown("**Actual fired rules từ SAS (bước cuối):**")
+    _render_fired_rules_table(fired_rules)
+
+    summary = summarize_sas_response(last_response.parsed_body)
+    _render_alerted_entities_section(summary.alerted_entities)
+
+    if progression_rows:
+        st.markdown("**Profile progression (từ SAS):**")
+        st.dataframe(progression_rows, use_container_width=True, hide_index=True)
+
+    with st.expander("Chi tiết từng bước (request/response)", expanded=False):
+        for entry in results:
+            st.markdown(f"**{entry['label']}**")
+            st.json(entry["payload"], expanded=False)
+            response = entry.get("response")
+            if response is not None:
+                st.json(response.parsed_body, expanded=False)
+
+
+def _render_quick_demos(
+    *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
+) -> None:
+    _section("Demo cảnh báo nhanh")
+    st.caption(
+        "Mỗi demo gửi một chuỗi hồ sơ Application Fraud thật vào SAS qua "
+        "build_application_fraud_payload() và send_message() — không có bước nào "
+        "giả lập kết quả hay tự tính profile count."
+    )
+
+    demo_columns = st.columns(4)
+    for index, key in enumerate(("demo1", "demo2", "demo3")):
+        spec = DEMO_SPECS[key]
+        with demo_columns[index]:
+            st.caption(spec.intro)
+            if st.button(spec.title, type="primary", use_container_width=True, key=f"af_{key}_run"):
+                steps = spec.build_steps()
+                with st.spinner(f"Đang chạy {spec.title}..."):
+                    demo_results = run_demo_steps(
+                        steps,
+                        endpoint=endpoint,
+                        timeout_seconds=timeout_seconds,
+                        verify_tls=verify_tls,
+                        ca_bundle=ca_bundle,
+                    )
+                for entry in demo_results:
+                    response = entry.get("response")
+                    if response is not None:
+                        _record_alert_if_created(entry["payload"], response, show_dialog=False)
+                st.session_state[f"af_{key}_result"] = demo_results
+
+    with demo_columns[3]:
+        st.caption("Thu nhập / đơn vị công tác bất thường")
+        st.button(
+            "Demo 4 — Thu nhập / đơn vị công tác bất thường",
+            disabled=True,
+            use_container_width=True,
+            key="af_demo4_run",
+        )
+        st.caption("Quick Demo chưa bật — cần xác minh nguồn incomeMismatchInd.")
+
+    for key in ("demo1", "demo2", "demo3"):
+        demo_results = st.session_state.get(f"af_{key}_result")
+        if demo_results:
+            _render_demo_result(DEMO_SPECS[key], demo_results)
+
+
 def render_application_workspace(
     *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
 ) -> None:
     _initialize_state()
     _render_styles()
+    pending_dialog = st.session_state.get("af_pending_result_dialog")
+    if pending_dialog:
+        _show_application_result_dialog(pending_dialog)
     st.markdown(
         """
         <div class="af-console-header">
@@ -735,6 +982,13 @@ def render_application_workspace(
         """,
         unsafe_allow_html=True,
     )
+    _render_quick_demos(
+        endpoint=endpoint,
+        timeout_seconds=timeout_seconds,
+        verify_tls=verify_tls,
+        ca_bundle=ca_bundle,
+    )
+    st.divider()
     single_tab, batch_tab = st.tabs(["Nhập một hồ sơ", "Gửi hồ sơ từ CSV"])
     with single_tab:
         _render_single(

@@ -29,11 +29,23 @@ from app.streamlit_console.application_scenarios import (
     normalize_address,
     scenario_history,
 )
+from app.streamlit_console.application_demo import (
+    DEMO_SPECS,
+    build_demo1_steps,
+    build_demo2_steps,
+    build_demo3_steps,
+    run_demo_steps,
+)
+from app.streamlit_console.application_workspace import (
+    _fired_rules_table_rows,
+    _rule_matches_target,
+)
 from app.streamlit_console.payloads import (
     build_application_fraud_payload,
     validate_application_fraud_payload,
 )
 from app.streamlit_console.sas_client import SasRuntimeResponse
+from app.streamlit_console.sas_response import extract_application_fired_rules
 
 
 BASE_RISK = {
@@ -425,6 +437,278 @@ def test_result_csv_keeps_sensitive_identifiers_as_strings() -> None:
     assert "079099009999" in exported
     assert "0901234567" in exported
     assert "09704000012345" in exported
+
+
+def _parsed_with_rules(rules: list[dict]) -> dict:
+    return {"message": {"sas": {"rulefired": rules}}}
+
+
+def test_fired_rule_prefers_human_readable_name_over_uuid() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0",
+                "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                "firedFlg": True,
+                "alertFlg": True,
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert len(fired) == 1
+    assert fired[0].display_name == "AF_DR_Disbursement_Account_Anomaly"
+    assert fired[0].name_basis == "ruleName"
+    assert fired[0].rule_identifier == "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0"
+
+
+def test_fired_rule_falls_back_to_unknown_when_only_uuid_is_present() -> None:
+    # This UUID is deliberately NOT one of the verified identifiers in
+    # sas_response._VERIFIED_RULE_NAMES, so the fallback path must be exercised
+    # instead of inventing a business name for it.
+    unmapped_identifier = "11111111-2222-3333-4444-555555555555"
+    parsed = _parsed_with_rules(
+        [{"ruleIdentifier": unmapped_identifier, "firedFlg": True}]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert fired[0].name_basis == "identifier"
+    assert unmapped_identifier in fired[0].display_name
+
+
+def test_verified_identifier_resolves_to_business_rule_name_from_live_sas() -> None:
+    # These two mappings were captured from real, live SAS responses in this
+    # session (Quick Demo 1 and Demo 2) — see the comment above
+    # sas_response._VERIFIED_RULE_NAMES for provenance. The reason text is
+    # still preserved separately so nothing SAS said is lost.
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "cc5fb2bb-4dba-4828-9ae1-0f30000db36a",
+                "referenceIdentifier": "50082.2",
+                "alertReason": "Shared non-matching disbursement account",
+                "firedFlg": True,
+                "alertFlg": True,
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert fired[0].display_name == "AF_DR_Disbursement_Account_Anomaly"
+    assert fired[0].name_basis == "verified_mapping"
+    assert fired[0].reason == "Shared non-matching disbursement account"
+    assert fired[0].rule_reference == "50082.2"
+
+
+def test_not_fired_rules_are_excluded_by_default() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {"ruleIdentifier": "A", "ruleName": "Rule A", "firedFlg": False},
+            {"ruleIdentifier": "B", "ruleName": "Rule B", "firedFlg": True},
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert len(fired) == 1
+    assert fired[0].display_name == "Rule B"
+
+
+def test_multiple_fired_rules_are_all_returned() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "A",
+                "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                "firedFlg": True,
+                "alertFlg": True,
+            },
+            {
+                "ruleIdentifier": "B",
+                "ruleName": "AF_DR_Shared_Reference_Network",
+                "firedFlg": True,
+                "alertFlg": True,
+            },
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    names = {rule.display_name for rule in fired}
+    assert names == {"AF_DR_Disbursement_Account_Anomaly", "AF_DR_Shared_Reference_Network"}
+
+
+def test_raw_identifier_stays_available_in_display_table() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0",
+                "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                "firedFlg": True,
+                "alertFlg": True,
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    rows = _fired_rules_table_rows(fired)
+    assert rows[0]["Reference / Identifier"] == "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0"
+
+
+def test_target_rule_is_matched_independently_of_display_name() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "A",
+                "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                "firedFlg": True,
+                "alertFlg": True,
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert _rule_matches_target(fired[0], "AF_DR_Disbursement_Account_Anomaly") is True
+    assert _rule_matches_target(fired[0], "AF_DR_Shared_Reference_Network") is False
+
+
+def test_target_rule_matches_via_verified_mapping_like_the_live_runtime_does() -> None:
+    # Mirrors the exact shape captured from the live SAS runtime for Demo 1's
+    # trigger step: no ruleName/ruleReference field, only ruleIdentifier,
+    # referenceIdentifier, and alertReason.
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "cc5fb2bb-4dba-4828-9ae1-0f30000db36a",
+                "referenceIdentifier": "50082.2",
+                "alertReason": "Shared non-matching disbursement account",
+                "firedFlg": True,
+                "alertFlg": True,
+                "outcomeEntity": "APP-DEMO-D1B-B7C7B1AA",
+                "outcomeEntityType": "app_fraud_app",
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert _rule_matches_target(fired[0], "AF_DR_Disbursement_Account_Anomaly") is True
+
+
+def _forbidden_profile_fields_absent(payload: dict) -> bool:
+    app_risk = payload["message"]["appRisk"]
+    forbidden = {
+        "disbAcctCustCnt30d",
+        "refPhoneCustCnt30d",
+        "addressCustCnt30d",
+        "clusterCustCnt30d",
+    }
+    return forbidden.isdisjoint(app_risk)
+
+
+def test_demo1_shares_only_the_intended_disbursement_account() -> None:
+    steps = build_demo1_steps()
+    assert len(steps) == 2
+    seed_payload = build_application_fraud_payload(steps[0].values)
+    trigger_payload = build_application_fraud_payload(steps[1].values)
+
+    assert validate_application_fraud_payload(seed_payload) == []
+    assert validate_application_fraud_payload(trigger_payload) == []
+    assert _forbidden_profile_fields_absent(seed_payload)
+    assert _forbidden_profile_fields_absent(trigger_payload)
+
+    seed_risk = seed_payload["message"]["appRisk"]
+    trigger_risk = trigger_payload["message"]["appRisk"]
+    assert seed_risk["disbAcctNumber"] == trigger_risk["disbAcctNumber"]
+    assert seed_risk["disbAcctOwnerMatchInd"] == 1
+    assert trigger_risk["disbAcctOwnerMatchInd"] == 0
+    assert (
+        seed_payload["message"]["application"]["identifier"]
+        != trigger_payload["message"]["application"]["identifier"]
+    )
+    assert (
+        seed_payload["message"]["customer"]["identifier"]
+        != trigger_payload["message"]["customer"]["identifier"]
+    )
+
+
+def test_demo2_shares_reference_phone_and_partial_account_overlap() -> None:
+    steps = build_demo2_steps()
+    assert len(steps) == 3
+    payloads = [build_application_fraud_payload(step.values) for step in steps]
+    for payload in payloads:
+        assert validate_application_fraud_payload(payload) == []
+        assert _forbidden_profile_fields_absent(payload)
+
+    phones = {p["message"]["appRisk"]["referencePhone"] for p in payloads}
+    assert len(phones) == 1
+
+    accounts = [p["message"]["appRisk"]["disbAcctNumber"] for p in payloads]
+    assert accounts[0] == accounts[2]
+    assert accounts[1] != accounts[0]
+
+    customer_ids = {p["message"]["customer"]["identifier"] for p in payloads}
+    assert len(customer_ids) == 3
+
+
+def test_demo3_shares_address_employer_and_sales_agent() -> None:
+    steps = build_demo3_steps()
+    assert len(steps) == 4
+    payloads = [build_application_fraud_payload(step.values) for step in steps]
+    for payload in payloads:
+        assert validate_application_fraud_payload(payload) == []
+        assert _forbidden_profile_fields_absent(payload)
+
+    addresses = {p["message"]["appRisk"]["normalizedAddress"] for p in payloads}
+    agents = {p["message"]["appRisk"]["salesAgentIdentifier"] for p in payloads}
+    employers = {
+        p["message"]["applicant"]["employment"][0]["employerName"] for p in payloads
+    }
+    assert len(addresses) == 1
+    assert len(agents) == 1
+    assert len(employers) == 1
+
+    customer_ids = {p["message"]["customer"]["identifier"] for p in payloads}
+    assert len(customer_ids) == 4
+
+
+def test_demo_steps_are_sent_sequentially_and_stop_on_failed_seed() -> None:
+    steps = build_demo1_steps()
+    calls: list[str] = []
+
+    def sender(**kwargs):
+        application_id = kwargs["payload"]["message"]["application"]["identifier"]
+        calls.append(application_id)
+        return SasRuntimeResponse(500, 10, {}, "boom", None, None)
+
+    results = run_demo_steps(
+        steps,
+        endpoint="https://runtime.example/detection/decision/execute",
+        timeout_seconds=10,
+        verify_tls=True,
+        ca_bundle=None,
+        sender=sender,
+    )
+
+    assert len(calls) == 1
+    assert len(results) == 1
+    assert results[0]["response"].status_code == 500
+
+
+def test_demo_steps_continue_while_http_is_successful() -> None:
+    steps = build_demo1_steps()
+    calls: list[str] = []
+
+    def sender(**kwargs):
+        calls.append(kwargs["payload"]["message"]["application"]["identifier"])
+        return SasRuntimeResponse(200, 10, {}, "{}", {"message": {"sas": {}}}, None)
+
+    results = run_demo_steps(
+        steps,
+        endpoint="https://runtime.example/detection/decision/execute",
+        timeout_seconds=10,
+        verify_tls=True,
+        ca_bundle=None,
+        sender=sender,
+    )
+
+    assert len(calls) == 2
+    assert len(results) == 2
+
+
+def test_demo4_target_rule_is_not_registered_as_a_quick_demo() -> None:
+    # Income/employer inconsistency stays disabled until incomeMismatchInd has a
+    # verified outbound message path — it must not appear as a runnable demo.
+    assert set(DEMO_SPECS) == {"demo1", "demo2", "demo3"}
 
 
 def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:
