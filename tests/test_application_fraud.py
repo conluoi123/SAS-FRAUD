@@ -37,8 +37,14 @@ from app.streamlit_console.application_demo import (
     run_demo_steps,
 )
 from app.streamlit_console.application_workspace import (
+    MANUAL_PROFILE_KEYS,
+    _build_quick_demo_dialog_entry,
+    _display_outcome,
     _fired_rules_table_rows,
+    _manual_result_identity,
     _rule_matches_target,
+    apply_fresh_test_dataset,
+    apply_new_application_same_customer,
 )
 from app.streamlit_console.payloads import (
     build_application_fraud_payload,
@@ -544,7 +550,7 @@ def test_raw_identifier_stays_available_in_display_table() -> None:
     )
     fired = extract_application_fired_rules(parsed)
     rows = _fired_rules_table_rows(fired)
-    assert rows[0]["Reference / Identifier"] == "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0"
+    assert rows[0]["Rule identifier"] == "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0"
 
 
 def test_target_rule_is_matched_independently_of_display_name() -> None:
@@ -709,6 +715,200 @@ def test_demo4_target_rule_is_not_registered_as_a_quick_demo() -> None:
     # Income/employer inconsistency stays disabled until incomeMismatchInd has a
     # verified outbound message path — it must not appear as a runnable demo.
     assert set(DEMO_SPECS) == {"demo1", "demo2", "demo3"}
+
+
+# --- UI/state separation between Quick Demo and the manual workflow ---------
+
+
+def test_quick_demo_state_keys_are_disjoint_from_manual_state_keys() -> None:
+    demo_keys = {"af_demo1_result", "af_demo2_result", "af_demo3_result", "af_demo_pending_dialog"}
+    manual_keys = {
+        "af_single_result",
+        "af_single_last_transaction",
+        "af_single_application_id",
+        "af_single_transaction_id",
+        "af_pending_result_dialog",
+        *MANUAL_PROFILE_KEYS,
+    }
+    assert demo_keys.isdisjoint(manual_keys)
+
+
+def test_manual_profile_keys_cover_every_profile_driving_field() -> None:
+    assert set(MANUAL_PROFILE_KEYS) == {
+        "af_single_applicant_id",
+        "af_single_customer_id",
+        "af_single_identification_number",
+        "af_single_phone",
+        "af_single_device_id",
+        "af_single_disb_account",
+        "af_single_reference_phone",
+        "af_single_normalized_address",
+        "af_single_sales_agent",
+    }
+
+
+def _fake_manual_state() -> dict[str, object]:
+    return {
+        "af_single_application_id": "APP-OLD",
+        "af_single_transaction_id": "MSG-OLD",
+        "af_single_applicant_id": "APL-OLD",
+        "af_single_customer_id": "CUST-OLD",
+        "af_single_identification_number": "079099009999",
+        "af_single_phone": "0901234567",
+        "af_single_device_id": "DEV-OLD",
+        "af_single_disb_account": "09704000012345",
+        "af_single_reference_phone": "0912345678",
+        "af_single_normalized_address": "88 CONG HOA TP HCM",
+        "af_single_sales_agent": "SALES-001",
+        "af_single_last_transaction": "MSG-OLD",
+        "af_single_result": {"payload": {"message": {}}, "response": "stale"},
+        "af_demo1_result": ["should not be touched"],
+        "af_demo2_result": ["should not be touched"],
+        "af_demo3_result": ["should not be touched"],
+        "af_demo_pending_dialog": {"should": "not be touched"},
+    }
+
+
+def test_new_application_same_customer_only_changes_application_and_transaction() -> None:
+    state = _fake_manual_state()
+    apply_new_application_same_customer(state)
+
+    assert state["af_single_application_id"] != "APP-OLD"
+    assert state["af_single_transaction_id"] != "MSG-OLD"
+    assert state["af_single_last_transaction"] is None
+    # Every profile-driving key is untouched — same identity, new application.
+    for key in MANUAL_PROFILE_KEYS:
+        assert state[key] == _fake_manual_state()[key]
+    # Quick Demo state must never be written by the manual reset actions.
+    assert state["af_demo1_result"] == ["should not be touched"]
+    assert state["af_demo2_result"] == ["should not be touched"]
+    assert state["af_demo3_result"] == ["should not be touched"]
+    assert state["af_demo_pending_dialog"] == {"should": "not be touched"}
+
+
+def test_fresh_test_dataset_regenerates_every_profile_driving_key() -> None:
+    original = _fake_manual_state()
+    state = _fake_manual_state()
+    apply_fresh_test_dataset(state)
+
+    assert state["af_single_application_id"] != original["af_single_application_id"]
+    assert state["af_single_transaction_id"] != original["af_single_transaction_id"]
+    for key in MANUAL_PROFILE_KEYS:
+        assert state[key] != original[key], f"{key} was not regenerated"
+
+    # New identification/phone/reference phone/disbursement account stay digits-only.
+    assert state["af_single_identification_number"].isdigit()
+    assert len(state["af_single_identification_number"]) == 12
+    assert state["af_single_phone"].isdigit()
+    assert state["af_single_reference_phone"].isdigit()
+    assert len(state["af_single_reference_phone"]) == 10
+    assert state["af_single_disb_account"].isdigit()
+
+    # Quick Demo state must never be written by the manual reset actions.
+    assert state["af_demo1_result"] == ["should not be touched"]
+    assert state["af_demo2_result"] == ["should not be touched"]
+    assert state["af_demo3_result"] == ["should not be touched"]
+    assert state["af_demo_pending_dialog"] == {"should": "not be touched"}
+
+
+def test_fresh_test_dataset_clears_stale_manual_result() -> None:
+    state = _fake_manual_state()
+    apply_fresh_test_dataset(state)
+
+    assert state["af_single_result"] is None
+    assert state["af_single_last_transaction"] is None
+
+
+# --- manual result metadata comes from the sent payload, not live form state ---
+
+
+def test_manual_result_identity_reads_from_sent_payload_only() -> None:
+    result = {
+        "payload": {
+            "message": {
+                "application": {"identifier": "APP-SENT-001"},
+                "customer": {"identifier": "CUST-SENT-001"},
+                "sas": {"system": {"transactionIdentifier": "MSG-SENT-001"}},
+            }
+        },
+        "response": SasRuntimeResponse(200, 10, {}, "{}", {"message": {}}, None),
+        "sent_at": "2026-09-09T01:00:00Z",
+    }
+    identity = _manual_result_identity(result)
+
+    assert identity == {
+        "application_identifier": "APP-SENT-001",
+        "customer_identifier": "CUST-SENT-001",
+        "transaction_identifier": "MSG-SENT-001",
+        "sent_at": "2026-09-09T01:00:00Z",
+    }
+
+
+def test_display_outcome_never_fakes_review_or_decline() -> None:
+    assert _display_outcome(None) == "No explicit outcome"
+    assert _display_outcome("Unknown") == "No explicit outcome"
+    assert _display_outcome("") == "No explicit outcome"
+    assert _display_outcome("Review") == "Review"
+    assert _display_outcome("Decline") == "Decline"
+
+
+# --- Quick Demo popup only opens for the final (trigger) step ---------------
+
+
+def test_quick_demo_dialog_only_built_when_final_step_creates_an_alert() -> None:
+    spec = DEMO_SPECS["demo1"]
+    payload = {
+        "message": {
+            "application": {"identifier": "APP-DEMO-TRIGGER"},
+            "customer": {"identifier": "CUST-DEMO-TRIGGER"},
+        }
+    }
+
+    no_alert_response = SasRuntimeResponse(
+        200, 10, {}, "{}", {"message": {"sas": {"rulefired": []}}}, None
+    )
+    assert _build_quick_demo_dialog_entry(spec, payload, no_alert_response) is None
+
+    alert_response = SasRuntimeResponse(
+        200,
+        10,
+        {},
+        "{}",
+        {
+            "message": {
+                "sas": {
+                    "rulefired": [
+                        {
+                            "ruleIdentifier": "cc5fb2bb-4dba-4828-9ae1-0f30000db36a",
+                            "referenceIdentifier": "50082.2",
+                            "alertReason": "Shared non-matching disbursement account",
+                            "firedFlg": True,
+                            "alertFlg": True,
+                        }
+                    ]
+                }
+            }
+        },
+        None,
+    )
+    entry = _build_quick_demo_dialog_entry(spec, payload, alert_response)
+    assert entry is not None
+    assert entry["target_rule"] == "AF_DR_Disbursement_Account_Anomaly"
+    assert entry["actual_rule_name"] == "AF_DR_Disbursement_Account_Anomaly"
+    assert entry["application_identifier"] == "APP-DEMO-TRIGGER"
+    assert entry["customer_identifier"] == "CUST-DEMO-TRIGGER"
+
+
+# --- stale hardcoded package version must not be the primary runtime display ---
+
+
+def test_no_hardcoded_package_version_in_application_workspace_source() -> None:
+    import inspect
+
+    from app.streamlit_console import application_workspace
+
+    source = inspect.getsource(application_workspace)
+    assert "50026" not in source
 
 
 def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:

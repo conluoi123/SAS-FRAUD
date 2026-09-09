@@ -25,6 +25,16 @@ class SasRuntimeResponse:
     parse_error: str | None
 
 
+def _resolve_verify(verify_tls: bool, ca_bundle: str | None) -> bool | str:
+    verify: bool | str = verify_tls
+    if verify_tls and ca_bundle:
+        certificate_path = Path(ca_bundle).expanduser()
+        if not certificate_path.is_file():
+            raise ValueError(f"CA bundle does not exist: {certificate_path}")
+        verify = str(certificate_path)
+    return verify
+
+
 def send_message(
     *,
     endpoint: str,
@@ -35,12 +45,7 @@ def send_message(
 ) -> SasRuntimeResponse:
     """Send one message to the Detection runtime and preserve the raw response."""
 
-    verify: bool | str = verify_tls
-    if verify_tls and ca_bundle:
-        certificate_path = Path(ca_bundle).expanduser()
-        if not certificate_path.is_file():
-            raise ValueError(f"CA bundle does not exist: {certificate_path}")
-        verify = str(certificate_path)
+    verify = _resolve_verify(verify_tls, ca_bundle)
 
     started = time.perf_counter()
     response = requests.post(
@@ -67,3 +72,38 @@ def send_message(
         parsed_body=parsed_body,
         parse_error=parse_error,
     )
+
+
+def fetch_runtime_description(
+    *,
+    endpoint: str,
+    timeout_seconds: float,
+    verify_tls: bool,
+    ca_bundle: str | None = None,
+) -> dict[str, Any] | None:
+    """GET the SAS decision/description endpoint. Returns parsed JSON, or None.
+
+    Best-effort runtime status probe only: never raises, so a slow/unreachable
+    description endpoint can never break Execute.
+    """
+
+    try:
+        verify = _resolve_verify(verify_tls, ca_bundle)
+    except ValueError:
+        return None
+    try:
+        response = requests.get(
+            endpoint,
+            headers={"Accept": "application/json"},
+            timeout=timeout_seconds,
+            verify=verify,
+        )
+    except requests.RequestException:
+        return None
+    if response.status_code != 200:
+        return None
+    try:
+        parsed = response.json()
+    except ValueError:
+        return None
+    return parsed if isinstance(parsed, dict) else None
