@@ -571,7 +571,7 @@ def invalid_batch_results(validation: CsvValidationResult) -> list[dict[str, Any
         source_row = rows_by_number.get(row_number, {"_rowNumber": str(row_number)})
         result = _base_result(source_row)
         result.update(
-            requestStatus="Payload không hợp lệ",
+            requestStatus="Invalid payload",
             errorType="CSV validation error",
             errorMessage=" | ".join(reasons),
         )
@@ -627,7 +627,7 @@ def execute_application_batch(
             )
             result.update(
                 httpStatus=response.status_code,
-                requestStatus="Request thành công" if request_ok else "Gửi thất bại",
+                requestStatus="Request successful" if request_ok else "Submission failed",
                 returnType=return_fields.get("returnType"),
                 decision=(summary.outcome_name or summary.outcome) if summary else None,
                 firedFlg=fired,
@@ -661,27 +661,27 @@ def execute_application_batch(
                 )
         except requests.exceptions.SSLError as error:
             result.update(
-                requestStatus="Gửi thất bại", errorType="SSL error", errorMessage=str(error)
+                requestStatus="Submission failed", errorType="SSL error", errorMessage=str(error)
             )
         except requests.exceptions.Timeout as error:
             result.update(
-                requestStatus="Gửi thất bại", errorType="Timeout", errorMessage=str(error)
+                requestStatus="Submission failed", errorType="Timeout", errorMessage=str(error)
             )
         except requests.exceptions.ConnectionError as error:
             result.update(
-                requestStatus="Gửi thất bại",
+                requestStatus="Submission failed",
                 errorType="DNS/connection error",
                 errorMessage=str(error),
             )
         except requests.RequestException as error:
             result.update(
-                requestStatus="Gửi thất bại",
+                requestStatus="Submission failed",
                 errorType="DNS/connection error",
                 errorMessage=str(error),
             )
         except (TypeError, ValueError) as error:
             result.update(
-                requestStatus="Payload không hợp lệ",
+                requestStatus="Invalid payload",
                 errorType="Payload mapping error",
                 errorMessage=str(error),
                 _request=payload,
@@ -690,7 +690,7 @@ def execute_application_batch(
         results.append(result)
         if progress:
             progress(index, total, row, result)
-        if stop_on_error and result["requestStatus"] != "Request thành công":
+        if stop_on_error and result["requestStatus"] != "Request successful":
             break
         if index < total and delay_seconds > 0:
             sleep(delay_seconds)
@@ -727,7 +727,7 @@ def reset_batch_for_new_file(state: MutableMapping[str, Any], fingerprint: str) 
     state["af_batch_details"] = {}
     state["af_batch_running"] = False
     state["af_batch_completed_fingerprint"] = None
-    state["af_batch_filter"] = "Tất cả"
+    state["af_batch_filter"] = "All results"
 
 
 def results_to_csv(results: list[dict[str, Any]]) -> bytes:

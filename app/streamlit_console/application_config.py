@@ -11,7 +11,7 @@ from typing import Final
 
 APPLICATION_CHANNELS: Final[dict[str, dict[str, str]]] = {
     "MOBILE_APP": {
-        "label": "Ứng dụng di động",
+        "label": "Mobile Application",
         "solution_channel_type": "MA",
     },
     "WEB": {
@@ -19,19 +19,19 @@ APPLICATION_CHANNELS: Final[dict[str, dict[str, str]]] = {
         "solution_channel_type": "WB",
     },
     "BRANCH": {
-        "label": "Chi nhánh / Phòng giao dịch",
+        "label": "Branch",
         "solution_channel_type": "BR",
     },
     "SALES_AGENT": {
-        "label": "Nhân viên / Đại lý bán hàng",
+        "label": "Sales Agent",
         "solution_channel_type": "SA",
     },
     "PARTNER": {
-        "label": "Đối tác / Đại lý / Điểm bán",
+        "label": "Partner / Point of Sale",
         "solution_channel_type": "PT",
     },
     "CALL_CENTER": {
-        "label": "Tổng đài",
+        "label": "Call Center",
         "solution_channel_type": "CC",
     },
 }

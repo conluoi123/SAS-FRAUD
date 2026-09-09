@@ -173,7 +173,7 @@ def _initialize_state() -> None:
         "af_batch_details": {},
         "af_batch_running": False,
         "af_batch_completed_fingerprint": None,
-        "af_batch_filter": "Tất cả",
+        "af_batch_filter": "All results",
         "af_pending_result_dialog": None,
         "af_demo_pending_dialog": None,
         "af_demo1_result": None,
@@ -289,7 +289,7 @@ def _fired_rules_table_rows(fired_rules: list[ApplicationFiredRule]) -> list[dic
 
 def _render_fired_rules_table(fired_rules: list[ApplicationFiredRule]) -> None:
     if not fired_rules:
-        st.info("Không có Decision Rule nào fire.")
+        st.info("No Decision Rule fired.")
         return
     st.dataframe(_fired_rules_table_rows(fired_rules), use_container_width=True, hide_index=True)
 
@@ -299,8 +299,8 @@ def _render_alerted_entities_section(alerted_entities: list[dict[str, Any]]) -> 
         return
     _section("Alerted entities")
     st.caption(
-        "Nhãn kỹ thuật — outcomeEntityType không nhất định là entity type đã cấu hình "
-        "trong Alert Triage."
+        "Technical field: outcomeEntityType may differ from the entity type configured "
+        "in Alert Triage."
     )
     st.dataframe(
         [
@@ -324,33 +324,33 @@ def _rule_matches_target(rule: ApplicationFiredRule, target_rule: str) -> bool:
     )
 
 
-@st.dialog("Kết quả hồ sơ")
+@st.dialog("Application Result")
 def _show_application_result_dialog(entry: dict[str, Any]) -> None:
     outcome_name = str(entry.get("outcome_name") or "").lower()
     if "declin" in outcome_name or "reject" in outcome_name:
-        st.markdown("## :material/block: Hồ sơ bị từ chối")
+        st.markdown("## :material/block: Application Declined")
     else:
-        st.markdown("## :material/warning: Hồ sơ có cảnh báo")
+        st.markdown("## :material/warning: Application Alert")
 
     fired_rules = entry.get("fired_rules") or []
     if fired_rules:
         for rule in fired_rules:
             st.markdown(f"**Rule:** `{rule.get('name', '')}`")
             if rule.get("reason"):
-                st.markdown(f"**Lý do:** {rule['reason']}")
+                st.markdown(f"**Reason:** {rule['reason']}")
     else:
-        st.caption("SAS không trả về tên rule cụ thể kèm alert này.")
+        st.caption("SAS did not return a specific rule name with this alert.")
 
     st.caption(f"Application: {entry.get('application_identifier', '')}")
     st.caption(f"Customer: {entry.get('customer_identifier', '')}")
-    st.markdown("**Alert:** Đã tạo")
+    st.markdown("**Alert:** Created")
 
-    if st.button("Đóng", type="primary", use_container_width=True, key="af_manual_dialog_close"):
+    if st.button("Close", type="primary", use_container_width=True, key="af_manual_dialog_close"):
         st.session_state["af_pending_result_dialog"] = None
         st.rerun()
 
 
-@st.dialog("Kết quả Demo")
+@st.dialog("Alert Demo Result")
 def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
     """Quick Demo's own popup — independent of af_pending_result_dialog.
 
@@ -358,16 +358,16 @@ def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
     sequence; seed steps never open a popup (see _render_quick_demos).
     """
 
-    st.markdown("## :material/warning: Hồ sơ có cảnh báo")
+    st.markdown("## :material/warning: Application Alert")
     st.markdown(f"**Target rule:** `{entry.get('target_rule', '')}`")
     st.markdown(f"**Actual fired rule:** `{entry.get('actual_rule_name', '')}`")
     if entry.get("reason"):
-        st.markdown(f"**Lý do:** {entry['reason']}")
+        st.markdown(f"**Reason:** {entry['reason']}")
     st.caption(f"Application: {entry.get('application_identifier', '')}")
     st.caption(f"Customer: {entry.get('customer_identifier', '')}")
-    st.markdown("**Alert:** Đã tạo")
+    st.markdown("**Alert:** Created")
 
-    if st.button("Đóng", type="primary", use_container_width=True, key="af_demo_dialog_close"):
+    if st.button("Close", type="primary", use_container_width=True, key="af_demo_dialog_close"):
         st.session_state["af_demo_pending_dialog"] = None
         st.rerun()
 
@@ -469,9 +469,9 @@ def _render_single_result(result: dict[str, Any]) -> None:
     alert = summary.alert_created if summary else False
     request_ok = 200 <= response.status_code < 300 and response.parse_error is None
 
-    _section("Kết quả cho hồ sơ")
+    _section("Application Result")
     st.markdown(
-        f"**Kết quả cho hồ sơ:** `{identity['application_identifier']}`  \n"
+        f"**Application:** `{identity['application_identifier']}`  \n"
         f"**Transaction:** `{identity['transaction_identifier']}`  \n"
         f"**Customer:** `{identity['customer_identifier']}`  \n"
         f"**Processed at:** {identity['sent_at']}"
@@ -479,10 +479,10 @@ def _render_single_result(result: dict[str, Any]) -> None:
 
     status_columns = st.columns(3)
     status_columns[0].metric(
-        "Request", "Thành công" if request_ok else "Gửi thất bại"
+        "Request", "Successful" if request_ok else "Failed"
     )
-    status_columns[1].metric("Rule", "Đã fire" if fired_rules else "Không fire")
-    status_columns[2].metric("Alert", "Đã tạo" if alert else "Không cảnh báo")
+    status_columns[1].metric("Rule", "Fired" if fired_rules else "Not fired")
+    status_columns[2].metric("Alert", "Created" if alert else "No alert")
 
     outcome_raw = (summary.outcome_name or summary.outcome) if summary else None
     outcome_display = _display_outcome(outcome_raw)
@@ -509,9 +509,9 @@ def _render_single_result(result: dict[str, Any]) -> None:
     _render_fired_rules_table(fired_rules)
     if alert:
         st.info(
-            "Alert này được đánh giá trên lịch sử Profile hiện có của SAS — nếu hồ sơ "
-            "này tái sử dụng một khoá test cũ (CCCD, tài khoản, điện thoại tham chiếu...), "
-            "Profile vẫn giữ lịch sử trước đó nên alert có thể là kết quả đúng."
+            "SAS evaluated this alert against existing Profile history. Reusing a prior "
+            "test key such as an identity number, account or reference phone can therefore "
+            "produce a valid alert based on earlier submissions."
         )
 
     if summary:
@@ -523,9 +523,9 @@ def _render_single_result(result: dict[str, Any]) -> None:
         else None
     )
     if profiles is not None:
-        with st.expander("Profile trả về", expanded=False):
+        with st.expander("Returned Profiles", expanded=False):
             st.json(profiles, expanded=False)
-    with st.expander("Chi tiết phản hồi (raw SAS response)", expanded=False):
+    with st.expander("Raw SAS Response", expanded=False):
         if response.parse_error:
             st.error(f"Invalid JSON response: {response.parse_error}")
         st.code(response.raw_body, language="text", wrap_lines=True)
@@ -545,141 +545,138 @@ def _render_single(
     now = datetime.now(timezone.utc).replace(microsecond=0)
     channel_codes = list(APPLICATION_CHANNELS)
 
-    _section("Quản lý dữ liệu test")
+    _section("Test Data Management")
     reset_col1, reset_col2 = st.columns(2)
     if reset_col1.button(
-        "Tạo application mới - giữ khách hàng",
+        "New Application - Keep Customer",
         key="af_reset_same_customer",
         use_container_width=True,
         help=(
-            "Sinh application.identifier và transactionIdentifier mới; giữ nguyên "
-            "customer/applicant/CCCD/phone/device/tài khoản giải ngân — hồ sơ mới vẫn "
-            "dùng chung Profile SAS của khách hàng này (có chủ đích)."
+            "Generate a new application identifier and transaction identifier while "
+            "keeping all customer and Profile keys unchanged."
         ),
     ):
         apply_new_application_same_customer(st.session_state)
         st.rerun()
     if reset_col2.button(
-        "Tạo bộ test sạch",
+        "Create Fresh Test Dataset",
         key="af_reset_fresh_dataset",
         use_container_width=True,
         help=(
-            "Sinh mới toàn bộ khoá liên quan Profile (customer, CCCD, phone, device, "
-            "tài khoản giải ngân, điện thoại tham chiếu, địa chỉ, sales agent) — dùng "
-            "trước khi trình diễn một hồ sơ 'bình thường / không cảnh báo' để giảm rủi "
-            "ro dính lịch sử Profile từ lần test trước. Không xoá Profile trên SAS."
+            "Generate new values for every Profile key before a normal no-alert test. "
+            "This does not delete any Profile stored by SAS."
         ),
     ):
         apply_fresh_test_dataset(st.session_state)
         st.rerun()
 
     with st.form("af_single_form", border=True):
-        _section("1. Thông tin hồ sơ")
+        _section("1. Application Details")
         first, second = st.columns(2)
-        application_identifier = first.text_input("Mã hồ sơ", key="af_single_application_id")
+        application_identifier = first.text_input("Application ID", key="af_single_application_id")
         application_type = second.selectbox(
-            "Sản phẩm vay", ["PERSONAL_LOAN", "HOME_LOAN", "AUTO_LOAN"]
+            "Loan Product", ["PERSONAL_LOAN", "HOME_LOAN", "AUTO_LOAN"]
         )
         application_amount = first.number_input(
-            "Số tiền đề nghị", min_value=0.0, value=50_000_000.0, step=1_000_000.0
+            "Requested Amount", min_value=0.0, value=50_000_000.0, step=1_000_000.0
         )
-        currency_code = second.selectbox("Loại tiền", ["VND", "USD"])
+        currency_code = second.selectbox("Currency", ["VND", "USD"])
         application_purpose = first.selectbox(
-            "Mục đích vay", ["PERSONAL_USE", "HOME_RENOVATION", "VEHICLE_PURCHASE"]
+            "Loan Purpose", ["PERSONAL_USE", "HOME_RENOVATION", "VEHICLE_PURCHASE"]
         )
         application_status = second.selectbox(
-            "Trạng thái hồ sơ", ["SUBMITTED", "PENDING", "APPROVED"]
+            "Application Status", ["SUBMITTED", "PENDING", "APPROVED"]
         )
         application_stage = first.selectbox(
-            "Giai đoạn xử lý", ["UNDER_REVIEW", "DOCUMENT_CHECK", "DECISION"]
+            "Application Stage", ["UNDER_REVIEW", "DOCUMENT_CHECK", "DECISION"]
         )
-        event_date = second.date_input("Ngày ghi nhận (UTC)", value=now.date())
-        event_time = first.time_input("Giờ ghi nhận (UTC)", value=now.time())
+        event_date = second.date_input("Event Date (UTC)", value=now.date())
+        event_time = first.time_input("Event Time (UTC)", value=now.time())
 
-        _section("2. Người nộp hồ sơ và khách hàng")
+        _section("2. Applicant and Customer")
         first, second = st.columns(2)
         applicant_identifier = first.text_input(
-            "Mã người nộp hồ sơ", key="af_single_applicant_id"
+            "Applicant ID", key="af_single_applicant_id"
         )
-        applicant_name = second.text_input("Tên người nộp hồ sơ", "Nguyen Van Demo")
+        applicant_name = second.text_input("Applicant Name", "Nguyen Van Demo")
         customer_identifier = first.text_input(
-            "Mã khách hàng", key="af_single_customer_id"
+            "Customer ID", key="af_single_customer_id"
         )
-        customer_name = second.text_input("Tên khách hàng", "Nguyen Van Demo")
-        customer_type = first.selectbox("Loại khách hàng", ["INDIVIDUAL", "BUSINESS"])
-        address_country_code = second.text_input("Mã quốc gia", "VN", max_chars=3)
+        customer_name = second.text_input("Customer Name", "Nguyen Van Demo")
+        customer_type = first.selectbox("Customer Type", ["INDIVIDUAL", "BUSINESS"])
+        address_country_code = second.text_input("Country Code", "VN", max_chars=3)
 
-        _section("3. Định danh và liên hệ")
+        _section("3. Identity and Contact")
         first, second = st.columns(2)
         identification_number = first.text_input(
-            "CCCD / Số định danh", key="af_single_identification_number"
+            "Identification Number", key="af_single_identification_number"
         )
         email = second.text_input("Email", "demo.application@example.com")
-        phone = first.text_input("Số điện thoại", key="af_single_phone")
+        phone = first.text_input("Phone Number", key="af_single_phone")
         months_at_location = second.number_input(
-            "Số tháng tại địa chỉ", min_value=0, value=24, step=1
+            "Months at Address", min_value=0, value=24, step=1
         )
 
-        _section("4. Nghề nghiệp và thu nhập")
+        _section("4. Employment and Income")
         first, second = st.columns(2)
-        employer_name = first.text_input("Đơn vị công tác", "Demo Company")
+        employer_name = first.text_input("Employer Name", "Demo Company")
         employment_status = second.selectbox(
-            "Trạng thái nghề nghiệp", ["EMPLOYED", "SELF_EMPLOYED", "UNEMPLOYED"]
+            "Employment Status", ["EMPLOYED", "SELF_EMPLOYED", "UNEMPLOYED"]
         )
         monthly_income = first.number_input(
-            "Thu nhập thường xuyên hàng tháng",
+            "Monthly Regular Income",
             min_value=0.0,
             value=25_000_000.0,
             step=1_000_000.0,
         )
         outstanding_debt = second.number_input(
-            "Dư nợ hiện tại", min_value=0.0, value=5_000_000.0, step=1_000_000.0
+            "Outstanding Debt", min_value=0.0, value=5_000_000.0, step=1_000_000.0
         )
 
-        _section("5. Kênh tiếp nhận")
+        _section("5. Submission Channel")
         application_channel = st.selectbox(
-            "Kênh tiếp nhận hồ sơ",
+            "Application Channel",
             channel_codes,
             index=channel_codes.index("MOBILE_APP"),
             format_func=lambda code: APPLICATION_CHANNELS[code]["label"],
         )
         st.caption(
-            "application.channel và solution.channelType được ánh xạ đồng bộ theo quy ước của POC."
+            "application.channel and solution.channelType use the centralized POC mapping."
         )
 
-        _section("6. Thiết bị")
+        _section("6. Device Information")
         first, second = st.columns(2)
-        device_identifier = first.text_input("Mã thiết bị", key="af_single_device_id")
-        ip_address = second.text_input("Địa chỉ IP", "203.0.113.42")
+        device_identifier = first.text_input("Device ID", key="af_single_device_id")
+        ip_address = second.text_input("IP Address", "203.0.113.42")
 
         _section("7. CIC")
         st.markdown(
-            f'<div class="af-contract-note">Profile AF_CICIdentity được SAS quản lý. '
-            f'Hai mảng profile giữ cùng capacity {AF_CIC_PROFILE_CAPACITY}; giao diện không sửa '
-            "trực tiếp profile/count và chưa đưa các path CIC chưa xác minh vào request.</div>",
+            f'<div class="af-contract-note">SAS manages the AF_CICIdentity Profile. '
+            f'Both Profile arrays use capacity {AF_CIC_PROFILE_CAPACITY}. The UI does not '
+            "edit Profile counts or send unverified CIC paths.</div>",
             unsafe_allow_html=True,
         )
 
-        _section("8. Dữ liệu rủi ro Application Fraud")
+        _section("8. Application Fraud Risk Data")
         first, second = st.columns(2)
-        bank_id = first.text_input("Mã đơn vị", "BANK-A")
+        bank_id = first.text_input("Institution ID", "BANK-A")
         sales_agent_identifier = second.text_input(
-            "Mã nhân viên/đại lý", key="af_single_sales_agent"
+            "Sales Agent ID", key="af_single_sales_agent"
         )
         disb_account_number = first.text_input(
-            "Tài khoản nhận giải ngân", key="af_single_disb_account"
+            "Disbursement Account", key="af_single_disb_account"
         )
         reference_phone = second.text_input(
-            "Điện thoại tham chiếu", key="af_single_reference_phone"
+            "Reference Phone", key="af_single_reference_phone"
         )
         normalized_address = st.text_input(
-            "Địa chỉ chuẩn hóa", key="af_single_normalized_address"
+            "Normalized Address", key="af_single_normalized_address"
         )
-        disb_owner_match = first.checkbox("Chủ tài khoản khớp người nộp", value=True)
-        employer_unverified = second.checkbox("Đơn vị công tác chưa xác minh", value=False)
-        st.caption("Các cửa sổ 7/30 ngày do SAS Profile và Variable Rule tính.")
+        disb_owner_match = first.checkbox("Account Owner Matches Applicant", value=True)
+        employer_unverified = second.checkbox("Employer Unverified", value=False)
+        st.caption("SAS Profiles and Variable Rules calculate all 7-day and 30-day windows.")
 
-        _section("9. Thông tin kỹ thuật")
+        _section("9. Technical Information")
         st.code(
             f"originationType={APPLICATION_ORIGINATION_TYPE} | "
             f"activityType={APPLICATION_ACTIVITY_TYPE} | "
@@ -689,7 +686,7 @@ def _render_single(
             language="text",
         )
         submitted = st.form_submit_button(
-            "Gửi hồ sơ", type="primary", use_container_width=True
+            "Submit Application", type="primary", use_container_width=True
         )
 
     values = {
@@ -736,7 +733,7 @@ def _render_single(
         payload = None
         validation_errors = [str(error)]
 
-    _section("Xem trước JSON")
+    _section("Payload Preview")
     if payload is not None:
         st.json(payload, expanded=False)
     for error in validation_errors:
@@ -747,15 +744,15 @@ def _render_single(
         if st.session_state["af_single_sending"] or (
             st.session_state["af_single_last_transaction"] == transaction_id
         ):
-            st.warning("Request này đã được ghi nhận; ứng dụng không gửi lại khi rerun.")
+            st.warning("This request was already submitted; reruns will not submit it again.")
         elif validation_errors or payload is None:
-            st.error("Dữ liệu chưa hợp lệ; request chưa được gửi.")
+            st.error("The payload is invalid; no request was submitted.")
         else:
             st.session_state["af_single_sending"] = True
             st.session_state["af_single_result"] = None
 
             try:
-                with st.spinner("Đang chờ SAS Fraud Runtime..."):
+                with st.spinner("Waiting for SAS Fraud Runtime..."):
                     response = send_message(
                         endpoint=endpoint,
                         payload=payload,
@@ -792,7 +789,7 @@ def _render_single(
                 st.error(f"DNS/connection error: {error}")
             except (requests.RequestException, ValueError) as error:
                 st.session_state["af_single_last_transaction"] = None
-                st.error(f"Gửi thất bại: {error}")
+                st.error(f"Submission failed: {error}")
             finally:
                 st.session_state["af_single_sending"] = False
 
@@ -802,52 +799,52 @@ def _render_single(
 
 
 def _filtered_results(results: list[dict[str, Any]], selected: str) -> list[dict[str, Any]]:
-    if selected == "Có cảnh báo":
+    if selected == "Alerts":
         return [result for result in results if result.get("alertFlg")]
-    if selected == "Không cảnh báo":
+    if selected == "No alerts":
         return [
             result
             for result in results
-            if result.get("requestStatus") == "Request thành công"
+            if result.get("requestStatus") == "Request successful"
             and not result.get("alertFlg")
         ]
-    if selected == "Rule đã fire":
+    if selected == "Rules fired":
         return [result for result in results if result.get("firedFlg")]
-    if selected == "Gửi thất bại":
-        return [result for result in results if result.get("requestStatus") == "Gửi thất bại"]
-    if selected == "Payload không hợp lệ":
+    if selected == "Failed submissions":
+        return [result for result in results if result.get("requestStatus") == "Submission failed"]
+    if selected == "Invalid rows":
         return [
             result
             for result in results
-            if result.get("requestStatus") == "Payload không hợp lệ"
+            if result.get("requestStatus") == "Invalid payload"
         ]
     return results
 
 
 def _render_batch_results(results: list[dict[str, Any]]) -> None:
-    _section("Kết quả xử lý")
-    success = sum(item.get("requestStatus") == "Request thành công" for item in results)
-    failed = sum(item.get("requestStatus") == "Gửi thất bại" for item in results)
+    _section("Processing Results")
+    success = sum(item.get("requestStatus") == "Request successful" for item in results)
+    failed = sum(item.get("requestStatus") == "Submission failed" for item in results)
     alert = sum(bool(item.get("alertFlg")) for item in results)
     no_alert = sum(
-        item.get("requestStatus") == "Request thành công" and not item.get("alertFlg")
+        item.get("requestStatus") == "Request successful" and not item.get("alertFlg")
         for item in results
     )
     columns = st.columns(4)
-    columns[0].metric("Thành công", success)
-    columns[1].metric("Thất bại", failed)
-    columns[2].metric("Có cảnh báo", alert)
-    columns[3].metric("Không cảnh báo", no_alert)
+    columns[0].metric("Successful", success)
+    columns[1].metric("Failed", failed)
+    columns[2].metric("Alerts", alert)
+    columns[3].metric("No alerts", no_alert)
 
     selected_filter = st.selectbox(
-        "Lọc kết quả",
+        "Result filter",
         [
-            "Tất cả",
-            "Có cảnh báo",
-            "Không cảnh báo",
-            "Rule đã fire",
-            "Gửi thất bại",
-            "Payload không hợp lệ",
+            "All results",
+            "Alerts",
+            "No alerts",
+            "Rules fired",
+            "Failed submissions",
+            "Invalid rows",
         ],
         key="af_batch_filter",
     )
@@ -858,7 +855,7 @@ def _render_batch_results(results: list[dict[str, Any]]) -> None:
         hide_index=True,
     )
     st.download_button(
-        "Tải kết quả CSV",
+        "Download Results CSV",
         data=results_to_csv(results),
         file_name="application_fraud_batch_results.csv",
         mime="text/csv",
@@ -867,29 +864,29 @@ def _render_batch_results(results: list[dict[str, Any]]) -> None:
     )
     if filtered:
         labels = [
-            f"Dòng {item['rowNumber']} — {item['applicationIdentifier']}" for item in filtered
+            f"Row {item['rowNumber']} — {item['applicationIdentifier']}" for item in filtered
         ]
-        selected_label = st.selectbox("Chi tiết từng dòng", labels, key="af_result_detail")
+        selected_label = st.selectbox("Row details", labels, key="af_result_detail")
         detail = filtered[labels.index(selected_label)]
         with st.expander("Request JSON", expanded=False):
             if detail.get("_request") is None:
-                st.info("Dòng không hợp lệ nên không tạo/gửi request.")
+                st.info("The invalid row was not mapped or submitted.")
             else:
                 st.json(detail["_request"], expanded=False)
-        with st.expander("Chi tiết phản hồi", expanded=False):
+        with st.expander("Response Details", expanded=False):
             if detail.get("_parsedResponse") is not None:
                 st.json(detail["_parsedResponse"], expanded=False)
             elif detail.get("_rawResponse"):
                 st.code(detail["_rawResponse"], language="text", wrap_lines=True)
             else:
-                st.info(detail.get("errorMessage") or "Không có phản hồi từ runtime.")
+                st.info(detail.get("errorMessage") or "No runtime response is available.")
 
 
 def _render_batch(
     *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
 ) -> None:
     st.download_button(
-        "Tải CSV mẫu",
+        "Download CSV Template",
         data=application_csv_template(),
         file_name="application_fraud_template.csv",
         mime="text/csv",
@@ -897,10 +894,10 @@ def _render_batch(
         use_container_width=True,
     )
     uploaded = st.file_uploader(
-        "Chọn tệp CSV", type=["csv"], key="af_csv_upload", accept_multiple_files=False
+        "Upload CSV", type=["csv"], key="af_csv_upload", accept_multiple_files=False
     )
     if uploaded is None:
-        st.info("Tải CSV mẫu, điền dữ liệu và upload để kiểm tra trước khi gửi.")
+        st.info("Download the template, enter data, then upload it for validation before submission.")
         return
 
     data = uploaded.getvalue()
@@ -913,10 +910,10 @@ def _render_batch(
         st.session_state["af_batch_validated_rows"] = validation.valid_rows
         st.session_state["af_batch_validation_errors"] = validation.errors
 
-    _section("Kiểm tra dữ liệu")
+    _section("Data Validation")
     st.caption(
-        f"{len(validation.rows)} dòng dữ liệu · {len(validation.valid_rows)} hợp lệ · "
-        f"{len(validation.errors)} lỗi"
+        f"{len(validation.rows)} data rows · {len(validation.valid_rows)} valid · "
+        f"{len(validation.errors)} errors"
     )
     if validation.rows:
         preview_columns = [column for column in validation.columns if column]
@@ -931,11 +928,11 @@ def _render_batch(
     if validation.errors:
         st.dataframe(validation.errors, use_container_width=True, hide_index=True)
     else:
-        st.success("Toàn bộ dữ liệu hợp lệ.")
+        st.success("All rows are valid.")
 
     first, second, third = st.columns(3)
     delay_seconds = first.number_input(
-        "Khoảng nghỉ giữa request (giây)",
+        "Delay between requests (seconds)",
         min_value=0.0,
         max_value=60.0,
         value=0.5,
@@ -943,7 +940,7 @@ def _render_batch(
         key="af_batch_delay",
     )
     batch_timeout = second.number_input(
-        "Timeout mỗi request (giây)",
+        "Timeout per request (seconds)",
         min_value=1.0,
         max_value=300.0,
         value=float(timeout_seconds),
@@ -951,16 +948,16 @@ def _render_batch(
         key="af_batch_timeout",
     )
     stop_mode = third.selectbox(
-        "Khi có lỗi", ["Tiếp tục", "Dừng batch"], key="af_batch_stop_mode"
+        "On error", ["Continue", "Stop batch"], key="af_batch_stop_mode"
     )
     confirmed = st.checkbox(
-        "Tôi đã kiểm tra dữ liệu; chỉ gửi các dòng hợp lệ.", key="af_batch_confirm"
+        "I have reviewed the data; submit valid rows only.", key="af_batch_confirm"
     )
     already_completed = (
         st.session_state.get("af_batch_completed_fingerprint") == fingerprint
     )
     run_clicked = st.button(
-        "Chạy batch",
+        "Run Batch",
         type="primary",
         key="af_run_batch",
         disabled=(
@@ -973,12 +970,12 @@ def _render_batch(
     )
     if already_completed:
         st.caption(
-            "Tệp này đã chạy trong session hiện tại. Upload tệp khác để tạo batch mới."
+            "This file has already run in the current session. Upload a different file to create a new batch."
         )
 
     if run_clicked:
         if not claim_batch_run(st.session_state, fingerprint):
-            st.warning("Batch đang chạy hoặc đã hoàn tất; không gửi lặp lại.")
+            st.warning("The batch is running or has completed; duplicate submission was blocked.")
         else:
             st.session_state["af_batch_status"] = "running"
             st.session_state["af_batch_progress"] = 0
@@ -996,17 +993,17 @@ def _render_batch(
                 progress_bar.progress(current / total)
                 st.session_state["af_batch_progress"] = current
                 current_text.write(
-                    f"Dòng {current}/{total} · Hồ sơ {row.get('applicationIdentifier', '')}"
+                    f"Row {current}/{total} · Application {row.get('applicationIdentifier', '')}"
                 )
-                if result.get("requestStatus") == "Request thành công":
+                if result.get("requestStatus") == "Request successful":
                     counters["success"] += 1
                     counters["alert" if result.get("alertFlg") else "no_alert"] += 1
                 else:
                     counters["failed"] += 1
-                metric_columns[0].metric("Thành công", counters["success"])
-                metric_columns[1].metric("Thất bại", counters["failed"])
-                metric_columns[2].metric("Có cảnh báo", counters["alert"])
-                metric_columns[3].metric("Không cảnh báo", counters["no_alert"])
+                metric_columns[0].metric("Successful", counters["success"])
+                metric_columns[1].metric("Failed", counters["failed"])
+                metric_columns[2].metric("Alerts", counters["alert"])
+                metric_columns[3].metric("No alerts", counters["no_alert"])
 
             try:
                 sent_results = execute_application_batch(
@@ -1016,7 +1013,7 @@ def _render_batch(
                     verify_tls=verify_tls,
                     ca_bundle=ca_bundle,
                     delay_seconds=float(delay_seconds),
-                    stop_on_error=stop_mode == "Dừng batch",
+                    stop_on_error=stop_mode == "Stop batch",
                     progress=update_progress,
                 )
                 all_results = invalid_batch_results(validation) + sent_results
@@ -1034,7 +1031,7 @@ def _render_batch(
                 st.session_state["af_batch_status"] = "completed"
             except Exception as error:  # UI boundary: never expose a stack trace.
                 st.session_state["af_batch_status"] = "failed"
-                st.error(f"Batch dừng do lỗi không mong đợi: {error}")
+                st.error(f"Batch stopped because of an unexpected error: {error}")
             finally:
                 finish_batch_run(st.session_state, fingerprint)
 
@@ -1115,12 +1112,17 @@ def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
             if response is not None and response.parsed_body is not None
             else []
         )
+        summary = (
+            summarize_sas_response(response.parsed_body)
+            if response is not None and response.parsed_body is not None
+            else None
+        )
         step_rows.append(
             {
-                "Bước": entry["label"],
+                "Step": entry["label"],
                 "HTTP": response.status_code if response is not None else "—",
-                "Rule đã fire": ", ".join(r.display_name for r in fired_rules) or "—",
-                "Alert": "Yes" if any(r.alert for r in fired_rules) else "No",
+                "Fired rules": ", ".join(r.display_name for r in fired_rules) or "—",
+                "Alert": "Yes" if summary and summary.alert_created else "No",
             }
         )
         profiles = (
@@ -1130,26 +1132,26 @@ def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
         )
         counts = _find_profile_counts(profiles) if profiles else {}
         if counts:
-            progression_rows.append({"Bước": entry["label"], **counts})
+            progression_rows.append({"Step": entry["label"], **counts})
 
     st.dataframe(step_rows, use_container_width=True, hide_index=True)
 
     last_entry = results[-1]
     if last_entry.get("errors"):
-        st.error("Payload không hợp lệ: " + " | ".join(last_entry["errors"]))
+        st.error("Invalid payload: " + " | ".join(last_entry["errors"]))
         return
     last_response: SasRuntimeResponse | None = last_entry.get("response")
     if last_response is None:
-        st.warning("Chuỗi demo dừng do một bước trước đó gửi thất bại.")
+        st.warning("The demo sequence stopped because an earlier step failed.")
         return
     if not (200 <= last_response.status_code < 300):
         st.error(
-            f"Request cuối trả về HTTP {last_response.status_code}; chuỗi demo dừng ở đây."
+            f"The final request returned HTTP {last_response.status_code}; the demo sequence stopped."
         )
 
     # 2. Profile progression
     if progression_rows:
-        st.markdown("**Profile progression (từ SAS):**")
+        st.markdown("**Profile progression returned by SAS:**")
         st.dataframe(progression_rows, use_container_width=True, hide_index=True)
 
     fired_rules = (
@@ -1167,16 +1169,16 @@ def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
         st.warning(f"Target rule result: NO HIT — {spec.no_hit_message}")
 
     # 4. Actual fired rule(s) from SAS — the only source of truth.
-    st.markdown("**Actual fired rules từ SAS (bước cuối):**")
+    st.markdown("**Actual rules returned by SAS for the final step:**")
     _render_fired_rules_table(fired_rules)
 
     # 5. Alert
     summary = summarize_sas_response(last_response.parsed_body)
-    st.markdown(f"**Alert:** {'Đã tạo' if summary.alert_created else 'Không tạo'}")
+    st.markdown(f"**Alert:** {'Created' if summary.alert_created else 'Not created'}")
     _render_alerted_entities_section(summary.alerted_entities)
 
     # 6. Technical details
-    with st.expander("Chi tiết kỹ thuật (request/response từng bước)", expanded=False):
+    with st.expander("Technical Details — Request/Response by Step", expanded=False):
         for entry in results:
             st.markdown(f"**{entry['label']}**")
             st.json(entry["payload"], expanded=False)
@@ -1192,21 +1194,26 @@ def _render_quick_demos(
     if pending_demo_dialog:
         _show_quick_demo_result_dialog(pending_demo_dialog)
 
-    _section("Demo cảnh báo nhanh")
+    _section("Quick Alert Demo")
     st.caption(
-        "Mỗi demo gửi một chuỗi hồ sơ Application Fraud thật vào SAS qua "
-        "build_application_fraud_payload() và send_message() — không có bước nào "
-        "giả lập kết quả hay tự tính profile count."
+        "Each demo submits a real sequence of Application Fraud requests to SAS through "
+        "build_application_fraud_payload() and send_message(). Results and profile counts "
+        "are never simulated by Streamlit."
     )
 
-    demo_columns = st.columns(4)
+    demo_columns = st.columns(3)
     for index, key in enumerate(("demo1", "demo2", "demo3")):
         spec = DEMO_SPECS[key]
         with demo_columns[index]:
             st.caption(spec.intro)
-            if st.button(spec.title, type="primary", use_container_width=True, key=f"af_{key}_run"):
+            if st.button(
+                spec.title,
+                type="primary" if index == 0 else "secondary",
+                use_container_width=True,
+                key=f"af_{key}_run",
+            ):
                 steps = spec.build_steps()
-                with st.spinner(f"Đang chạy {spec.title}..."):
+                with st.spinner(f"Running {spec.title}..."):
                     demo_results = run_demo_steps(
                         steps,
                         endpoint=endpoint,
@@ -1238,16 +1245,6 @@ def _render_quick_demos(
                     # Setting session_state alone does not reopen a @st.dialog —
                     # it only takes effect on the NEXT script run, so force one.
                     st.rerun()
-
-    with demo_columns[3]:
-        st.caption("Thu nhập / đơn vị công tác bất thường")
-        st.button(
-            "Demo 4 — Thu nhập / đơn vị công tác bất thường",
-            disabled=True,
-            use_container_width=True,
-            key="af_demo4_run",
-        )
-        st.caption("Quick Demo chưa bật — cần xác minh nguồn incomeMismatchInd.")
 
     for key in ("demo1", "demo2", "demo3"):
         demo_results = st.session_state.get(f"af_{key}_result")
@@ -1312,23 +1309,23 @@ def _render_runtime_status(
 
     with st.expander("Developer diagnostics", expanded=False):
         st.text_input(
-            "Expected package version (dev only, không dùng cho demo trình bày)",
+            "Expected package version (development only)",
             value="",
-            placeholder="ví dụ: 50217",
+            placeholder="Example: 50217",
             key="af_dev_expected_package_version",
             help=(
-                "So sánh thủ công với message.sas.system.packageVersion trong response — "
-                "giá trị này không so sánh tự động và không ảnh hưởng tới Execute."
+                "Compare manually with message.sas.system.packageVersion in the response. "
+                "This value does not affect execution."
             ),
         )
         if description is not None:
             st.json(description, expanded=False)
         elif description_endpoint:
-            st.caption(f"Không lấy được dữ liệu từ {description_endpoint}.")
+            st.caption(f"Could not retrieve metadata from {description_endpoint}.")
         else:
             st.caption(
-                "Không suy ra được description endpoint từ decision endpoint hiện tại "
-                "(cần kết thúc bằng '/execute')."
+                "The description endpoint could not be derived from the current decision endpoint "
+                "(it must end with '/execute')."
             )
 
 
@@ -1341,7 +1338,7 @@ def render_application_workspace(
         """
         <div class="af-console-header">
           <h2>Application Fraud</h2>
-          <p>Kiểm thử hồ sơ trên SAS Fraud Runtime</p>
+          <p>Test application submissions against SAS Fraud Runtime</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -1354,7 +1351,7 @@ def render_application_workspace(
     )
 
     quick_demo_tab, single_tab, batch_tab = st.tabs(
-        ["Demo cảnh báo nhanh", "Nhập một hồ sơ", "Gửi hồ sơ từ CSV"]
+        ["Quick Alert Demo", "Single Application", "CSV Batch Submission"]
     )
     with quick_demo_tab:
         _render_quick_demos(

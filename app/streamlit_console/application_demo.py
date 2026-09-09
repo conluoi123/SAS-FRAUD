@@ -12,7 +12,8 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from time import sleep
 from typing import Any, Callable
 
 try:
@@ -38,13 +39,33 @@ def _suffix() -> str:
     return uuid.uuid4().hex[:8].upper()
 
 
+def _digits(length: int) -> str:
+    """Return numeric-only synthetic data for phone, ID and account fields."""
+
+    return "".join(str(int(character, 16) % 10) for character in uuid.uuid4().hex[:length])
+
+
+def _sequence_timestamps(values: list[dict[str, Any]]) -> None:
+    """Give demo messages increasing UTC times without placing them in the future."""
+
+    started = datetime.now(timezone.utc).replace(microsecond=0) - timedelta(
+        seconds=max(0, len(values) - 1)
+    )
+    for index, item in enumerate(values):
+        item["message_datetime"] = (
+            (started + timedelta(seconds=index))
+            .isoformat(timespec="seconds")
+            .replace("+00:00", "Z")
+        )
+
+
 def _default_app_risk(prefix: str) -> dict[str, Any]:
     suffix = _suffix()
     return {
         "bankId": "BANK-DEMO",
         "salesAgentIdentifier": f"SALES-DEMO-{prefix}-{suffix}",
-        "disbAcctNumber": f"DEMO-ACC-{prefix}-{suffix}",
-        "referencePhone": f"09{suffix[:8]}",
+        "disbAcctNumber": _digits(14),
+        "referencePhone": f"09{_digits(8)}",
         "normalizedAddress": f"{suffix} DEMO STREET, DEMO DISTRICT",
         "disbAcctOwnerMatchInd": 1,
         "employerUnverifiedInd": 0,
@@ -74,9 +95,9 @@ def _base_values(prefix: str, **overrides: Any) -> dict[str, Any]:
         "customer_name": "Demo Applicant",
         "customer_type": "INDIVIDUAL",
         "address_country_code": "VN",
-        "identification_number": f"0{suffix}"[:12],
+        "identification_number": _digits(12),
         "email": f"demo.{suffix.lower()}@example.com",
-        "phone": f"09{suffix[:8]}",
+        "phone": f"09{_digits(8)}",
         "months_at_location": 24,
         "device_identifier": f"DEV-DEMO-{prefix}-{suffix}",
         "device_ip_address": "203.0.113.42",
@@ -104,7 +125,7 @@ class DemoSpec:
 def build_demo1_steps() -> list[DemoStep]:
     """Shared disbursement account, owner mismatch on the second application."""
 
-    shared_account = f"DEMO-SHARED-ACC-{_suffix()}"
+    shared_account = _digits(14)
 
     seed_values = _base_values("D1A")
     seed_values["app_risk"] = {
@@ -120,18 +141,20 @@ def build_demo1_steps() -> list[DemoStep]:
         "disbAcctOwnerMatchInd": 0,
     }
 
+    values = [seed_values, trigger_values]
+    _sequence_timestamps(values)
     return [
-        DemoStep("Seed A — tài khoản, chủ khớp", seed_values),
-        DemoStep("Trigger B — cùng tài khoản, chủ không khớp", trigger_values),
+        DemoStep("Seed A - account owner matches", seed_values),
+        DemoStep("Trigger B - shared account, owner mismatch", trigger_values),
     ]
 
 
 def build_demo2_steps() -> list[DemoStep]:
     """Three customers sharing one reference phone; two also share an account."""
 
-    shared_phone = f"09{_suffix()[:8]}"
-    account_x = f"DEMO-ACC-X-{_suffix()}"
-    account_y = f"DEMO-ACC-Y-{_suffix()}"
+    shared_phone = f"09{_digits(8)}"
+    account_x = _digits(14)
+    account_y = _digits(14)
 
     values_a = _base_values("D2A")
     values_a["app_risk"] = {
@@ -152,10 +175,12 @@ def build_demo2_steps() -> list[DemoStep]:
         "disbAcctNumber": account_x,
     }
 
+    values = [values_a, values_b, values_c]
+    _sequence_timestamps(values)
     return [
-        DemoStep("A — điện thoại tham chiếu chung", values_a),
-        DemoStep("B — cùng điện thoại tham chiếu", values_b),
-        DemoStep("C trigger — cùng điện thoại + trùng tài khoản với A", values_c),
+        DemoStep("A - shared reference phone", values_a),
+        DemoStep("B - shared reference phone", values_b),
+        DemoStep("C trigger - shared phone and account with A", values_c),
     ]
 
 
@@ -175,42 +200,43 @@ def build_demo3_steps() -> list[DemoStep]:
             "salesAgentIdentifier": shared_agent,
         }
         steps.append(DemoStep(label, values))
+    _sequence_timestamps([step.values for step in steps])
     return steps
 
 
 DEMO_SPECS: dict[str, DemoSpec] = {
     "demo1": DemoSpec(
         key="demo1",
-        title="Demo 1 — Trùng tài khoản giải ngân",
+        title="Run Shared Account Alert",
         target_rule=RULE_DISBURSEMENT,
         build_steps=build_demo1_steps,
         no_hit_message=(
-            "SAS chưa trả về rule này trong lần chạy — kiểm tra profile "
-            "AF_DisbursementAccount và Variable Rule liên quan."
+            "SAS did not return this rule. Check AF_DisbursementAccount "
+            "and its Variable Rule."
         ),
-        intro="Gửi 2 hồ sơ dùng chung 1 tài khoản giải ngân; hồ sơ thứ hai đổi chủ tài khoản không khớp.",
+        intro="Sends two customers with one disbursement account; the trigger has an owner mismatch.",
     ),
     "demo2": DemoSpec(
         key="demo2",
-        title="Demo 2 — Mạng lưới điện thoại tham chiếu",
+        title="Run Reference Network Alert",
         target_rule=RULE_REFERENCE,
         build_steps=build_demo2_steps,
         no_hit_message=(
-            "SAS chưa trả về rule này trong lần chạy — kiểm tra profile "
-            "AF_ReferencePhone và điều kiện liên kết đi kèm."
+            "SAS did not return this rule. Check AF_ReferencePhone "
+            "and the linked-condition threshold."
         ),
-        intro="Gửi 3 hồ sơ dùng chung 1 số điện thoại tham chiếu; 2 trong số đó cũng dùng chung tài khoản giải ngân.",
+        intro="Sends three customers with one reference phone; two also share a disbursement account.",
     ),
     "demo3": DemoSpec(
         key="demo3",
-        title="Demo 3 — Địa chỉ liên kết mật độ cao",
+        title="Run Linked Address Alert",
         target_rule=RULE_ADDRESS,
         build_steps=build_demo3_steps,
         no_hit_message=(
-            "Runtime/profile chưa sẵn sàng — SAS chưa trả về rule này cho địa chỉ/"
-            "employer/sales agent dùng chung trong lần chạy."
+            "SAS did not return this rule. Check AF_Address and the shared "
+            "address, employer and sales-agent conditions."
         ),
-        intro="Gửi 4 hồ sơ dùng chung địa chỉ chuẩn hóa, đơn vị công tác và nhân viên kinh doanh.",
+        intro="Sends four customers with one normalized address, employer and sales agent.",
     ),
 }
 
@@ -223,6 +249,8 @@ def run_demo_steps(
     verify_tls: bool,
     ca_bundle: str | None,
     sender: Callable[..., SasRuntimeResponse] = send_message,
+    delay_seconds: float = 0.5,
+    sleeper: Callable[[float], None] = sleep,
 ) -> list[dict[str, Any]]:
     """Send each step strictly in order; stop as soon as one is not HTTP 2xx."""
 
@@ -250,4 +278,6 @@ def run_demo_steps(
         results.append(entry)
         if not (200 <= response.status_code < 300):
             break
+        if step is not steps[-1] and delay_seconds > 0:
+            sleeper(delay_seconds)
     return results

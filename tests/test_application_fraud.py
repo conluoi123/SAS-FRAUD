@@ -311,7 +311,7 @@ def test_csv_parser_reports_blank_rows_and_duplicate_headers() -> None:
     validation = parse_application_csv(with_blank_row.encode("utf-8"))
     assert any(item["reason"] == "Blank row" for item in validation.errors)
     assert invalid_batch_results(validation)[0]["requestStatus"] == (
-        "Payload không hợp lệ"
+        "Invalid payload"
     )
 
     duplicate_header = b"applicationIdentifier,applicationIdentifier\nAPP-1,APP-2\n"
@@ -362,7 +362,7 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
 
     assert sent_ids == ["APP-000001", "APP-000002"]
     assert sleeps == [0.5]
-    assert results[0]["requestStatus"] == "Request thành công"
+    assert results[0]["requestStatus"] == "Request successful"
     assert results[0]["firedFlg"] is False
     assert results[0]["alertFlg"] is False
     assert results[1]["firedFlg"] is True
@@ -515,6 +515,22 @@ def test_not_fired_rules_are_excluded_by_default() -> None:
     assert fired[0].display_name == "Rule B"
 
 
+def test_alert_flag_keeps_rule_visible_when_fired_flag_is_absent() -> None:
+    parsed = _parsed_with_rules(
+        [
+            {
+                "ruleIdentifier": "A",
+                "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                "alertFlg": True,
+            }
+        ]
+    )
+    fired = extract_application_fired_rules(parsed)
+    assert len(fired) == 1
+    assert fired[0].fired is False
+    assert fired[0].alert is True
+
+
 def test_multiple_fired_rules_are_all_returned() -> None:
     parsed = _parsed_with_rules(
         [
@@ -625,6 +641,14 @@ def test_demo1_shares_only_the_intended_disbursement_account() -> None:
         seed_payload["message"]["customer"]["identifier"]
         != trigger_payload["message"]["customer"]["identifier"]
     )
+    assert seed_risk["disbAcctNumber"].isdigit()
+    assert len(seed_risk["disbAcctNumber"]) == 14
+    assert seed_payload["message"]["identification"]["number"].isdigit()
+    assert trigger_payload["message"]["identification"]["number"].isdigit()
+    assert (
+        seed_payload["message"]["request"]["messageDtTm"]
+        < trigger_payload["message"]["request"]["messageDtTm"]
+    )
 
 
 def test_demo2_shares_reference_phone_and_partial_account_overlap() -> None:
@@ -637,6 +661,7 @@ def test_demo2_shares_reference_phone_and_partial_account_overlap() -> None:
 
     phones = {p["message"]["appRisk"]["referencePhone"] for p in payloads}
     assert len(phones) == 1
+    assert next(iter(phones)).isdigit()
 
     accounts = [p["message"]["appRisk"]["disbAcctNumber"] for p in payloads]
     assert accounts[0] == accounts[2]
@@ -644,6 +669,9 @@ def test_demo2_shares_reference_phone_and_partial_account_overlap() -> None:
 
     customer_ids = {p["message"]["customer"]["identifier"] for p in payloads}
     assert len(customer_ids) == 3
+    timestamps = [p["message"]["request"]["messageDtTm"] for p in payloads]
+    assert timestamps == sorted(timestamps)
+    assert len(set(timestamps)) == 3
 
 
 def test_demo3_shares_address_employer_and_sales_agent() -> None:
@@ -683,6 +711,7 @@ def test_demo_steps_are_sent_sequentially_and_stop_on_failed_seed() -> None:
         verify_tls=True,
         ca_bundle=None,
         sender=sender,
+        delay_seconds=0,
     )
 
     assert len(calls) == 1
@@ -705,6 +734,7 @@ def test_demo_steps_continue_while_http_is_successful() -> None:
         verify_tls=True,
         ca_bundle=None,
         sender=sender,
+        delay_seconds=0,
     )
 
     assert len(calls) == 2

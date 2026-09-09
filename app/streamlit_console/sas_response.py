@@ -344,7 +344,11 @@ def extract_application_fired_rules(
         if not isinstance(rule, dict):
             continue
         fired = flag(rule.get("firedFlg"))
-        if only_fired and not fired:
+        alert = flag(rule.get("alertFlg"))
+        # Some SAS response variants carry alertFlg without repeating firedFlg.
+        # Keep the row visible whenever either authoritative SAS flag is true;
+        # the two raw booleans remain separate on ApplicationFiredRule.
+        if only_fired and not (fired or alert):
             continue
         display_name, basis = _rule_display_name(rule)
         reason = rule.get("alertReason") or rule.get("ruleReason")
@@ -358,7 +362,7 @@ def extract_application_fired_rules(
                     else None
                 ),
                 fired=fired,
-                alert=flag(rule.get("alertFlg")),
+                alert=alert,
                 rule_identifier=(
                     str(rule.get("ruleIdentifier")).strip()
                     if rule.get("ruleIdentifier")
