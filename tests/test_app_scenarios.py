@@ -29,6 +29,7 @@ def test_scenario_renders_without_exception(scenario) -> None:
     at = AppTest.from_file(APP_PATH)
     at.run(timeout=30)
 
+    at.sidebar.radio[0].set_value("Payment Fraud").run(timeout=30)
     at.sidebar.selectbox[0].set_value(scenario.family).run(timeout=30)
     at.sidebar.selectbox[1].set_value(scenario.label).run(timeout=30)
 

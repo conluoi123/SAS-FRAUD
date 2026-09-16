@@ -290,7 +290,11 @@ def _rule_display_name(rule: dict[str, Any]) -> tuple[str, str]:
 
     for field_name in ("ruleName", "ruleReference"):
         value = rule.get(field_name)
-        if isinstance(value, str) and value.strip() and not _looks_like_identifier(value):
+        if (
+            isinstance(value, str)
+            and value.strip()
+            and not _looks_like_identifier(value)
+        ):
             return value.strip(), field_name
 
     identifier = rule.get("ruleIdentifier")
@@ -331,7 +335,9 @@ def extract_application_fired_rules(
     sas = message.get("sas", {}) if isinstance(message, dict) else {}
     rules = sas.get("rulefired", []) if isinstance(sas, dict) else []
     rules = (
-        rules if isinstance(rules, list) else ([rules] if isinstance(rules, dict) else [])
+        rules
+        if isinstance(rules, list)
+        else ([rules] if isinstance(rules, dict) else [])
     )
 
     def flag(value: Any) -> bool:
@@ -369,7 +375,9 @@ def extract_application_fired_rules(
                     else None
                 ),
                 rule_reference=(
-                    str(rule.get("ruleReference") or rule.get("referenceIdentifier")).strip()
+                    str(
+                        rule.get("ruleReference") or rule.get("referenceIdentifier")
+                    ).strip()
                     if rule.get("ruleReference") or rule.get("referenceIdentifier")
                     else None
                 ),
@@ -390,6 +398,150 @@ def extract_application_fired_rules(
             )
         )
     return results
+
+
+_ALERT_ID_FIELDS = ("alertId", "alertID", "alertIdentifier")
+
+
+def extract_alert_id(parsed: Any) -> str | None:
+    """Return only an explicit Alert Triage identifier supplied by SAS.
+
+    Runtime captures currently stored in this repository do not contain an
+    Alert Triage ID, so this intentionally has no fallback to application,
+    transaction, message, decision-reference, entity, or locally generated IDs.
+    The recursive lookup makes the UI ready for response envelopes that expose
+    an explicit ``alertId``/``alertIdentifier`` without assuming its container.
+    """
+
+    def walk(node: Any) -> str | None:
+        if isinstance(node, dict):
+            for field_name in _ALERT_ID_FIELDS:
+                value = node.get(field_name)
+                if isinstance(value, (str, int)) and str(value).strip():
+                    return str(value).strip()
+            for value in node.values():
+                found = walk(value)
+                if found:
+                    return found
+        elif isinstance(node, list):
+            for item in node:
+                found = walk(item)
+                if found:
+                    return found
+        return None
+
+    return walk(parsed)
+
+
+@dataclass(frozen=True)
+class ApplicationFraudResult:
+    """Business-facing normalization over an unmodified SAS response."""
+
+    request_ok: bool
+    decision: Any
+    outcome_name: str | None
+    rule_fired: bool
+    alert_created: bool
+    alert_id: str | None
+    fired_rules: list[ApplicationFiredRule]
+    alert_reason: str | None
+    evidence: list[dict[str, Any]]
+    alerted_entities: list[dict[str, Any]]
+    transaction_id: str | None
+    message_id: str | None
+    decision_reference: str | None
+    application_id: str | None
+    customer_id: str | None
+    channel: str | None
+    elapsed_ms: int | None
+    return_type: Any
+    raw_response: Any
+
+
+def normalize_application_result(
+    parsed: Any,
+    *,
+    payload: dict[str, Any] | None = None,
+    http_status: int | None = None,
+    elapsed_ms: int | None = None,
+    parse_error: str | None = None,
+) -> ApplicationFraudResult:
+    """Normalize one Application Fraud request/response without inventing facts."""
+
+    summary = summarize_sas_response(parsed)
+    rules = extract_application_fired_rules(parsed)
+    return_fields = extract_return_fields(parsed)
+    business_error = return_fields.get("returnType") not in {None, 0, "0"}
+    request_ok = (
+        http_status is not None
+        and 200 <= http_status < 300
+        and parse_error is None
+        and not business_error
+    )
+
+    reasons: list[str] = []
+    for rule in rules:
+        if rule.reason and rule.reason not in reasons:
+            reasons.append(rule.reason)
+
+    message = payload.get("message", {}) if isinstance(payload, dict) else {}
+    application = message.get("application", {}) if isinstance(message, dict) else {}
+    customer = message.get("customer", {}) if isinstance(message, dict) else {}
+    request_system = (
+        message.get("sas", {}).get("system", {})
+        if isinstance(message, dict) and isinstance(message.get("sas"), dict)
+        else {}
+    )
+    transaction_id = summary.transaction_identifier or request_system.get(
+        "transactionIdentifier"
+    )
+
+    # Evidence is limited to entities explicitly returned by SAS.  Profile
+    # counters remain available in raw_response/Technical Details and are never
+    # inferred or fabricated here.
+    evidence = [
+        {
+            "type": "alerted_entity",
+            "value": item.get("outcomeEntity"),
+            "entity_type": item.get("outcomeEntityType"),
+        }
+        for item in summary.alerted_entities
+        if item.get("outcomeEntity") or item.get("outcomeEntityType")
+    ]
+
+    return ApplicationFraudResult(
+        request_ok=request_ok,
+        decision=summary.outcome_name or summary.outcome,
+        outcome_name=summary.outcome_name,
+        rule_fired=bool(rules),
+        alert_created=summary.alert_created,
+        alert_id=extract_alert_id(parsed),
+        fired_rules=rules,
+        alert_reason="; ".join(reasons) or None,
+        evidence=evidence,
+        alerted_entities=summary.alerted_entities,
+        transaction_id=str(transaction_id) if transaction_id else None,
+        message_id=summary.message_identifier,
+        decision_reference=summary.reference_identifier,
+        application_id=(
+            str(application.get("identifier"))
+            if isinstance(application, dict) and application.get("identifier")
+            else None
+        ),
+        customer_id=(
+            str(customer.get("identifier"))
+            if isinstance(customer, dict) and customer.get("identifier")
+            else None
+        ),
+        channel=(
+            str(application.get("channel"))
+            if isinstance(application, dict) and application.get("channel")
+            else None
+        ),
+        elapsed_ms=elapsed_ms,
+        return_type=return_fields.get("returnType"),
+        raw_response=parsed,
+    )
 
 
 def extract_return_fields(parsed: Any) -> dict[str, Any]:

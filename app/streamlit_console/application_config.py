@@ -11,7 +11,7 @@ from typing import Final
 
 APPLICATION_CHANNELS: Final[dict[str, dict[str, str]]] = {
     "MOBILE_APP": {
-        "label": "Mobile Application",
+        "label": "Ứng dụng di động",
         "solution_channel_type": "MA",
     },
     "WEB": {
@@ -19,19 +19,19 @@ APPLICATION_CHANNELS: Final[dict[str, dict[str, str]]] = {
         "solution_channel_type": "WB",
     },
     "BRANCH": {
-        "label": "Branch",
+        "label": "Tại quầy / Chi nhánh",
         "solution_channel_type": "BR",
     },
     "SALES_AGENT": {
-        "label": "Sales Agent",
+        "label": "Nhân viên kinh doanh",
         "solution_channel_type": "SA",
     },
     "PARTNER": {
-        "label": "Partner / Point of Sale",
+        "label": "Đối tác / Điểm bán",
         "solution_channel_type": "PT",
     },
     "CALL_CENTER": {
-        "label": "Call Center",
+        "label": "Tổng đài",
         "solution_channel_type": "CC",
     },
 }
@@ -54,6 +54,4 @@ def application_channel_type(application_channel: str) -> str:
         return APPLICATION_CHANNELS[channel]["solution_channel_type"]
     except KeyError as error:
         allowed = ", ".join(APPLICATION_CHANNELS)
-        raise ValueError(
-            f"application.channel must be one of: {allowed}."
-        ) from error
+        raise ValueError(f"application.channel must be one of: {allowed}.") from error

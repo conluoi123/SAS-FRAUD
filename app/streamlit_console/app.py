@@ -1,4 +1,4 @@
-"""SAS Fraud Decisioning multi-scenario test console."""
+"""Demo Bank loan origination portal backed by SAS Fraud Decisioning."""
 
 from __future__ import annotations
 
@@ -582,17 +582,19 @@ def _form_values(scenario) -> dict[str, Any]:
 
 
 def main() -> None:
-    st.set_page_config(page_title="SAS Fraud Console", page_icon="S", layout="wide")
-    st.title("SAS Fraud Decisioning Test Console")
-    st.caption(
-        "Chọn 1 scenario ở sidebar, chỉnh field cần thiết, gửi message tới SAS và xem "
-        "quyết định trả về."
+    bank_name = os.getenv("BANK_DISPLAY_NAME", "Demo Bank")
+    st.set_page_config(
+        page_title=f"{bank_name} | Loan Application Portal",
+        page_icon="🏦",
+        layout="wide",
+        initial_sidebar_state="expanded",
     )
 
     domain = st.sidebar.radio(
-        "Fraud domain",
-        ["Payment Fraud", "Application Fraud"],
+        "Không gian làm việc",
+        ["Application Fraud", "Payment Fraud"],
         key="fraud_domain_selector",
+        help="Payment Fraud is retained as a secondary technical workspace.",
     )
     if domain == "Payment Fraud":
         pending_dialog = st.session_state.get("pending_outcome_dialog")
@@ -603,45 +605,51 @@ def main() -> None:
         scenario = select_application_scenario()
 
     with st.sidebar:
+        st.markdown(f"### {bank_name}")
+        st.caption("Loan Origination & Fraud Screening")
+        st.page_link("app.py", label="Hồ sơ mới / Xử lý hàng loạt", icon="🏦")
+        st.page_link("pages/1_Alert_Log.py", label="Nhật ký cảnh báo", icon="🔔")
         st.divider()
-        st.header("Runtime")
-        endpoint = st.text_input("Decision endpoint", value=DEFAULT_ENDPOINT)
-        timeout_seconds = st.number_input(
-            "Timeout (seconds)",
-            min_value=1,
-            max_value=300,
-            value=int(os.getenv("SAS_REQUEST_TIMEOUT_SECONDS", "30")),
-        )
-        verify_default = os.getenv("SAS_TLS_VERIFY", "false").lower() == "true"
-        verify_tls = st.toggle("Verify TLS certificate", value=verify_default)
-        ca_bundle = st.text_input(
-            "CA bundle path", value=os.getenv("SAS_CA_BUNDLE", "")
-        )
-        expected_package_version = st.text_input(
-            "Expected package version",
-            value=os.getenv("SAS_EXPECTED_PACKAGE_VERSION", ""),
-            placeholder="50026",
-            help="Optional. The app will warn if SAS returns a different message.sas.system.packageVersion.",
-        )
-        if not verify_tls:
-            st.warning("TLS verification is disabled for this test environment.")
-        st.divider()
-        st.markdown("**Target rule**")
-        if domain == "Payment Fraud":
-            st.code(f"{scenario.rule_name}\n{scenario.rule_reason}", language="text")
-        else:
-            st.code(
-                "Kết luận lấy từ phản hồi thực của SAS Runtime",
-                language="text",
+        st.caption("Demo / Synthetic Data · POC")
+        with st.expander("Chi tiết kỹ thuật", expanded=False):
+            endpoint = st.text_input("Decision endpoint", value=DEFAULT_ENDPOINT)
+            timeout_seconds = st.number_input(
+                "Timeout (seconds)",
+                min_value=1,
+                max_value=300,
+                value=int(os.getenv("SAS_REQUEST_TIMEOUT_SECONDS", "30")),
             )
-        st.markdown("**Routing**")
-        if domain == "Payment Fraud":
-            st.code("SAS Debit Card Fraud\nPayment Fraud\nGLOBAL", language="text")
-        else:
-            st.code(
-                "Application Fraud\nGLOBAL\nAlert: app_fraud_app\nEntity: sfd_application",
-                language="text",
+            verify_default = os.getenv("SAS_TLS_VERIFY", "false").lower() == "true"
+            verify_tls = st.toggle("Verify TLS certificate", value=verify_default)
+            ca_bundle = st.text_input(
+                "CA bundle path", value=os.getenv("SAS_CA_BUNDLE", "")
             )
+            expected_package_version = st.text_input(
+                "Expected package version",
+                value=os.getenv("SAS_EXPECTED_PACKAGE_VERSION", ""),
+                help="Optional diagnostic comparison only.",
+            )
+            if not verify_tls:
+                st.caption("TLS verification is disabled in this demo environment.")
+            if domain == "Payment Fraud":
+                st.code(
+                    f"{scenario.rule_name}\n{scenario.rule_reason}", language="text"
+                )
+
+    if domain == "Application Fraud":
+        st.markdown(
+            f"""
+            <div style="padding:.35rem 0 1rem 0">
+              <div style="color:#64748b;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase">{bank_name}</div>
+              <h1 style="color:#0b2b4c;margin:.15rem 0 .2rem 0;font-size:2rem">Cổng xử lý hồ sơ vay</h1>
+              <div style="color:#536273">Tiếp nhận hồ sơ & sàng lọc gian lận · Demo / Synthetic Data</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    else:
+        st.title("Payment Fraud — Technical Workspace")
+        st.caption("Legacy scenario console retained for engineering validation.")
 
     if domain == "Application Fraud":
         render_application_console(

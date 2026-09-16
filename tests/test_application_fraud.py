@@ -36,6 +36,12 @@ from app.streamlit_console.application_demo import (
     build_demo3_steps,
     run_demo_steps,
 )
+from app.streamlit_console.application_json import (
+    format_payload,
+    merge_form_payload,
+    parse_and_validate_payload,
+    payload_to_form_updates,
+)
 from app.streamlit_console.application_workspace import (
     MANUAL_PROFILE_KEYS,
     _build_quick_demo_dialog_entry,
@@ -51,7 +57,11 @@ from app.streamlit_console.payloads import (
     validate_application_fraud_payload,
 )
 from app.streamlit_console.sas_client import SasRuntimeResponse
-from app.streamlit_console.sas_response import extract_application_fired_rules
+from app.streamlit_console.sas_response import (
+    extract_alert_id,
+    extract_application_fired_rules,
+    normalize_application_result,
+)
 
 
 BASE_RISK = {
@@ -310,15 +320,12 @@ def test_csv_parser_reports_blank_rows_and_duplicate_headers() -> None:
     with_blank_row = application_csv_template().decode("utf-8-sig") + "\n"
     validation = parse_application_csv(with_blank_row.encode("utf-8"))
     assert any(item["reason"] == "Blank row" for item in validation.errors)
-    assert invalid_batch_results(validation)[0]["requestStatus"] == (
-        "Invalid payload"
-    )
+    assert invalid_batch_results(validation)[0]["requestStatus"] == ("Invalid payload")
 
     duplicate_header = b"applicationIdentifier,applicationIdentifier\nAPP-1,APP-2\n"
     duplicate_validation = parse_application_csv(duplicate_header)
     assert any(
-        item["reason"] == "Duplicate CSV header"
-        for item in duplicate_validation.errors
+        item["reason"] == "Duplicate CSV header" for item in duplicate_validation.errors
     )
 
 
@@ -334,6 +341,7 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
         parsed = {
             "message": {
                 "sas": {
+                    "alert": ({"alertId": "ALT-BATCH-2"} if has_alert else {}),
                     "system": {"returnType": 0},
                     "decision": {"outcomeName": "Review" if has_alert else "Continue"},
                     "rulefired": [
@@ -343,7 +351,9 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
                             "alertFlg": has_alert,
                         }
                     ],
-                    "alerted": ([{"outcomeEntity": application_id}] if has_alert else []),
+                    "alerted": (
+                        [{"outcomeEntity": application_id}] if has_alert else []
+                    ),
                 }
             }
         }
@@ -367,6 +377,7 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
     assert results[0]["alertFlg"] is False
     assert results[1]["firedFlg"] is True
     assert results[1]["alertFlg"] is True
+    assert results[1]["alertId"] == "ALT-BATCH-2"
 
 
 def test_batch_does_not_retry_http_response() -> None:
@@ -550,7 +561,10 @@ def test_multiple_fired_rules_are_all_returned() -> None:
     )
     fired = extract_application_fired_rules(parsed)
     names = {rule.display_name for rule in fired}
-    assert names == {"AF_DR_Disbursement_Account_Anomaly", "AF_DR_Shared_Reference_Network"}
+    assert names == {
+        "AF_DR_Disbursement_Account_Anomaly",
+        "AF_DR_Shared_Reference_Network",
+    }
 
 
 def test_raw_identifier_stays_available_in_display_table() -> None:
@@ -751,7 +765,12 @@ def test_demo4_target_rule_is_not_registered_as_a_quick_demo() -> None:
 
 
 def test_quick_demo_state_keys_are_disjoint_from_manual_state_keys() -> None:
-    demo_keys = {"af_demo1_result", "af_demo2_result", "af_demo3_result", "af_demo_pending_dialog"}
+    demo_keys = {
+        "af_demo1_result",
+        "af_demo2_result",
+        "af_demo3_result",
+        "af_demo_pending_dialog",
+    }
     manual_keys = {
         "af_single_result",
         "af_single_last_transaction",
@@ -799,7 +818,9 @@ def _fake_manual_state() -> dict[str, object]:
     }
 
 
-def test_new_application_same_customer_only_changes_application_and_transaction() -> None:
+def test_new_application_same_customer_only_changes_application_and_transaction() -> (
+    None
+):
     state = _fake_manual_state()
     apply_new_application_same_customer(state)
 
@@ -954,3 +975,104 @@ def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(alert_log, "LOG_FILE", log_path)
 
     assert alert_log.load_alerts() == old_entries
+
+
+def test_form_payload_round_trips_through_json_editor() -> None:
+    payload = build_application_fraud_payload(BASE_VALUES)
+    parsed, errors = parse_and_validate_payload(format_payload(payload))
+
+    assert errors == []
+    assert parsed == payload
+
+
+def test_valid_json_edit_maps_known_values_back_to_form() -> None:
+    payload = build_application_fraud_payload(BASE_VALUES)
+    payload["message"]["application"]["amount"] = 75_000_000.0
+    payload["message"]["application"]["channel"] = "BRANCH"
+    payload["message"]["solution"]["channelType"] = "BR"
+
+    parsed, errors = parse_and_validate_payload(format_payload(payload))
+    updates = payload_to_form_updates(parsed or {})
+
+    assert errors == []
+    assert updates["af_form_application_amount"] == 75_000_000.0
+    assert updates["af_form_channel"] == "BRANCH"
+
+
+def test_invalid_json_is_blocked_before_application() -> None:
+    payload, errors = parse_and_validate_payload('{"message":')
+
+    assert payload is None
+    assert errors and errors[0].startswith("Message JSON is invalid")
+
+
+def test_form_edit_after_json_edit_preserves_unknown_fields() -> None:
+    previous_form = build_application_fraud_payload(BASE_VALUES)
+    effective = json.loads(json.dumps(previous_form))
+    effective["message"]["bankExtension"] = {"reviewQueue": "Q-01"}
+    effective["message"]["application"]["customPurposeCode"] = "CUST-X"
+    current_form = build_application_fraud_payload(
+        {**BASE_VALUES, "application_amount": 88_000_000.0}
+    )
+
+    merged = merge_form_payload(effective, previous_form, current_form)
+
+    assert merged["message"]["application"]["amount"] == 88_000_000.0
+    assert merged["message"]["bankExtension"] == {"reviewQueue": "Q-01"}
+    assert merged["message"]["application"]["customPurposeCode"] == "CUST-X"
+
+
+def test_alert_id_uses_only_explicit_alert_fields() -> None:
+    assert (
+        extract_alert_id(
+            {"message": {"sas": {"alert": {"alertId": "539642637588672"}}}}
+        )
+        == "539642637588672"
+    )
+    assert extract_alert_id({"alertIdentifier": "ALT-100"}) == "ALT-100"
+    assert (
+        extract_alert_id(
+            {
+                "message": {
+                    "application": {"identifier": "APP-DO-NOT-USE"},
+                    "sas": {
+                        "system": {
+                            "transactionIdentifier": "MSG-DO-NOT-USE",
+                            "messageIdentifier": "MESSAGE-DO-NOT-USE",
+                        },
+                        "decision": {"referenceIdentifier": "DECISION-DO-NOT-USE"},
+                    },
+                }
+            }
+        )
+        is None
+    )
+
+
+def test_application_result_normalizes_real_reason_without_invention() -> None:
+    payload = build_application_fraud_payload(BASE_VALUES)
+    parsed = {
+        "message": {
+            "sas": {
+                "system": {"returnType": 0, "transactionIdentifier": "MSG-1"},
+                "decision": {"outcomeName": "Review"},
+                "rulefired": [
+                    {
+                        "ruleName": "AF_DR_TEST",
+                        "alertReason": "Shared disbursement account",
+                        "firedFlg": True,
+                        "alertFlg": True,
+                    }
+                ],
+            }
+        }
+    }
+
+    result = normalize_application_result(
+        parsed, payload=payload, http_status=200, elapsed_ms=12
+    )
+
+    assert result.request_ok is True
+    assert result.alert_created is True
+    assert result.alert_reason == "Shared disbursement account"
+    assert result.alert_id is None

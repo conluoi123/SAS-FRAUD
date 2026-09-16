@@ -22,7 +22,12 @@ try:
         validate_application_fraud_payload,
     )
     from .sas_client import SasRuntimeResponse, send_message
-    from .sas_response import extract_return_fields, summarize_sas_response
+    from .sas_response import (
+        extract_alert_id,
+        extract_application_fired_rules,
+        extract_return_fields,
+        summarize_sas_response,
+    )
 except ImportError:
     from application_config import APPLICATION_CHANNELS
     from payloads import (
@@ -31,7 +36,12 @@ except ImportError:
         validate_application_fraud_payload,
     )
     from sas_client import SasRuntimeResponse, send_message
-    from sas_response import extract_return_fields, summarize_sas_response
+    from sas_response import (
+        extract_alert_id,
+        extract_application_fired_rules,
+        extract_return_fields,
+        summarize_sas_response,
+    )
 
 
 CSV_COLUMNS = (
@@ -131,6 +141,8 @@ RESULT_COLUMNS = (
     "decision",
     "firedFlg",
     "alertFlg",
+    "alertId",
+    "alertReason",
     "firedRules",
     "processingTimeMs",
     "errorType",
@@ -279,12 +291,8 @@ def map_application_csv_row(row: dict[str, str]) -> dict[str, Any]:
             "disbAcctNumber": _text(row, "disbAcctNumber"),
             "referencePhone": _text(row, "referencePhone"),
             "normalizedAddress": _text(row, "normalizedAddress"),
-            "disbAcctOwnerMatchInd": _parse_bool(
-                row.get("disbAcctOwnerMatchInd")
-            ),
-            "employerUnverifiedInd": _parse_bool(
-                row.get("employerUnverifiedInd")
-            ),
+            "disbAcctOwnerMatchInd": _parse_bool(row.get("disbAcctOwnerMatchInd")),
+            "employerUnverifiedInd": _parse_bool(row.get("employerUnverifiedInd")),
         },
     }
     return build_application_fraud_payload(values)
@@ -349,7 +357,9 @@ def parse_application_csv(data: bytes) -> CsvValidationResult:
                     f"Expected {len(header)} values but found {len(fields)}",
                 )
             )
-        normalized_fields = fields[: len(header)] + [""] * max(0, len(header) - len(fields))
+        normalized_fields = fields[: len(header)] + [""] * max(
+            0, len(header) - len(fields)
+        )
         row = {name: value.strip() for name, value in zip(header, normalized_fields)}
         row["_rowNumber"] = str(row_number)
         rows.append(row)
@@ -406,7 +416,12 @@ def parse_application_csv(data: bytes) -> CsvValidationResult:
                 _utc_iso8601(timestamp)
             except ValueError:
                 errors.append(
-                    _error(row_number, "messageDtTm", timestamp, "Invalid ISO-8601 timestamp")
+                    _error(
+                        row_number,
+                        "messageDtTm",
+                        timestamp,
+                        "Invalid ISO-8601 timestamp",
+                    )
                 )
         channel = row.get("applicationChannel", "").strip().upper()
         if channel and channel not in APPLICATION_CHANNELS:
@@ -504,8 +519,14 @@ def _rules_from_response(response: SasRuntimeResponse) -> tuple[bool, bool, str]
     message = response.parsed_body.get("message", {})
     sas = message.get("sas", {}) if isinstance(message, dict) else {}
     rules = sas.get("rulefired", []) if isinstance(sas, dict) else []
-    rules = rules if isinstance(rules, list) else ([rules] if isinstance(rules, dict) else [])
-    fired = [rule for rule in rules if isinstance(rule, dict) and _flag(rule.get("firedFlg"))]
+    rules = (
+        rules
+        if isinstance(rules, list)
+        else ([rules] if isinstance(rules, dict) else [])
+    )
+    fired = [
+        rule for rule in rules if isinstance(rule, dict) and _flag(rule.get("firedFlg"))
+    ]
     identifiers = [
         str(
             rule.get("ruleIdentifier")
@@ -515,13 +536,16 @@ def _rules_from_response(response: SasRuntimeResponse) -> tuple[bool, bool, str]
         )
         for rule in fired
     ]
-    alert = any(
-        _flag(rule.get("alertFlg")) for rule in rules if isinstance(rule, dict)
-    ) or summarize_sas_response(response.parsed_body).alert_created
+    alert = (
+        any(_flag(rule.get("alertFlg")) for rule in rules if isinstance(rule, dict))
+        or summarize_sas_response(response.parsed_body).alert_created
+    )
     return bool(fired), alert, ", ".join(item for item in identifiers if item)
 
 
-def _base_result(row: dict[str, str], payload: dict[str, Any] | None = None) -> dict[str, Any]:
+def _base_result(
+    row: dict[str, str], payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
     message = payload.get("message", {}) if payload else {}
     application = message.get("application", {}) if isinstance(message, dict) else {}
     solution = message.get("solution", {}) if isinstance(message, dict) else {}
@@ -545,6 +569,8 @@ def _base_result(row: dict[str, str], payload: dict[str, Any] | None = None) -> 
         "decision": None,
         "firedFlg": False,
         "alertFlg": False,
+        "alertId": None,
+        "alertReason": "",
         "firedRules": "",
         "processingTimeMs": None,
         "errorType": "",
@@ -619,6 +645,7 @@ def execute_application_batch(
                 else None
             )
             fired, alert, fired_rules = _rules_from_response(response)
+            normalized_rules = extract_application_fired_rules(response.parsed_body)
             business_error = return_fields.get("returnType") not in {None, 0, "0"}
             request_ok = (
                 200 <= response.status_code < 300
@@ -627,11 +654,19 @@ def execute_application_batch(
             )
             result.update(
                 httpStatus=response.status_code,
-                requestStatus="Request successful" if request_ok else "Submission failed",
+                requestStatus=(
+                    "Request successful" if request_ok else "Submission failed"
+                ),
                 returnType=return_fields.get("returnType"),
                 decision=(summary.outcome_name or summary.outcome) if summary else None,
                 firedFlg=fired,
                 alertFlg=alert,
+                alertId=extract_alert_id(response.parsed_body),
+                alertReason="; ".join(
+                    dict.fromkeys(
+                        rule.reason for rule in normalized_rules if rule.reason
+                    )
+                ),
                 firedRules=fired_rules,
                 processingTimeMs=response.elapsed_ms,
                 _rawResponse=response.raw_body,
@@ -661,11 +696,15 @@ def execute_application_batch(
                 )
         except requests.exceptions.SSLError as error:
             result.update(
-                requestStatus="Submission failed", errorType="SSL error", errorMessage=str(error)
+                requestStatus="Submission failed",
+                errorType="SSL error",
+                errorMessage=str(error),
             )
         except requests.exceptions.Timeout as error:
             result.update(
-                requestStatus="Submission failed", errorType="Timeout", errorMessage=str(error)
+                requestStatus="Submission failed",
+                errorType="Timeout",
+                errorMessage=str(error),
             )
         except requests.exceptions.ConnectionError as error:
             result.update(
