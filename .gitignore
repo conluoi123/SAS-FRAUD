@@ -54,6 +54,9 @@ logs/
 *.log
 *.pid
 app/streamlit_console/.alert_log.json
+app/streamlit_console/.application_history.json
+app/streamlit_console/.application_history.json.tmp
+.codex-test-tmp/
 sas-token.txt
 *-token.txt
 cnp-import-response.txt

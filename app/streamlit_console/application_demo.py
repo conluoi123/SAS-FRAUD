@@ -18,11 +18,17 @@ from typing import Any, Callable
 
 try:
     from .application_scenarios import RULE_ADDRESS, RULE_DISBURSEMENT, RULE_REFERENCE
-    from .payloads import build_application_fraud_payload, validate_application_fraud_payload
+    from .payloads import (
+        build_application_fraud_payload,
+        validate_application_fraud_payload,
+    )
     from .sas_client import SasRuntimeResponse, send_message
 except ImportError:
     from application_scenarios import RULE_ADDRESS, RULE_DISBURSEMENT, RULE_REFERENCE
-    from payloads import build_application_fraud_payload, validate_application_fraud_payload
+    from payloads import (
+        build_application_fraud_payload,
+        validate_application_fraud_payload,
+    )
     from sas_client import SasRuntimeResponse, send_message
 
 
@@ -42,7 +48,9 @@ def _suffix() -> str:
 def _digits(length: int) -> str:
     """Return numeric-only synthetic data for phone, ID and account fields."""
 
-    return "".join(str(int(character, 16) % 10) for character in uuid.uuid4().hex[:length])
+    return "".join(
+        str(int(character, 16) % 10) for character in uuid.uuid4().hex[:length]
+    )
 
 
 def _sequence_timestamps(values: list[dict[str, Any]]) -> None:
@@ -192,7 +200,12 @@ def build_demo3_steps() -> list[DemoStep]:
     shared_agent = f"SALES-DEMO-CLUSTER-{_suffix()}"
 
     steps: list[DemoStep] = []
-    for label, prefix in (("A", "D3A"), ("B", "D3B"), ("C", "D3C"), ("D trigger", "D3D")):
+    for label, prefix in (
+        ("A", "D3A"),
+        ("B", "D3B"),
+        ("C", "D3C"),
+        ("D trigger", "D3D"),
+    ):
         values = _base_values(prefix, employer_name=shared_employer)
         values["app_risk"] = {
             **_default_app_risk(prefix),

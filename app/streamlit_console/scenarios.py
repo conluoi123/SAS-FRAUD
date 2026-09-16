@@ -51,7 +51,8 @@ def _cnp_new_device_checks(values: dict[str, Any]) -> list[CheckRow]:
             "Condition": "Debit card authorization",
             "Expected": "originationType = DC, activityType = CA",
             "Current": f"{values['origination_type']} / {values['activity_type']}",
-            "Pass": values["origination_type"] == "DC" and values["activity_type"] == "CA",
+            "Pass": values["origination_type"] == "DC"
+            and values["activity_type"] == "CA",
         },
         {
             "Condition": "CNP transaction",
@@ -100,7 +101,8 @@ def _cnp_risky_mcc_checks(values: dict[str, Any]) -> list[CheckRow]:
             "Condition": "Debit card authorization",
             "Expected": "originationType = DC, activityType = CA",
             "Current": f"{values['origination_type']} / {values['activity_type']}",
-            "Pass": values["origination_type"] == "DC" and values["activity_type"] == "CA",
+            "Pass": values["origination_type"] == "DC"
+            and values["activity_type"] == "CA",
         },
         {
             "Condition": "CNP transaction",
@@ -131,7 +133,8 @@ def _cnp_subscription_testing_checks(values: dict[str, Any]) -> list[CheckRow]:
             "Condition": "Debit card authorization",
             "Expected": "originationType = DC, activityType = CA",
             "Current": f"{values['origination_type']} / {values['activity_type']}",
-            "Pass": values["origination_type"] == "DC" and values["activity_type"] == "CA",
+            "Pass": values["origination_type"] == "DC"
+            and values["activity_type"] == "CA",
         },
         {
             "Condition": "CNP transaction",
@@ -156,14 +159,17 @@ def _cnp_subscription_testing_checks(values: dict[str, Any]) -> list[CheckRow]:
 
 def _structuring_checks(values: dict[str, Any]) -> list[CheckRow]:
     amount = float(values.get("card_amount", 0) or 0)
-    reference_threshold = float(values.get("structuring_reference_threshold", 500) or 500)
+    reference_threshold = float(
+        values.get("structuring_reference_threshold", 500) or 500
+    )
     lower_bound = reference_threshold * 0.8
     return [
         {
             "Condition": "Debit card authorization",
             "Expected": "originationType = DC, activityType = CA",
             "Current": f"{values['origination_type']} / {values['activity_type']}",
-            "Pass": values["origination_type"] == "DC" and values["activity_type"] == "CA",
+            "Pass": values["origination_type"] == "DC"
+            and values["activity_type"] == "CA",
         },
         {
             "Condition": "Amount near reference threshold (this message)",
@@ -199,7 +205,8 @@ def _chargeback_abuse_checks(values: dict[str, Any]) -> list[CheckRow]:
             "Condition": "Chargeback routing (PLACEHOLDER — cần xác nhận)",
             "Expected": "originationType = DC, activityType = CB (giả định)",
             "Current": f"{values['origination_type']} / {values['activity_type']}",
-            "Pass": values["origination_type"] == "DC" and values["activity_type"] == "CB",
+            "Pass": values["origination_type"] == "DC"
+            and values["activity_type"] == "CB",
         },
         {
             "Condition": "Original transaction reference exists",

@@ -3,7 +3,9 @@ from __future__ import annotations
 import csv
 import io
 import json
+from base64 import b64encode
 from datetime import datetime, timezone
+from pathlib import Path
 
 import requests
 
@@ -22,6 +24,7 @@ from app.streamlit_console.application_config import (
     AF_CIC_PROFILE_CAPACITY,
     APPLICATION_CHANNELS,
 )
+from app.streamlit_console.copy_control import copy_control_html
 from app.streamlit_console.application_scenarios import (
     APPLICATION_SCENARIOS,
     calculate_30d_counts,
@@ -45,12 +48,16 @@ from app.streamlit_console.application_json import (
 from app.streamlit_console.application_workspace import (
     MANUAL_PROFILE_KEYS,
     _build_quick_demo_dialog_entry,
+    _cached_runtime_description,
     _display_outcome,
     _fired_rules_table_rows,
     _manual_result_identity,
     _rule_matches_target,
     apply_fresh_test_dataset,
     apply_new_application_same_customer,
+    claim_guided_demo_run,
+    finish_guided_demo_run,
+    reset_guided_demo,
 )
 from app.streamlit_console.payloads import (
     build_application_fraud_payload,
@@ -58,7 +65,7 @@ from app.streamlit_console.payloads import (
 )
 from app.streamlit_console.sas_client import SasRuntimeResponse
 from app.streamlit_console.sas_response import (
-    extract_alert_id,
+    extract_application_alerted_entities,
     extract_application_fired_rules,
     normalize_application_result,
 )
@@ -239,6 +246,10 @@ def test_all_application_channels_map_in_sync() -> None:
         name: config["solution_channel_type"]
         for name, config in APPLICATION_CHANNELS.items()
     } == expected
+    assert all(
+        config.get("business_description") and config.get("source_identifier_label")
+        for config in APPLICATION_CHANNELS.values()
+    )
     for channel, channel_type in expected.items():
         message = build_application_fraud_payload(
             {**BASE_VALUES, "application_channel": channel}
@@ -341,7 +352,6 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
         parsed = {
             "message": {
                 "sas": {
-                    "alert": ({"alertId": "ALT-BATCH-2"} if has_alert else {}),
                     "system": {"returnType": 0},
                     "decision": {"outcomeName": "Review" if has_alert else "Continue"},
                     "rulefired": [
@@ -352,7 +362,18 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
                         }
                     ],
                     "alerted": (
-                        [{"outcomeEntity": application_id}] if has_alert else []
+                        [
+                            {
+                                "outcomeEntity": application_id,
+                                "outcomeEntityType": "app_fraud_app",
+                            },
+                            {
+                                "outcomeEntity": "RELATED-ENTITY-2",
+                                "outcomeEntityType": "related_type",
+                            },
+                        ]
+                        if has_alert
+                        else []
                     ),
                 }
             }
@@ -377,7 +398,11 @@ def test_batch_is_sequential_and_distinguishes_rule_from_alert() -> None:
     assert results[0]["alertFlg"] is False
     assert results[1]["firedFlg"] is True
     assert results[1]["alertFlg"] is True
-    assert results[1]["alertId"] == "ALT-BATCH-2"
+    assert results[1]["alertedEntity"] == "APP-000002 | RELATED-ENTITY-2"
+    assert results[1]["alertedEntityType"] == "app_fraud_app | related_type"
+    exported = results_to_csv(results).decode("utf-8-sig")
+    assert "alertedEntity" in exported
+    assert "APP-000002 | RELATED-ENTITY-2" in exported
 
 
 def test_batch_does_not_retry_http_response() -> None:
@@ -435,6 +460,21 @@ def test_batch_run_guard_blocks_rerun_and_double_click() -> None:
     state["af_batch_running"] = False
     state["af_batch_completed_fingerprint"] = "file-a"
     assert claim_batch_run(state, "file-a") is False
+
+
+def test_guided_demo_run_guard_blocks_seed_rerun_until_explicit_reset() -> None:
+    state: dict[str, object] = {}
+    assert claim_guided_demo_run(state, "demo1") is True
+    assert claim_guided_demo_run(state, "demo1") is False
+
+    state["af_demo1_result"] = [{"final": True}]
+    finish_guided_demo_run(state)
+    assert claim_guided_demo_run(state, "demo1") is False
+
+    state["af_demo_pending_dialog"] = {"open": True}
+    reset_guided_demo(state, "demo1")
+    assert state["af_demo_pending_dialog"] is None
+    assert claim_guided_demo_run(state, "demo1") is True
 
 
 def test_result_csv_keeps_sensitive_identifiers_as_strings() -> None:
@@ -827,6 +867,7 @@ def test_new_application_same_customer_only_changes_application_and_transaction(
     assert state["af_single_application_id"] != "APP-OLD"
     assert state["af_single_transaction_id"] != "MSG-OLD"
     assert state["af_single_last_transaction"] is None
+    assert state["af_pending_result_dialog"] is None
     # Every profile-driving key is untouched — same identity, new application.
     for key in MANUAL_PROFILE_KEYS:
         assert state[key] == _fake_manual_state()[key]
@@ -864,10 +905,14 @@ def test_fresh_test_dataset_regenerates_every_profile_driving_key() -> None:
 
 def test_fresh_test_dataset_clears_stale_manual_result() -> None:
     state = _fake_manual_state()
+    state["af_pending_result_dialog"] = {"old": "dialog"}
+    state["af_json_applied_notice"] = True
     apply_fresh_test_dataset(state)
 
     assert state["af_single_result"] is None
     assert state["af_single_last_transaction"] is None
+    assert state["af_pending_result_dialog"] is None
+    assert state["af_json_applied_notice"] is False
 
 
 # --- manual result metadata comes from the sent payload, not live form state ---
@@ -936,7 +981,13 @@ def test_quick_demo_dialog_only_built_when_final_step_creates_an_alert() -> None
                             "firedFlg": True,
                             "alertFlg": True,
                         }
-                    ]
+                    ],
+                    "alerted": [
+                        {
+                            "outcomeEntity": "APP-DEMO-TRIGGER",
+                            "outcomeEntityType": "app_fraud_app",
+                        }
+                    ],
                 }
             }
         },
@@ -948,6 +999,13 @@ def test_quick_demo_dialog_only_built_when_final_step_creates_an_alert() -> None
     assert entry["actual_rule_name"] == "AF_DR_Disbursement_Account_Anomaly"
     assert entry["application_identifier"] == "APP-DEMO-TRIGGER"
     assert entry["customer_identifier"] == "CUST-DEMO-TRIGGER"
+    assert entry["alert_created"] is True
+    assert entry["alerted_entities"] == [
+        {
+            "alerted_entity": "APP-DEMO-TRIGGER",
+            "alerted_entity_type": "app_fraud_app",
+        }
+    ]
 
 
 # --- stale hardcoded package version must not be the primary runtime display ---
@@ -960,6 +1018,34 @@ def test_no_hardcoded_package_version_in_application_workspace_source() -> None:
 
     source = inspect.getsource(application_workspace)
     assert "50026" not in source
+
+
+def test_runtime_metadata_is_cached_without_caching_decision_execution(
+    monkeypatch,
+) -> None:
+    calls: list[str] = []
+
+    def fake_fetch(**kwargs):
+        calls.append(kwargs["endpoint"])
+        return {"build": "qa-build"}
+
+    monkeypatch.setattr(
+        "app.streamlit_console.application_workspace.fetch_runtime_description",
+        fake_fetch,
+    )
+    _cached_runtime_description.clear()
+    try:
+        arguments = {
+            "endpoint": "https://runtime.example/decision/description",
+            "timeout_seconds": 3.0,
+            "verify_tls": True,
+            "ca_bundle": None,
+        }
+        assert _cached_runtime_description(**arguments) == {"build": "qa-build"}
+        assert _cached_runtime_description(**arguments) == {"build": "qa-build"}
+        assert calls == [arguments["endpoint"]]
+    finally:
+        _cached_runtime_description.clear()
 
 
 def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:
@@ -975,6 +1061,24 @@ def test_old_alert_log_remains_readable(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(alert_log, "LOG_FILE", log_path)
 
     assert alert_log.load_alerts() == old_entries
+
+
+def test_alert_log_persists_alerted_entity(tmp_path, monkeypatch) -> None:
+    log_path = tmp_path / ".alert_log.json"
+    monkeypatch.setattr(alert_log, "LOG_FILE", log_path)
+    entry = {
+        "application_identifier": "APP-TRACE-1",
+        "alerted_entities": [
+            {
+                "alerted_entity": "APP-ALERTED-1",
+                "alerted_entity_type": "app_fraud_app",
+            }
+        ],
+    }
+
+    alert_log.record_alert(entry)
+
+    assert alert_log.load_alerts() == [entry]
 
 
 def test_form_payload_round_trips_through_json_editor() -> None:
@@ -1003,7 +1107,124 @@ def test_invalid_json_is_blocked_before_application() -> None:
     payload, errors = parse_and_validate_payload('{"message":')
 
     assert payload is None
-    assert errors and errors[0].startswith("Message JSON is invalid")
+    assert errors and errors[0].startswith("JSON không hợp lệ")
+
+
+def test_json_validation_messages_are_business_readable() -> None:
+    payload = build_application_fraud_payload(BASE_VALUES)
+    payload["message"]["application"]["amount"] = -1
+    payload["message"]["application"]["channel"] = "UNSUPPORTED"
+
+    parsed, errors = parse_and_validate_payload(format_payload(payload))
+
+    assert parsed is None
+    assert "Số tiền đề nghị không được là số âm." in errors
+    assert any("Kênh tiếp nhận không được hỗ trợ" in error for error in errors)
+
+
+def test_copy_control_reuses_encoded_identifier_without_raw_html_injection() -> None:
+    value = "APP-DEMO-<unsafe>"
+    markup = copy_control_html(value, "Copy <ID>")
+
+    assert b64encode(value.encode("utf-8")).decode("ascii") in markup
+    assert value not in markup
+    assert "Copy &lt;ID&gt;" in markup
+
+
+def test_business_evidence_uses_returned_profiles_and_submitted_values_only() -> None:
+    payload = build_application_fraud_payload(
+        {
+            **BASE_VALUES,
+            "app_risk": {**BASE_RISK, "disbAcctOwnerMatchInd": 0},
+        }
+    )
+    parsed = {
+        "message": {
+            "sas": {
+                "system": {"returnType": 0},
+                "rulefired": [
+                    {
+                        "ruleName": "AF_DR_Disbursement_Account_Anomaly",
+                        "alertReason": "Shared non-matching disbursement account",
+                        "firedFlg": True,
+                        "alertFlg": True,
+                    }
+                ],
+            }
+        },
+        "profiles": {
+            "AF_DisbursementAccount": {"disbAcctCustCnt30d": 2},
+            "AF_ReferencePhone": {"refPhoneCustCnt30d": 1},
+            "SAS_Customer": {
+                "addressCustCnt30d": 0,
+                "clusterCustCnt30d": 0,
+            },
+        },
+    }
+
+    result = normalize_application_result(parsed, payload=payload, http_status=200)
+    evidence = {item["label"]: item for item in result.evidence}
+
+    assert (
+        evidence["Số khách hàng liên kết với tài khoản giải ngân trong 30 ngày"][
+            "value"
+        ]
+        == 2
+    )
+    assert evidence["Chủ tài khoản giải ngân khớp người vay"]["value"] == "Không"
+    assert all(
+        item["source"] in {"sas_response", "submitted_request"}
+        for item in result.evidence
+    )
+    assert not any(item.get("value") == 0 for item in result.evidence)
+
+
+def test_reference_and_address_evidence_require_returned_counters() -> None:
+    payload = build_application_fraud_payload(BASE_VALUES)
+    cases = [
+        (
+            "AF_DR_Shared_Reference_Network",
+            {"AF_ReferencePhone": {"refPhoneCustCnt30d": 3}},
+            "Số khách hàng sử dụng số điện thoại tham chiếu trong 30 ngày",
+            3,
+        ),
+        (
+            "AF_DR_Linked_Address_Network",
+            {"SAS_Customer": {"addressCustCnt30d": 4}},
+            "Số khách hàng liên kết với địa chỉ trong 30 ngày",
+            4,
+        ),
+    ]
+    for rule_name, profiles, label, expected in cases:
+        parsed = {
+            "message": {
+                "sas": {
+                    "system": {"returnType": 0},
+                    "rulefired": [
+                        {
+                            "ruleName": rule_name,
+                            "firedFlg": True,
+                            "alertFlg": True,
+                        }
+                    ],
+                }
+            },
+            "profiles": profiles,
+        }
+        result = normalize_application_result(parsed, payload=payload, http_status=200)
+        assert (
+            next(item["value"] for item in result.evidence if item["label"] == label)
+            == expected
+        )
+
+    without_profiles = normalize_application_result(
+        {"message": {"sas": {"rulefired": []}}},
+        payload=payload,
+        http_status=200,
+    )
+    assert not any(
+        item.get("source") == "sas_response" for item in without_profiles.evidence
+    )
 
 
 def test_form_edit_after_json_edit_preserves_unknown_fields() -> None:
@@ -1022,31 +1243,35 @@ def test_form_edit_after_json_edit_preserves_unknown_fields() -> None:
     assert merged["message"]["application"]["customPurposeCode"] == "CUST-X"
 
 
-def test_alert_id_uses_only_explicit_alert_fields() -> None:
-    assert (
-        extract_alert_id(
-            {"message": {"sas": {"alert": {"alertId": "539642637588672"}}}}
-        )
-        == "539642637588672"
-    )
-    assert extract_alert_id({"alertIdentifier": "ALT-100"}) == "ALT-100"
-    assert (
-        extract_alert_id(
-            {
-                "message": {
-                    "application": {"identifier": "APP-DO-NOT-USE"},
-                    "sas": {
-                        "system": {
-                            "transactionIdentifier": "MSG-DO-NOT-USE",
-                            "messageIdentifier": "MESSAGE-DO-NOT-USE",
-                        },
-                        "decision": {"referenceIdentifier": "DECISION-DO-NOT-USE"},
+def test_alerted_entities_use_only_sas_alerted_fields_and_preserve_all() -> None:
+    parsed = {
+        "message": {
+            "application": {"identifier": "APP-REQUEST-1"},
+            "sas": {
+                "alerted": [
+                    {
+                        "outcomeEntity": "APP-ALERTED-1",
+                        "outcomeEntityType": "app_fraud_app",
                     },
-                }
-            }
-        )
-        is None
-    )
+                    {
+                        "outcomeEntity": "NETWORK-2",
+                        "outcomeEntityType": "fraud_network",
+                    },
+                ]
+            },
+        }
+    }
+
+    assert extract_application_alerted_entities(parsed) == [
+        {
+            "alerted_entity": "APP-ALERTED-1",
+            "alerted_entity_type": "app_fraud_app",
+        },
+        {
+            "alerted_entity": "NETWORK-2",
+            "alerted_entity_type": "fraud_network",
+        },
+    ]
 
 
 def test_application_result_normalizes_real_reason_without_invention() -> None:
@@ -1064,6 +1289,12 @@ def test_application_result_normalizes_real_reason_without_invention() -> None:
                         "alertFlg": True,
                     }
                 ],
+                "alerted": [
+                    {
+                        "outcomeEntity": "APP-ALERTED-1",
+                        "outcomeEntityType": "app_fraud_app",
+                    }
+                ],
             }
         }
     }
@@ -1075,4 +1306,48 @@ def test_application_result_normalizes_real_reason_without_invention() -> None:
     assert result.request_ok is True
     assert result.alert_created is True
     assert result.alert_reason == "Shared disbursement account"
-    assert result.alert_id is None
+    assert result.application_id != result.primary_alerted_entity
+    assert result.primary_alerted_entity == "APP-ALERTED-1"
+    assert result.primary_alerted_entity_type == "app_fraud_app"
+
+
+def test_application_ui_has_no_alert_id_dependency() -> None:
+    import inspect
+
+    from app.streamlit_console import application_workspace
+
+    source = inspect.getsource(application_workspace)
+    alert_log_page = (
+        Path(application_workspace.__file__).parent / "pages" / "1_Alert_Log.py"
+    ).read_text(encoding="utf-8")
+    history_page = (
+        Path(application_workspace.__file__).parent
+        / "pages"
+        / "2_Application_History.py"
+    ).read_text(encoding="utf-8")
+    assert "Alert ID" not in source
+    assert "alert_id" not in source
+    assert "Alert ID" not in alert_log_page
+    assert "alert_id" not in alert_log_page
+    assert "Alert ID" not in history_page
+    assert "alert_id" not in history_page
+
+
+def test_streamlit_sources_have_no_stale_alert_identifier_wording() -> None:
+    source_root = Path(__file__).resolve().parents[1] / "app" / "streamlit_console"
+    text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in source_root.rglob("*")
+        if path.suffix in {".py", ".md"}
+    ).lower()
+    for forbidden in (
+        "alert id",
+        "alert-id",
+        "alert_id",
+        "alert identifier",
+        "alert reference pending",
+        "could not resolve alert",
+        "cã³ alert",
+        "thá»±c thá»ƒ cáº£nh bã¡o",
+    ):
+        assert forbidden not in text

@@ -38,7 +38,9 @@ APPLICATION_RISK_INTEGER_FIELDS = (
     "disbAcctOwnerMatchInd",
     "employerUnverifiedInd",
 )
-APPLICATION_RISK_FIELDS = APPLICATION_RISK_STRING_FIELDS + APPLICATION_RISK_INTEGER_FIELDS
+APPLICATION_RISK_FIELDS = (
+    APPLICATION_RISK_STRING_FIELDS + APPLICATION_RISK_INTEGER_FIELDS
+)
 
 
 def _utc_iso8601(value: Any) -> str:
@@ -207,7 +209,9 @@ def validate_application_fraud_payload(payload: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     message = payload["message"]
     if _contains_null_literal(message):
-        errors.append('Payload must not contain literal "nan", "None", or null strings.')
+        errors.append(
+            'Payload must not contain literal "nan", "None", or null strings.'
+        )
     request = message.get("request", {})
     system = _value_at(message, "sas", "system") or {}
     solution = message.get("solution")

@@ -608,6 +608,9 @@ def main() -> None:
         st.markdown(f"### {bank_name}")
         st.caption("Loan Origination & Fraud Screening")
         st.page_link("app.py", label="Hồ sơ mới / Xử lý hàng loạt", icon="🏦")
+        st.page_link(
+            "pages/2_Application_History.py", label="Hồ sơ đã xử lý", icon="📋"
+        )
         st.page_link("pages/1_Alert_Log.py", label="Nhật ký cảnh báo", icon="🔔")
         st.divider()
         st.caption("Demo / Synthetic Data · POC")

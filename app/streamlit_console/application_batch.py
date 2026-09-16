@@ -23,7 +23,7 @@ try:
     )
     from .sas_client import SasRuntimeResponse, send_message
     from .sas_response import (
-        extract_alert_id,
+        extract_application_alerted_entities,
         extract_application_fired_rules,
         extract_return_fields,
         summarize_sas_response,
@@ -37,7 +37,7 @@ except ImportError:
     )
     from sas_client import SasRuntimeResponse, send_message
     from sas_response import (
-        extract_alert_id,
+        extract_application_alerted_entities,
         extract_application_fired_rules,
         extract_return_fields,
         summarize_sas_response,
@@ -141,7 +141,8 @@ RESULT_COLUMNS = (
     "decision",
     "firedFlg",
     "alertFlg",
-    "alertId",
+    "alertedEntity",
+    "alertedEntityType",
     "alertReason",
     "firedRules",
     "processingTimeMs",
@@ -569,7 +570,8 @@ def _base_result(
         "decision": None,
         "firedFlg": False,
         "alertFlg": False,
-        "alertId": None,
+        "alertedEntity": "",
+        "alertedEntityType": "",
         "alertReason": "",
         "firedRules": "",
         "processingTimeMs": None,
@@ -646,6 +648,9 @@ def execute_application_batch(
             )
             fired, alert, fired_rules = _rules_from_response(response)
             normalized_rules = extract_application_fired_rules(response.parsed_body)
+            alerted_entities = extract_application_alerted_entities(
+                response.parsed_body
+            )
             business_error = return_fields.get("returnType") not in {None, 0, "0"}
             request_ok = (
                 200 <= response.status_code < 300
@@ -661,7 +666,16 @@ def execute_application_batch(
                 decision=(summary.outcome_name or summary.outcome) if summary else None,
                 firedFlg=fired,
                 alertFlg=alert,
-                alertId=extract_alert_id(response.parsed_body),
+                alertedEntity=" | ".join(
+                    item["alerted_entity"]
+                    for item in alerted_entities
+                    if item.get("alerted_entity")
+                ),
+                alertedEntityType=" | ".join(
+                    item["alerted_entity_type"]
+                    for item in alerted_entities
+                    if item.get("alerted_entity_type")
+                ),
                 alertReason="; ".join(
                     dict.fromkeys(
                         rule.reason for rule in normalized_rules if rule.reason

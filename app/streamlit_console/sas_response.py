@@ -400,37 +400,183 @@ def extract_application_fired_rules(
     return results
 
 
-_ALERT_ID_FIELDS = ("alertId", "alertID", "alertIdentifier")
+def extract_application_alerted_entities(parsed: Any) -> list[dict[str, str | None]]:
+    """Normalize every entity explicitly returned in ``message.sas.alerted``.
 
-
-def extract_alert_id(parsed: Any) -> str | None:
-    """Return only an explicit Alert Triage identifier supplied by SAS.
-
-    Runtime captures currently stored in this repository do not contain an
-    Alert Triage ID, so this intentionally has no fallback to application,
-    transaction, message, decision-reference, entity, or locally generated IDs.
-    The recursive lookup makes the UI ready for response envelopes that expose
-    an explicit ``alertId``/``alertIdentifier`` without assuming its container.
+    The list order and all non-empty values are preserved.  These values are
+    search/correlation keys for Alert Triage; they are not portal-generated identifiers.
     """
 
-    def walk(node: Any) -> str | None:
+    entities: list[dict[str, str | None]] = []
+    for item in summarize_sas_response(parsed).alerted_entities:
+        entity = item.get("outcomeEntity")
+        entity_type = item.get("outcomeEntityType")
+        entity_text = str(entity).strip() if entity is not None else ""
+        type_text = str(entity_type).strip() if entity_type is not None else ""
+        if not entity_text and not type_text:
+            continue
+        entities.append(
+            {
+                "alerted_entity": entity_text or None,
+                "alerted_entity_type": type_text or None,
+            }
+        )
+    return entities
+
+
+_PROFILE_COUNTERS: dict[str, tuple[str, tuple[str, ...]]] = {
+    "disbAcctCustCnt30d": (
+        "Số khách hàng liên kết với tài khoản giải ngân trong 30 ngày",
+        ("AF_DisbursementAccount", "SAS_Customer"),
+    ),
+    "refPhoneCustCnt30d": (
+        "Số khách hàng sử dụng số điện thoại tham chiếu trong 30 ngày",
+        ("AF_ReferencePhone", "SAS_Customer"),
+    ),
+    "addressCustCnt30d": (
+        "Số khách hàng liên kết với địa chỉ trong 30 ngày",
+        ("AF_Address", "SAS_Customer"),
+    ),
+    "clusterCustCnt30d": (
+        "Số khách hàng trong cụm liên kết trong 30 ngày",
+        ("AF_Address", "SAS_Customer"),
+    ),
+}
+
+
+def _returned_profile_counter(
+    parsed: Any, field_name: str, preferred_profiles: tuple[str, ...]
+) -> tuple[Any, str] | None:
+    """Read an exact returned counter and retain its technical response path."""
+
+    root = parsed if isinstance(parsed, dict) else {}
+    profiles = root.get("profiles")
+    if not isinstance(profiles, dict):
+        return None
+
+    for profile_name in preferred_profiles:
+        profile = profiles.get(profile_name)
+        if isinstance(profile, dict) and field_name in profile:
+            return profile[field_name], f"profiles.{profile_name}.{field_name}"
+
+    def walk(node: Any, path: tuple[str, ...]) -> tuple[Any, str] | None:
         if isinstance(node, dict):
-            for field_name in _ALERT_ID_FIELDS:
-                value = node.get(field_name)
-                if isinstance(value, (str, int)) and str(value).strip():
-                    return str(value).strip()
-            for value in node.values():
-                found = walk(value)
-                if found:
+            if field_name in node:
+                return node[field_name], ".".join((*path, field_name))
+            for key, value in node.items():
+                found = walk(value, (*path, str(key)))
+                if found is not None:
                     return found
         elif isinstance(node, list):
-            for item in node:
-                found = walk(item)
-                if found:
+            for index, item in enumerate(node):
+                found = walk(item, (*path, str(index)))
+                if found is not None:
                     return found
         return None
 
-    return walk(parsed)
+    return walk(profiles, ("profiles",))
+
+
+def extract_application_business_evidence(
+    parsed: Any,
+    *,
+    payload: dict[str, Any] | None,
+    fired_rules: list[ApplicationFiredRule],
+) -> list[dict[str, Any]]:
+    """Build readable evidence from returned profiles and submitted values only."""
+
+    evidence: list[dict[str, Any]] = []
+    rule_context = " ".join(
+        filter(
+            None,
+            [
+                text
+                for rule in fired_rules
+                for text in (rule.display_name, rule.rule_name, rule.reason)
+            ],
+        )
+    ).lower()
+    relevant_fields: set[str] = set()
+    if "disbur" in rule_context or "account" in rule_context:
+        relevant_fields.add("disbAcctCustCnt30d")
+    if "reference" in rule_context or "phone" in rule_context:
+        relevant_fields.add("refPhoneCustCnt30d")
+    if "address" in rule_context or "cluster" in rule_context:
+        relevant_fields.update(("addressCustCnt30d", "clusterCustCnt30d"))
+
+    for field_name, (label, preferred_profiles) in _PROFILE_COUNTERS.items():
+        returned = _returned_profile_counter(parsed, field_name, preferred_profiles)
+        if returned is None:
+            continue
+        value, path = returned
+        numeric = isinstance(value, (int, float)) and not isinstance(value, bool)
+        if numeric and value <= 0:
+            continue
+        if (
+            relevant_fields
+            and field_name not in relevant_fields
+            and numeric
+            and value <= 1
+        ):
+            continue
+        evidence.append(
+            {
+                "label": label,
+                "value": value,
+                "source": "sas_response",
+                "technical_field": path,
+            }
+        )
+
+    message = payload.get("message", {}) if isinstance(payload, dict) else {}
+    app_risk = message.get("appRisk", {}) if isinstance(message, dict) else {}
+    applicant = message.get("applicant", {}) if isinstance(message, dict) else {}
+    employment = applicant.get("employment", []) if isinstance(applicant, dict) else []
+    employment = employment[0] if isinstance(employment, list) and employment else {}
+
+    def add_request_value(label: str, field_name: str, value: Any) -> None:
+        if value is None or value == "":
+            return
+        evidence.append(
+            {
+                "label": label,
+                "value": value,
+                "source": "submitted_request",
+                "technical_field": field_name,
+            }
+        )
+
+    if "disbAcctCustCnt30d" in relevant_fields and isinstance(app_risk, dict):
+        owner_match = app_risk.get("disbAcctOwnerMatchInd")
+        if owner_match is not None:
+            add_request_value(
+                "Chủ tài khoản giải ngân khớp người vay",
+                "message.appRisk.disbAcctOwnerMatchInd",
+                "Có" if bool(owner_match) else "Không",
+            )
+    if "refPhoneCustCnt30d" in relevant_fields and isinstance(app_risk, dict):
+        add_request_value(
+            "Số điện thoại tham chiếu đã gửi",
+            "message.appRisk.referencePhone",
+            app_risk.get("referencePhone"),
+        )
+    if "addressCustCnt30d" in relevant_fields and isinstance(app_risk, dict):
+        add_request_value(
+            "Địa chỉ chuẩn hóa đã gửi",
+            "message.appRisk.normalizedAddress",
+            app_risk.get("normalizedAddress"),
+        )
+        add_request_value(
+            "Đơn vị công tác đã gửi",
+            "message.applicant.employment[0].employerName",
+            employment.get("employerName") if isinstance(employment, dict) else None,
+        )
+        add_request_value(
+            "Sales Agent ID đã gửi",
+            "message.appRisk.salesAgentIdentifier",
+            app_risk.get("salesAgentIdentifier"),
+        )
+    return evidence
 
 
 @dataclass(frozen=True)
@@ -442,11 +588,12 @@ class ApplicationFraudResult:
     outcome_name: str | None
     rule_fired: bool
     alert_created: bool
-    alert_id: str | None
     fired_rules: list[ApplicationFiredRule]
     alert_reason: str | None
     evidence: list[dict[str, Any]]
-    alerted_entities: list[dict[str, Any]]
+    alerted_entities: list[dict[str, str | None]]
+    primary_alerted_entity: str | None
+    primary_alerted_entity_type: str | None
     transaction_id: str | None
     message_id: str | None
     decision_reference: str | None
@@ -495,19 +642,12 @@ def normalize_application_result(
     transaction_id = summary.transaction_identifier or request_system.get(
         "transactionIdentifier"
     )
+    alerted_entities = extract_application_alerted_entities(parsed)
 
-    # Evidence is limited to entities explicitly returned by SAS.  Profile
-    # counters remain available in raw_response/Technical Details and are never
-    # inferred or fabricated here.
-    evidence = [
-        {
-            "type": "alerted_entity",
-            "value": item.get("outcomeEntity"),
-            "entity_type": item.get("outcomeEntityType"),
-        }
-        for item in summary.alerted_entities
-        if item.get("outcomeEntity") or item.get("outcomeEntityType")
-    ]
+    evidence = extract_application_business_evidence(
+        parsed, payload=payload, fired_rules=rules
+    )
+    primary_entity = alerted_entities[0] if alerted_entities else {}
 
     return ApplicationFraudResult(
         request_ok=request_ok,
@@ -515,11 +655,12 @@ def normalize_application_result(
         outcome_name=summary.outcome_name,
         rule_fired=bool(rules),
         alert_created=summary.alert_created,
-        alert_id=extract_alert_id(parsed),
         fired_rules=rules,
         alert_reason="; ".join(reasons) or None,
         evidence=evidence,
-        alerted_entities=summary.alerted_entities,
+        alerted_entities=alerted_entities,
+        primary_alerted_entity=primary_entity.get("alerted_entity"),
+        primary_alerted_entity_type=primary_entity.get("alerted_entity_type"),
         transaction_id=str(transaction_id) if transaction_id else None,
         message_id=summary.message_identifier,
         decision_reference=summary.reference_identifier,

@@ -17,7 +17,9 @@ def test_load_alerts_empty_when_no_file(tmp_path, monkeypatch) -> None:
     assert alert_log.load_alerts() == []
 
 
-def test_record_alert_persists_and_loads_most_recent_first(tmp_path, monkeypatch) -> None:
+def test_record_alert_persists_and_loads_most_recent_first(
+    tmp_path, monkeypatch
+) -> None:
     alert_log = _fresh_alert_log(tmp_path, monkeypatch)
 
     alert_log.record_alert({"transaction_identifier": "TXN-1"})
@@ -25,6 +27,22 @@ def test_record_alert_persists_and_loads_most_recent_first(tmp_path, monkeypatch
 
     loaded = alert_log.load_alerts()
     assert [entry["transaction_identifier"] for entry in loaded] == ["TXN-2", "TXN-1"]
+
+
+def test_record_alert_deduplicates_streamlit_rerun(tmp_path, monkeypatch) -> None:
+    alert_log = _fresh_alert_log(tmp_path, monkeypatch)
+    entry = {
+        "recorded_at": "2026-09-16T10:00:00Z",
+        "transaction_identifier": "TXN-SAME",
+        "alerted_entity": "APP-ALERTED-1",
+    }
+
+    assert alert_log.record_alert(entry) is True
+    assert (
+        alert_log.record_alert({**entry, "recorded_at": "2026-09-16T10:00:01Z"})
+        is False
+    )
+    assert alert_log.load_alerts() == [entry]
 
 
 def test_clear_alerts_removes_file(tmp_path, monkeypatch) -> None:

@@ -20,9 +20,9 @@ streamlit run app/streamlit_console/app.py --server.address 127.0.0.1 --server.p
 ```
 
 The app reads `SAS_DECISION_URL`, `SAS_REQUEST_TIMEOUT_SECONDS`,
-`SAS_TLS_VERIFY`, `SAS_CA_BUNDLE`, `SAS_EXPECTED_PACKAGE_VERSION`, and the
-optional `SAS_ALERT_TRIAGE_URL` from `.env`. Demo labels can be configured with
-`BANK_DISPLAY_NAME`, `BANK_DEMO_USER`, and `BANK_DEMO_BRANCH`.
+`SAS_TLS_VERIFY`, `SAS_CA_BUNDLE`, and `SAS_EXPECTED_PACKAGE_VERSION` from
+`.env`. Demo labels can be configured with `BANK_DISPLAY_NAME`,
+`BANK_DEMO_USER`, and `BANK_DEMO_BRANCH`.
 
 ## Application Fraud demo
 
@@ -35,18 +35,29 @@ optional `SAS_ALERT_TRIAGE_URL` from `.env`. Demo labels can be configured with
 4. Request success, fired rule, and alert creation are displayed separately and
    come from the real SAS response.
 
+Every Application Fraud request actually submitted from Single Application,
+the final Guided Demo step, or a valid Batch row is written to the local
+`.application_history.json` feed. **Hồ sơ đã xử lý** shows both alert and
+no-alert results; **Nhật ký cảnh báo** remains a separate alert-only feed.
+Transaction identifiers provide the primary deduplication key so Streamlit
+reruns do not duplicate history records. Guided Demo seed requests and invalid,
+unsent CSV rows are excluded.
+
 The form and JSON editor share one canonical effective payload. A validated JSON
 edit is the exact object sent to SAS; later form edits patch only known paths and
 preserve JSON-only additions. SAS Profile and Variable Rules continue to own all
 7/30-day calculations.
 
-The current repository captures prove that the Detection runtime returns fired
-rules, reasons and alerted entities, but they do not contain an Alert Triage
-`alertId`, and no verified authenticated lookup client exists in this console.
-The data model therefore supports explicit `alertId`/`alertIdentifier` response
-fields but keeps the value null and displays an honest unavailable message when
-SAS does not return one. It never substitutes Application ID, Transaction ID,
-Message ID or decision reference.
+The current POC traceability path ends at the Detection Runtime response. The
+runtime returns the fraud decision, fired rule, reason, alert flag, and the
+alerted entity in `message.sas.alerted[].outcomeEntity` with its type in
+`outcomeEntityType`. The portal presents every returned entity as the factual
+search/correlation key a user can use in SAS Alert Triage.
+
+Correlation beyond the returned alerted entity would require source-event
+integrations outside the current Streamlit scope. The portal consistently uses
+the SAS-returned alerted entity as the Alert Triage search value and never
+relabels another application or message identifier as that value.
 
 For development on the internal SSH host, forward the Streamlit port:
 

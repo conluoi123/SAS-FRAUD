@@ -6,13 +6,11 @@ import hashlib
 import os
 import random
 import uuid
-from base64 import b64encode
 from datetime import datetime, timezone
 from typing import Any, MutableMapping
 
 import requests
 import streamlit as st
-import streamlit.components.v1 as components
 
 try:
     from .alert_log import record_alert
@@ -28,12 +26,19 @@ try:
     )
     from .application_config import APPLICATION_CHANNELS
     from .application_demo import DEMO_SPECS, DemoSpec, run_demo_steps
+    from .application_history import (
+        record_application_response,
+        record_batch_history,
+        record_guided_demo_history,
+    )
     from .application_json import (
         apply_payload_to_state,
         format_payload,
         merge_form_payload,
         parse_and_validate_payload,
     )
+    from .application_validation import humanize_validation_error
+    from .copy_control import render_copy_control, render_copyable_value
     from .payloads import (
         build_application_fraud_payload,
         validate_application_fraud_payload,
@@ -59,12 +64,19 @@ except ImportError:
     )
     from application_config import APPLICATION_CHANNELS
     from application_demo import DEMO_SPECS, DemoSpec, run_demo_steps
+    from application_history import (
+        record_application_response,
+        record_batch_history,
+        record_guided_demo_history,
+    )
     from application_json import (
         apply_payload_to_state,
         format_payload,
         merge_form_payload,
         parse_and_validate_payload,
     )
+    from application_validation import humanize_validation_error
+    from copy_control import render_copy_control, render_copyable_value
     from payloads import (
         build_application_fraud_payload,
         validate_application_fraud_payload,
@@ -204,6 +216,8 @@ def _initialize_state() -> None:
         "af_batch_filter": "All results",
         "af_pending_result_dialog": None,
         "af_demo_pending_dialog": None,
+        "af_demo_running": False,
+        "af_demo_active_key": None,
         "af_demo1_result": None,
         "af_demo2_result": None,
         "af_demo3_result": None,
@@ -225,6 +239,7 @@ def apply_new_application_same_customer(state: MutableMapping[str, Any]) -> None
     state["af_single_transaction_id"] = _new_transaction_id()
     state["af_single_last_transaction"] = None
     state["af_single_result"] = None
+    state["af_pending_result_dialog"] = None
 
 
 def apply_fresh_test_dataset(state: MutableMapping[str, Any]) -> None:
@@ -253,6 +268,28 @@ def apply_fresh_test_dataset(state: MutableMapping[str, Any]) -> None:
     state["af_form_payload_snapshot"] = None
     state["af_json_editor_text"] = ""
     state["af_json_validation_errors"] = []
+    state["af_json_applied_notice"] = False
+    state["af_pending_result_dialog"] = None
+
+
+def claim_guided_demo_run(state: MutableMapping[str, Any], key: str) -> bool:
+    """Reserve one demo run and block reruns until the presenter resets it."""
+
+    if state.get("af_demo_running") or state.get(f"af_{key}_result"):
+        return False
+    state["af_demo_running"] = True
+    state["af_demo_active_key"] = key
+    return True
+
+
+def finish_guided_demo_run(state: MutableMapping[str, Any]) -> None:
+    state["af_demo_running"] = False
+    state["af_demo_active_key"] = None
+
+
+def reset_guided_demo(state: MutableMapping[str, Any], key: str) -> None:
+    state[f"af_{key}_result"] = None
+    state["af_demo_pending_dialog"] = None
 
 
 def _render_styles() -> None:
@@ -353,26 +390,51 @@ def _render_fired_rules_table(fired_rules: list[ApplicationFiredRule]) -> None:
     )
 
 
-def _render_alerted_entities_section(alerted_entities: list[dict[str, Any]]) -> None:
-    if not alerted_entities:
+def _render_business_evidence(evidence: list[dict[str, Any]]) -> None:
+    if not evidence:
+        st.caption("SAS không trả về thêm profile counter cho kết quả này.")
         return
-    _section("Alerted entities")
-    st.caption(
-        "Technical field: outcomeEntityType may differ from the entity type configured "
-        "in Alert Triage."
-    )
     st.dataframe(
         [
             {
-                "SAS outcome entity": item.get("outcomeEntity", ""),
-                "SAS outcome entity type": item.get("outcomeEntityType", ""),
+                "Bằng chứng / Dấu hiệu": item.get("label") or item.get("type") or "—",
+                "Giá trị": item.get("value", "—"),
             }
-            for item in alerted_entities
-            if isinstance(item, dict)
+            for item in evidence
         ],
         use_container_width=True,
         hide_index=True,
     )
+
+
+def _render_alerted_entities_section(alerted_entities: list[dict[str, Any]]) -> None:
+    rows = [
+        {
+            "alerted_entity": item.get("alerted_entity") or item.get("outcomeEntity"),
+            "alerted_entity_type": item.get("alerted_entity_type")
+            or item.get("outcomeEntityType"),
+        }
+        for item in alerted_entities
+        if isinstance(item, dict)
+        and (
+            item.get("alerted_entity")
+            or item.get("outcomeEntity")
+            or item.get("alerted_entity_type")
+            or item.get("outcomeEntityType")
+        )
+    ]
+    if not rows:
+        return
+    st.markdown("#### Thực thể cảnh báo")
+    for index, item in enumerate(rows, start=1):
+        entity = item.get("alerted_entity")
+        entity_type = item.get("alerted_entity_type")
+        if len(rows) > 1:
+            st.caption(f"Thực thể {index}")
+        if entity:
+            render_copyable_value("Alerted Entity", str(entity))
+        st.markdown(f"**Entity Type:** `{entity_type or '—'}`")
+    st.caption("Sử dụng thực thể này để tìm cảnh báo trong SAS Alert Triage.")
 
 
 def _rule_matches_target(rule: ApplicationFiredRule, target_rule: str) -> bool:
@@ -386,23 +448,21 @@ def _rule_matches_target(rule: ApplicationFiredRule, target_rule: str) -> bool:
 @st.dialog("Kết quả sàng lọc")
 def _show_application_result_dialog(entry: dict[str, Any]) -> None:
     st.markdown("## Hồ sơ cần xem xét")
+    st.write("SAS Fraud Decisioning đã phát hiện dấu hiệu cần kiểm tra.")
 
     fired_rules = entry.get("fired_rules") or []
     if fired_rules:
         for rule in fired_rules:
-            st.markdown(f"**Quy tắc phát hiện:** `{rule.get('name', '')}`")
             if rule.get("reason"):
                 st.markdown(f"**Lý do cảnh báo:** {rule['reason']}")
+            st.markdown(f"**Quy tắc phát hiện:** `{rule.get('name', '')}`")
     else:
         st.caption("SAS không trả về tên quy tắc cụ thể cho cảnh báo này.")
 
-    alert_id = entry.get("alert_id")
-    st.markdown(
-        f"**Alert ID:** `{alert_id}`"
-        if alert_id
-        else "**Alert ID:** Không được trả về trong runtime response hiện tại"
-    )
-    st.caption(f"Application ID: {entry.get('application_identifier', '')}")
+    st.markdown("**Bằng chứng / Dấu hiệu rủi ro**")
+    _render_business_evidence(entry.get("evidence") or [])
+    _render_alerted_entities_section(entry.get("alerted_entities") or [])
+    render_copyable_value("Application ID", entry.get("application_identifier"))
     st.caption(f"Customer ID: {entry.get('customer_identifier', '')}")
     st.markdown("**Trạng thái:** Đã tạo cảnh báo")
 
@@ -422,17 +482,20 @@ def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
     """
 
     st.markdown("## :material/warning: Application Alert")
-    st.markdown(f"**Target rule:** `{entry.get('target_rule', '')}`")
     st.markdown(f"**Actual fired rule:** `{entry.get('actual_rule_name', '')}`")
     if entry.get("reason"):
         st.markdown(f"**Reason:** {entry['reason']}")
-    st.caption(f"Application: {entry.get('application_identifier', '')}")
+    st.caption(
+        f"Demo validation context · Expected rule: {entry.get('target_rule', '')}"
+    )
+    render_copyable_value("Application ID", entry.get("application_identifier"))
     st.caption(f"Customer: {entry.get('customer_identifier', '')}")
-    if entry.get("alert_id"):
-        st.code(str(entry["alert_id"]), language=None)
-    else:
-        st.caption("Alert ID không được trả về trong runtime response hiện tại.")
-    st.markdown("**Alert:** Created")
+    st.markdown(
+        f"**Alert:** {'Created' if entry.get('alert_created') else 'Not created'}"
+    )
+    st.markdown("**Bằng chứng / Dấu hiệu rủi ro**")
+    _render_business_evidence(entry.get("evidence") or [])
+    _render_alerted_entities_section(entry.get("alerted_entities") or [])
 
     if st.button(
         "Close", type="primary", use_container_width=True, key="af_demo_dialog_close"
@@ -472,7 +535,6 @@ def _record_alert_if_created(
             "channel": message.get("application", {}).get("channel"),
             "transaction_identifier": normalized.transaction_id,
             "message_identifier": normalized.message_id,
-            "alert_id": normalized.alert_id,
             "alert_reason": normalized.alert_reason,
             "evidence": normalized.evidence,
             "decision": normalized.decision,
@@ -486,16 +548,20 @@ def _record_alert_if_created(
             "fired_rule_details": [rule.raw for rule in fired_rules],
             "outcome_name": normalized.outcome_name,
             "alerted_entities": normalized.alerted_entities,
+            "alerted_entity": normalized.primary_alerted_entity,
+            "alerted_entity_type": normalized.primary_alerted_entity_type,
             "rule_fired": bool(fired_rules),
+            "processing_time_ms": response.elapsed_ms,
             "raw_response": response.parsed_body,
         }
     )
     if show_dialog:
         st.session_state["af_pending_result_dialog"] = {
             "outcome_name": normalized.outcome_name,
-            "alert_id": normalized.alert_id,
             "application_identifier": message["application"]["identifier"],
             "customer_identifier": message["customer"]["identifier"],
+            "alerted_entities": normalized.alerted_entities,
+            "evidence": normalized.evidence,
             "fired_rules": [
                 {"name": rule.display_name, "reason": rule.reason}
                 for rule in fired_rules
@@ -560,7 +626,7 @@ def _render_single_result(result: dict[str, Any]) -> None:
     elif normalized.alert_created:
         st.markdown(
             '<div class="af-status-alert"><h3>Hồ sơ cần xem xét</h3>'
-            "<p>SAS Fraud Decisioning đã tạo cảnh báo cho hồ sơ này.</p></div>",
+            "<p>SAS Fraud Decisioning đã phát hiện dấu hiệu cần kiểm tra.</p></div>",
             unsafe_allow_html=True,
         )
     else:
@@ -576,21 +642,25 @@ def _render_single_result(result: dict[str, Any]) -> None:
     columns[2].metric("Quyết định", _display_outcome(normalized.decision))
     columns[3].metric("Cảnh báo", "Đã tạo" if normalized.alert_created else "Không")
 
+    identifier_columns = st.columns(3)
+    with identifier_columns[0]:
+        render_copyable_value("Application ID", identity["application_identifier"])
+    with identifier_columns[1]:
+        render_copyable_value("Transaction ID", normalized.transaction_id)
+    with identifier_columns[2]:
+        render_copyable_value("Message ID", normalized.message_id)
+
     if normalized.alert_created:
-        st.markdown("#### Alert ID")
-        if normalized.alert_id:
-            st.code(normalized.alert_id, language=None)
-        else:
-            st.warning("Alert ID không được trả về trong runtime response hiện tại.")
-        st.markdown("#### Vì sao hồ sơ bị cảnh báo?")
+        st.markdown("#### Lý do cảnh báo")
         if normalized.alert_reason:
             st.write(normalized.alert_reason)
         elif normalized.fired_rules:
             st.caption("SAS trả về quy tắc nhưng không kèm alertReason/ruleReason.")
+        st.markdown("#### Quy tắc phát hiện")
         _render_fired_rules_table(normalized.fired_rules)
-        if normalized.evidence:
-            st.markdown("#### Bằng chứng / Dấu hiệu rủi ro")
-            st.dataframe(normalized.evidence, use_container_width=True, hide_index=True)
+        st.markdown("#### Bằng chứng / Dấu hiệu rủi ro")
+        _render_business_evidence(normalized.evidence)
+        _render_alerted_entities_section(normalized.alerted_entities)
 
     with st.expander("Chi tiết kỹ thuật", expanded=False):
         tech_columns = st.columns(4)
@@ -681,22 +751,7 @@ def _restore_json_from_form() -> None:
 
 
 def _copy_json_control(payload_text: str) -> None:
-    encoded = b64encode(payload_text.encode("utf-8")).decode("ascii")
-    components.html(
-        f"""
-        <button id="copy" style="border:1px solid #b8c5d3;border-radius:7px;background:#fff;
-        color:#0b3558;padding:8px 14px;font:600 14px system-ui;cursor:pointer">Copy JSON</button>
-        <span id="status" style="color:#4b6478;font:13px system-ui;margin-left:8px"></span>
-        <script>
-        const text = new TextDecoder().decode(Uint8Array.from(atob('{encoded}'), c => c.charCodeAt(0)));
-        document.getElementById('copy').onclick = async () => {{
-          try {{ await navigator.clipboard.writeText(text); document.getElementById('status').innerText='Copied'; }}
-          catch (_) {{ document.getElementById('status').innerText='Use the copy icon in the JSON block'; }}
-        }};
-        </script>
-        """,
-        height=42,
-    )
+    render_copy_control(payload_text, "Copy JSON")
 
 
 def _render_single(
@@ -775,14 +830,8 @@ def _render_single(
             key="af_form_channel",
         )
         channel = st.session_state["af_form_channel"]
-        if channel == "BRANCH":
-            st.caption("Hồ sơ được nhân viên tại quầy nhập trực tiếp.")
-        elif channel in {"MOBILE_APP", "WEB"}:
-            st.caption(
-                "Hồ sơ khởi tạo trên kênh số và đang được nhân viên ngân hàng xử lý."
-            )
-        else:
-            st.caption("Nguồn tiếp nhận được giữ nguyên trong thông điệp gửi SAS.")
+        channel_config = APPLICATION_CHANNELS[channel]
+        st.info(channel_config["business_description"])
 
         _section("Thông tin khách hàng")
         first, second = st.columns(2)
@@ -803,6 +852,15 @@ def _render_single(
             min_value=0,
             step=1,
             key="af_form_months_at_location",
+        )
+        st.markdown("**Địa chỉ khách hàng**")
+        st.text_input(
+            "Địa chỉ chuẩn hóa",
+            key="af_single_normalized_address",
+            help=(
+                "Vị trí hiển thị thuộc thông tin khách hàng; JSON path vẫn là "
+                "message.appRisk.normalizedAddress theo contract hiện tại."
+            ),
         )
 
         _section("Nghề nghiệp & tài chính")
@@ -829,10 +887,8 @@ def _render_single(
         _section("Giải ngân & thông tin tham chiếu")
         first, second = st.columns(2)
         first.text_input("Mã ngân hàng / tổ chức", key="af_form_bank_id")
-        second.text_input("Sales Agent ID", key="af_single_sales_agent")
         first.text_input("Tài khoản giải ngân", key="af_single_disb_account")
         second.text_input("Điện thoại tham chiếu", key="af_single_reference_phone")
-        st.text_input("Địa chỉ chuẩn hóa", key="af_single_normalized_address")
         first.checkbox(
             "Chủ tài khoản giải ngân trùng với người vay",
             key="af_form_disb_owner_match",
@@ -841,13 +897,33 @@ def _render_single(
             "Đơn vị công tác đã được xác minh", key="af_form_employer_verified"
         )
 
-        with st.expander("Thiết bị & thông tin tiếp nhận", expanded=False):
+        source_label = channel_config["source_identifier_label"]
+        if channel in {"BRANCH", "SALES_AGENT", "PARTNER", "CALL_CENTER"}:
+            st.text_input(source_label, key="af_single_sales_agent")
+        else:
+            with st.expander("Thông tin nguồn tiếp nhận", expanded=False):
+                st.text_input(source_label, key="af_single_sales_agent")
+                st.caption(
+                    "Trường bắt buộc của payload hiện tại; được thu gọn vì không phải "
+                    "thông tin chính của hồ sơ khởi tạo trên kênh số."
+                )
+
+        with st.expander(
+            "Thiết bị & thông tin tiếp nhận",
+            expanded=channel in {"MOBILE_APP", "WEB"},
+        ):
             first, second = st.columns(2)
             first.text_input("Device ID", key="af_single_device_id")
             second.text_input("IP Address", key="af_form_ip_address")
-            st.caption(
-                "Phần này hữu ích cho hồ sơ phát sinh từ Mobile App hoặc Website."
-            )
+            if channel in {"MOBILE_APP", "WEB"}:
+                st.caption(
+                    "Thông tin liên quan trực tiếp đến hồ sơ phát sinh trên kênh số."
+                )
+            else:
+                st.caption(
+                    "Trường kỹ thuật bắt buộc của payload được giữ lại nhưng thu gọn "
+                    "vì kênh hiện tại có hỗ trợ nhập hồ sơ."
+                )
 
     values = _form_values_from_state(st.session_state)
     try:
@@ -903,7 +979,7 @@ def _render_single(
             st.error(error)
 
     for error in validation_errors:
-        st.error(error)
+        st.error(humanize_validation_error(error))
 
     effective_payload = st.session_state.get("af_effective_payload")
     editor_dirty = isinstance(effective_payload, dict) and st.session_state.get(
@@ -963,6 +1039,12 @@ def _render_single(
                     # HTTP 4xx/5xx must remain retryable.
                     st.session_state["af_single_last_transaction"] = None
 
+                record_application_response(
+                    effective_payload,
+                    response,
+                    source="single",
+                    processed_at=st.session_state["af_single_result"]["sent_at"],
+                )
                 _record_alert_if_created(effective_payload, response)
                 if st.session_state.get("af_pending_result_dialog"):
                     # Setting session_state alone does not reopen a @st.dialog —
@@ -1055,7 +1137,8 @@ def _render_batch_results(results: list[dict[str, Any]]) -> None:
             "Quyết định": row.get("decision"),
             "Quy tắc phát hiện": row.get("firedRules") or "—",
             "Cảnh báo": "Có" if row.get("alertFlg") else "Không",
-            "Alert ID": row.get("alertId") or "Không được trả về",
+            "Thực thể cảnh báo": row.get("alertedEntity") or "—",
+            "Loại thực thể": row.get("alertedEntityType") or "—",
             "Thời gian (ms)": row.get("processingTimeMs"),
             "Trạng thái": row.get("requestStatus"),
         }
@@ -1241,6 +1324,7 @@ def _render_batch(
                     stop_on_error=stop_mode == "Stop batch",
                     progress=update_progress,
                 )
+                record_batch_history(sent_results)
                 for item in sent_results:
                     if not item.get("alertFlg") or not isinstance(
                         item.get("_request"), dict
@@ -1331,19 +1415,22 @@ def _build_quick_demo_dialog_entry(
     )
     actual_rule = target_hit_rule or (fired_rules[0] if fired_rules else None)
     message = last_payload["message"]
+    normalized = normalize_application_result(
+        last_response.parsed_body,
+        payload=last_payload,
+        http_status=last_response.status_code,
+        elapsed_ms=last_response.elapsed_ms,
+        parse_error=last_response.parse_error,
+    )
     return {
         "target_rule": spec.target_rule,
         "actual_rule_name": actual_rule.display_name if actual_rule else "Unknown rule",
         "reason": actual_rule.reason if actual_rule else None,
         "application_identifier": message["application"]["identifier"],
         "customer_identifier": message["customer"]["identifier"],
-        "alert_id": normalize_application_result(
-            last_response.parsed_body,
-            payload=last_payload,
-            http_status=last_response.status_code,
-            elapsed_ms=last_response.elapsed_ms,
-            parse_error=last_response.parse_error,
-        ).alert_id,
+        "alert_created": normalized.alert_created,
+        "alerted_entities": normalized.alerted_entities,
+        "evidence": normalized.evidence,
     }
 
 
@@ -1411,25 +1498,41 @@ def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
         _rule_matches_target(rule, spec.target_rule) for rule in fired_rules
     )
 
-    # 3. Target rule — never treated as proof by itself, see step 4 below.
-    if target_hit:
-        st.success("Kịch bản minh họa đã tạo đúng kết quả kỳ vọng.")
-    else:
-        st.warning(
-            "Kịch bản demo không tạo ra kết quả kỳ vọng. "
-            f"Expected: {spec.target_rule}. Actual: Không có matching rule returned."
-        )
-
-    # 4. Actual fired rule(s) from SAS — the only source of truth.
-    st.markdown("**Quy tắc thực tế SAS trả về cho hồ sơ hiện tại:**")
+    normalized = normalize_application_result(
+        last_response.parsed_body,
+        payload=last_entry["payload"],
+        http_status=last_response.status_code,
+        elapsed_ms=last_response.elapsed_ms,
+        parse_error=last_response.parse_error,
+    )
+    # Actual SAS output is the primary result. The expected rule below is only
+    # presenter validation context and never substitutes for this response.
+    st.markdown("#### Quy tắc thực tế SAS trả về")
     _render_fired_rules_table(fired_rules)
+    if normalized.alert_reason:
+        st.markdown(f"**Lý do cảnh báo:** {normalized.alert_reason}")
+    st.markdown(
+        f"**Cảnh báo:** {'Đã tạo' if normalized.alert_created else 'Không tạo'}"
+    )
+    st.markdown("#### Bằng chứng / Dấu hiệu rủi ro")
+    _render_business_evidence(normalized.evidence)
+    _render_alerted_entities_section(normalized.alerted_entities)
+    identifier_columns = st.columns(2)
+    with identifier_columns[0]:
+        render_copyable_value("Application ID", normalized.application_id)
+    with identifier_columns[1]:
+        render_copyable_value("Transaction ID", normalized.transaction_id)
 
-    # 5. Alert
-    summary = summarize_sas_response(last_response.parsed_body)
-    st.markdown(f"**Cảnh báo:** {'Đã tạo' if summary.alert_created else 'Không tạo'}")
-    _render_alerted_entities_section(summary.alerted_entities)
+    with st.expander("Đối chiếu kịch bản demo", expanded=False):
+        st.caption(f"Expected / target rule: {spec.target_rule}")
+        if target_hit:
+            st.success("Kết quả thực tế khớp quy tắc kỳ vọng của kịch bản.")
+        else:
+            st.warning(
+                "Kịch bản demo không tạo ra kết quả kỳ vọng. "
+                f"Expected: {spec.target_rule}. Actual: Không có matching rule returned."
+            )
 
-    # 6. Technical details
     with st.expander("Technical Details — Request/Response by Step", expanded=False):
         if progression_rows:
             st.markdown("**Profile progression returned by SAS**")
@@ -1467,43 +1570,80 @@ def _render_quick_demos(
     key = option_to_key[selected]
     spec = DEMO_SPECS[key]
     st.caption(spec.intro)
-    if st.button(
+    existing_result = st.session_state.get(f"af_{key}_result")
+    demo_running = bool(st.session_state.get("af_demo_running"))
+    run_clicked = st.button(
         "Chuẩn bị dữ liệu mẫu & chạy sàng lọc",
         type="primary",
         use_container_width=True,
         key="af_guided_demo_run",
-    ):
-        steps = spec.build_steps()
-        with st.status("Đang chuẩn bị kịch bản", expanded=True) as status:
-            st.write("Đang chuẩn bị lịch sử minh họa...")
-            demo_results = run_demo_steps(
-                steps,
-                endpoint=endpoint,
-                timeout_seconds=timeout_seconds,
-                verify_tls=verify_tls,
-                ca_bundle=ca_bundle,
-            )
-            st.write("Đang sàng lọc hồ sơ hiện tại...")
-            st.write("Đã nhận quyết định.")
-            status.update(label="Hoàn tất kịch bản", state="complete", expanded=False)
-        for entry in demo_results:
-            response = entry.get("response")
-            if response is not None:
-                _record_alert_if_created(entry["payload"], response, show_dialog=False)
-        st.session_state[f"af_{key}_result"] = demo_results
-
-        last_demo_entry = demo_results[-1]
-        last_demo_response = last_demo_entry.get("response")
-        dialog_entry = (
-            _build_quick_demo_dialog_entry(
-                spec, last_demo_entry["payload"], last_demo_response
-            )
-            if last_demo_response is not None
-            else None
+        disabled=demo_running or bool(existing_result),
+    )
+    if existing_result:
+        st.caption(
+            "Kịch bản này đã chạy trong phiên hiện tại. Đặt lại kịch bản trước khi "
+            "tạo và gửi một bộ dữ liệu tổng hợp mới."
         )
-        if dialog_entry is not None:
-            st.session_state["af_demo_pending_dialog"] = dialog_entry
+        if st.button(
+            "Đặt lại kịch bản này",
+            key=f"af_{key}_reset",
+            use_container_width=True,
+        ):
+            reset_guided_demo(st.session_state, key)
             st.rerun()
+
+    if run_clicked:
+        # Reserve the run before the first network call. The result remains the
+        # completed-run guard until the presenter explicitly resets this demo.
+        if not claim_guided_demo_run(st.session_state, key):
+            st.warning("Kịch bản đang chạy hoặc đã hoàn tất; yêu cầu lặp đã bị chặn.")
+        else:
+            try:
+                steps = spec.build_steps()
+                with st.status("Đang chuẩn bị kịch bản", expanded=True) as status:
+                    st.write("Đang chuẩn bị lịch sử minh họa...")
+                    demo_results = run_demo_steps(
+                        steps,
+                        endpoint=endpoint,
+                        timeout_seconds=timeout_seconds,
+                        verify_tls=verify_tls,
+                        ca_bundle=ca_bundle,
+                    )
+                    st.write("Đang sàng lọc hồ sơ hiện tại...")
+                    st.write("Đã nhận quyết định.")
+                    status.update(
+                        label="Hoàn tất kịch bản", state="complete", expanded=False
+                    )
+                # Seed requests remain internal setup. Only a fully executed
+                # sequence's final application enters the two local feeds.
+                if len(demo_results) == len(steps):
+                    record_guided_demo_history(
+                        demo_results, expected_step_count=len(steps)
+                    )
+                    final_entry = demo_results[-1]
+                    final_response = final_entry.get("response")
+                    if final_response is not None:
+                        _record_alert_if_created(
+                            final_entry["payload"],
+                            final_response,
+                            show_dialog=False,
+                        )
+                st.session_state[f"af_{key}_result"] = demo_results
+
+                last_demo_entry = demo_results[-1]
+                last_demo_response = last_demo_entry.get("response")
+                dialog_entry = (
+                    _build_quick_demo_dialog_entry(
+                        spec, last_demo_entry["payload"], last_demo_response
+                    )
+                    if last_demo_response is not None
+                    else None
+                )
+                if dialog_entry is not None:
+                    st.session_state["af_demo_pending_dialog"] = dialog_entry
+                    st.rerun()
+            finally:
+                finish_guided_demo_run(st.session_state)
 
     demo_results = st.session_state.get(f"af_{key}_result")
     if demo_results:
@@ -1533,6 +1673,24 @@ def _runtime_schema_version(description: dict[str, Any], schema_name: str) -> An
     return None
 
 
+@st.cache_data(ttl=300, show_spinner=False)
+def _cached_runtime_description(
+    *,
+    endpoint: str,
+    timeout_seconds: float,
+    verify_tls: bool,
+    ca_bundle: str | None,
+) -> dict[str, Any] | None:
+    """Cache only read-only runtime metadata; decision execution is never cached."""
+
+    return fetch_runtime_description(
+        endpoint=endpoint,
+        timeout_seconds=timeout_seconds,
+        verify_tls=verify_tls,
+        ca_bundle=ca_bundle,
+    )
+
+
 def _render_runtime_status(
     *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
 ) -> None:
@@ -1544,7 +1702,7 @@ def _render_runtime_status(
 
     description_endpoint = _description_endpoint(endpoint)
     description = (
-        fetch_runtime_description(
+        _cached_runtime_description(
             endpoint=description_endpoint,
             timeout_seconds=timeout_seconds,
             verify_tls=verify_tls,

@@ -13,8 +13,10 @@ from datetime import datetime
 from typing import Any, Iterable, MutableMapping
 
 try:
+    from .application_validation import humanize_validation_errors
     from .payloads import validate_application_fraud_payload
 except ImportError:
+    from application_validation import humanize_validation_errors
     from payloads import validate_application_fraud_payload
 
 
@@ -187,11 +189,12 @@ def parse_and_validate_payload(text: str) -> tuple[dict[str, Any] | None, list[s
         parsed = json.loads(text)
     except json.JSONDecodeError as error:
         return None, [
-            f"Message JSON is invalid: {error.msg} (line {error.lineno}, column {error.colno})."
+            f"JSON không hợp lệ: {error.msg} "
+            f"(dòng {error.lineno}, cột {error.colno})."
         ]
     if not isinstance(parsed, dict):
-        return None, ["Message JSON must be a JSON object."]
-    errors = validate_application_fraud_payload(parsed)
+        return None, ["Message JSON phải là một JSON object."]
+    errors = humanize_validation_errors(validate_application_fraud_payload(parsed))
     return (parsed if not errors else None), errors
 
 
