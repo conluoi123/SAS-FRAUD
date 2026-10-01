@@ -5,6 +5,9 @@ from app.streamlit_console.application_workspace import (
     application_business_fingerprint,
     apply_new_application_same_customer,
     apply_fresh_test_dataset,
+    _record_alert_if_created,
+    _render_single,
+    _render_quick_demos,
 )
 from app.streamlit_console.sas_client import send_message
 from app.streamlit_console.application_batch import execute_application_batch
@@ -134,3 +137,86 @@ def test_duplicate_rerun_blocked_and_allowed():
     # new application generates new transactionIdentifier
     apply_new_application_same_customer(state)
     assert state["af_single_last_fingerprint"] is None
+
+
+def test_sticky_alert_dialog_lifecycle():
+    mock_payload = {
+        "message": {
+            "application": {"identifier": "APP1"},
+            "customer": {"identifier": "CUST1", "surname": "Test"}
+        }
+    }
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.elapsed_ms = 100
+    mock_response.parse_error = False
+    mock_response.parsed_body = {
+        "message": {
+            "appRisk": {
+                "firedRuleSummary": "Test",
+                "alertReasonSummary": "Test"
+            },
+            "sas": {
+                "rulefired": [
+                    {"ruleIdentifier": "1", "alertFlg": 1, "firedFlg": 1}
+                ]
+            }
+        }
+    }
+
+    state = {}
+    mock_st = MagicMock()
+    mock_st.session_state = state
+
+    with patch("app.streamlit_console.application_workspace.st", mock_st):
+        with patch("app.streamlit_console.application_workspace.record_alert"):
+            # A. new manual alert -> popup event exists
+            _record_alert_if_created(mock_payload, mock_response, show_dialog=True)
+
+        assert "af_pending_result_dialog" in state
+        assert state["af_pending_result_dialog"] is not None
+
+        # B. event is consumed once
+        with patch("app.streamlit_console.application_workspace._show_application_result_dialog") as mock_show:
+            with patch("app.streamlit_console.application_workspace._section"):
+                try:
+                    _render_single(endpoint="", timeout_seconds=10, verify_tls=False, ca_bundle=None)
+                except Exception:
+                    pass
+                mock_show.assert_called_once()
+        
+        # C. subsequent rerun -> no popup
+        assert state.get("af_pending_result_dialog") is None
+
+        # D. new second alert -> popup opens once again
+        with patch("app.streamlit_console.application_workspace.record_alert"):
+            _record_alert_if_created(mock_payload, mock_response, show_dialog=True)
+        assert state["af_pending_result_dialog"] is not None
+        with patch("app.streamlit_console.application_workspace._show_application_result_dialog") as mock_show:
+            with patch("app.streamlit_console.application_workspace._section"):
+                try:
+                    _render_single(endpoint="", timeout_seconds=10, verify_tls=False, ca_bundle=None)
+                except Exception:
+                    pass
+                mock_show.assert_called_once()
+        assert state.get("af_pending_result_dialog") is None
+
+        # E. Quick Demo follows same lifecycle
+        state["af_demo_pending_dialog"] = {"test": "data"}
+        with patch("app.streamlit_console.application_workspace._show_quick_demo_result_dialog") as mock_show_demo:
+            try:
+                _render_quick_demos(endpoint="", timeout_seconds=10, verify_tls=False, ca_bundle=None)
+            except Exception:
+                pass
+            mock_show_demo.assert_called_once()
+                    
+        assert state.get("af_demo_pending_dialog") is None
+
+        # F. no-alert response -> no popup
+        mock_response.parsed_body["message"]["sas"]["rulefired"] = []
+        with patch("app.streamlit_console.application_workspace.record_alert"):
+            _record_alert_if_created(mock_payload, mock_response, show_dialog=True)
+                
+        assert state.get("af_pending_result_dialog") is None
+        # G. old alert record remains stored (simulated by record_alert mock above which does nothing, but popup is not set)
+

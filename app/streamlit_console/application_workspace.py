@@ -473,7 +473,6 @@ def _show_application_result_dialog(entry: dict[str, Any]) -> None:
     if st.button(
         "Đóng", type="primary", use_container_width=True, key="af_manual_dialog_close"
     ):
-        st.session_state["af_pending_result_dialog"] = None
         st.rerun()
 
 
@@ -505,7 +504,6 @@ def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
     if st.button(
         "Đóng", type="primary", use_container_width=True, key="af_demo_dialog_close"
     ):
-        st.session_state["af_demo_pending_dialog"] = None
         st.rerun()
 
 
@@ -790,7 +788,7 @@ def _render_single(
 ) -> None:
     # Rendered only inside the manual tab — Quick Demo has its own independent
     # af_demo_pending_dialog/_show_quick_demo_result_dialog (see _render_quick_demos).
-    pending_dialog = st.session_state.get("af_pending_result_dialog")
+    pending_dialog = st.session_state.pop("af_pending_result_dialog", None)
     if pending_dialog:
         _show_application_result_dialog(pending_dialog)
 
@@ -1046,7 +1044,6 @@ def _render_single(
                     new_tx_id = _new_transaction_id()
                     effective_payload["message"]["sas"]["system"]["transactionIdentifier"] = new_tx_id
                     st.session_state["af_single_transaction_id"] = new_tx_id
-                    st.session_state["af_json_editor_text"] = format_payload(effective_payload)
                     # Recompute fingerprint for the new effective_payload
                     current_fingerprint = application_business_fingerprint(effective_payload)
 
@@ -1594,7 +1591,7 @@ def _render_demo_result(spec: DemoSpec, results: list[dict[str, Any]]) -> None:
 def _render_quick_demos(
     *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
 ) -> None:
-    pending_demo_dialog = st.session_state.get("af_demo_pending_dialog")
+    pending_demo_dialog = st.session_state.pop("af_demo_pending_dialog", None)
     if pending_demo_dialog:
         _show_quick_demo_result_dialog(pending_demo_dialog)
 
