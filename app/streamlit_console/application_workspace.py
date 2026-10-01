@@ -463,8 +463,9 @@ def _show_application_result_dialog(entry: dict[str, Any]) -> None:
     _render_business_evidence(entry.get("evidence") or [])
     _render_alerted_entities_section(entry.get("alerted_entities") or [])
     render_copyable_value("Application ID", entry.get("application_identifier"))
-    st.caption(f"Customer ID: {entry.get('customer_identifier', '')}")
-    st.markdown("**Trạng thái:** Đã tạo cảnh báo")
+    render_copyable_value("Customer ID", entry.get("customer_identifier"))
+    render_copyable_value("Transaction Identifier", entry.get("transaction_identifier"))
+    st.markdown("**Trạng thái:** Alert created by Detection; Alert Triage ID pending")
 
     if st.button(
         "Đóng", type="primary", use_container_width=True, key="af_manual_dialog_close"
@@ -489,10 +490,13 @@ def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
         f"Demo validation context · Expected rule: {entry.get('target_rule', '')}"
     )
     render_copyable_value("Application ID", entry.get("application_identifier"))
-    st.caption(f"Customer: {entry.get('customer_identifier', '')}")
-    st.markdown(
-        f"**Alert:** {'Created' if entry.get('alert_created') else 'Not created'}"
-    )
+    render_copyable_value("Customer ID", entry.get("customer_identifier"))
+    render_copyable_value("Transaction Identifier", entry.get("transaction_identifier"))
+    if entry.get("alert_created"):
+        st.markdown("**Alert status:** Alert created by Detection; Alert Triage ID pending")
+    else:
+        st.markdown("**Alert status:** Not created")
+    
     st.markdown("**Bằng chứng / Dấu hiệu rủi ro**")
     _render_business_evidence(entry.get("evidence") or [])
     _render_alerted_entities_section(entry.get("alerted_entities") or [])
@@ -560,6 +564,7 @@ def _record_alert_if_created(
             "outcome_name": normalized.outcome_name,
             "application_identifier": message["application"]["identifier"],
             "customer_identifier": message["customer"]["identifier"],
+            "transaction_identifier": normalized.transaction_id,
             "alerted_entities": normalized.alerted_entities,
             "evidence": normalized.evidence,
             "fired_rules": [
@@ -766,7 +771,7 @@ def _render_single(
     channel_codes = list(APPLICATION_CHANNELS)
 
     _section("Chuẩn bị hồ sơ")
-    reset_col1, reset_col2 = st.columns(2)
+    reset_col1, reset_col2, reset_col3 = st.columns(3)
     if reset_col1.button(
         "Hồ sơ mới — Giữ khách hàng",
         key="af_reset_same_customer",
@@ -788,6 +793,20 @@ def _render_single(
         ),
     ):
         apply_fresh_test_dataset(st.session_state)
+        st.rerun()
+    if reset_col3.button(
+        "Use verified demo network",
+        key="af_reset_demo_network",
+        use_container_width=True,
+        help=(
+            "Generate new IDs but reuse known referencePhone and disbAcctNumber to trigger "
+            "AF_DR_Shared_Reference_Network alert."
+        ),
+    ):
+        apply_fresh_test_dataset(st.session_state)
+        st.session_state["af_single_reference_phone"] = "0918000009"
+        st.session_state["af_single_disb_account"] = "09704422000005"
+        st.session_state["af_form_disb_owner_match"] = True
         st.rerun()
 
     with st.container(border=True):
@@ -998,74 +1017,96 @@ def _render_single(
     )
 
     if submitted:
-        transaction_id = st.session_state["af_single_transaction_id"]
-        if st.session_state["af_single_sending"] or (
-            st.session_state["af_single_last_transaction"] == transaction_id
-        ):
-            st.warning(
-                "This request was already submitted; reruns will not submit it again."
-            )
-        elif validation_errors or not isinstance(effective_payload, dict):
+        if validation_errors or not isinstance(effective_payload, dict):
             st.error("Hồ sơ chứa thông tin không hợp lệ; chưa có request nào được gửi.")
+        elif st.session_state.get("af_single_sending"):
+            st.warning("Đang gửi request, vui lòng đợi.")
         else:
-            st.session_state["af_single_sending"] = True
-            st.session_state["af_single_result"] = None
+            # Create a fingerprint without the transactionIdentifier for comparison
+            payload_for_fp = {k: v for k, v in effective_payload.items()}
+            # A deepcopy would be safer but since we just need to blank out transactionIdentifier:
+            current_tx_id = effective_payload.get("message", {}).get("sas", {}).get("system", {}).get("transactionIdentifier")
+            
+            # Since we just want to know if the non-transaction parts changed, we can serialize 
+            # and ignore the exact transaction ID. But to avoid deepcopy we can just replace it in string:
+            current_fingerprint = format_payload(effective_payload)
+            if current_tx_id:
+                current_fingerprint = current_fingerprint.replace(current_tx_id, "<TX_ID>")
+                
+            if st.session_state.get("af_single_last_fingerprint") == current_fingerprint:
+                st.warning("This request was already submitted; reruns will not submit it again.")
+            else:
+                # Payload changed (e.g. user manually changed App ID, or we reset demo data).
+                # If transactionIdentifier is the same as the last submitted one, we must generate a new one!
+                if current_tx_id and current_tx_id == st.session_state.get("af_single_last_transaction"):
+                    new_tx_id = _new_transaction_id()
+                    effective_payload["message"]["sas"]["system"]["transactionIdentifier"] = new_tx_id
+                    st.session_state["af_single_transaction_id"] = new_tx_id
+                    st.session_state["af_json_editor_text"] = format_payload(effective_payload)
+                    # Recompute fingerprint for the new effective_payload
+                    current_fingerprint = format_payload(effective_payload).replace(new_tx_id, "<TX_ID>")
 
-            try:
-                with st.status("Đang xử lý hồ sơ", expanded=True) as status:
-                    st.write("Đang xác thực thông tin hồ sơ")
-                    st.write("Đang gửi tới SAS Fraud Decisioning")
-                    response = send_message(
-                        endpoint=endpoint,
-                        payload=effective_payload,
-                        timeout_seconds=timeout_seconds,
-                        verify_tls=verify_tls,
-                        ca_bundle=ca_bundle,
+                st.session_state["af_single_sending"] = True
+                st.session_state["af_single_result"] = None
+
+                try:
+                    with st.status("Đang xử lý hồ sơ", expanded=True) as status:
+                        st.write("Đang xác thực thông tin hồ sơ")
+                        st.write("Đang gửi tới SAS Fraud Decisioning")
+                        response = send_message(
+                            endpoint=endpoint,
+                            payload=effective_payload,
+                            timeout_seconds=timeout_seconds,
+                            verify_tls=verify_tls,
+                            ca_bundle=ca_bundle,
+                            as_text_plain=True,
+                        )
+                        st.write("Đã nhận quyết định")
+                        status.update(
+                            label="Hoàn tất sàng lọc", state="complete", expanded=False
+                        )
+                    st.session_state["af_single_result"] = {
+                        "payload": effective_payload,
+                        "response": response,
+                        "sent_at": datetime.now(timezone.utc)
+                        .isoformat(timespec="seconds")
+                        .replace("+00:00", "Z"),
+                    }
+                    if 200 <= response.status_code < 300:
+                        st.session_state["af_single_last_transaction"] = effective_payload.get("message", {}).get("sas", {}).get("system", {}).get("transactionIdentifier")
+                        st.session_state["af_single_last_fingerprint"] = current_fingerprint
+                    else:
+                        # HTTP 4xx/5xx must remain retryable.
+                        st.session_state["af_single_last_transaction"] = None
+                        st.session_state["af_single_last_fingerprint"] = None
+
+                    record_application_response(
+                        effective_payload,
+                        response,
+                        source="single",
+                        processed_at=st.session_state["af_single_result"]["sent_at"],
                     )
-                    st.write("Đã nhận quyết định")
-                    status.update(
-                        label="Hoàn tất sàng lọc", state="complete", expanded=False
-                    )
-                st.session_state["af_single_result"] = {
-                    "payload": effective_payload,
-                    "response": response,
-                    "sent_at": datetime.now(timezone.utc)
-                    .isoformat(timespec="seconds")
-                    .replace("+00:00", "Z"),
-                }
-                if 200 <= response.status_code < 300:
-                    st.session_state["af_single_last_transaction"] = transaction_id
-                else:
-                    # HTTP 4xx/5xx must remain retryable.
+                    _record_alert_if_created(effective_payload, response)
+                    if st.session_state.get("af_pending_result_dialog"):
+                        # Setting session_state alone does not reopen a @st.dialog —
+                        # it only takes effect on the NEXT script run, so force one.
+                        st.rerun()
+                except requests.exceptions.SSLError:
                     st.session_state["af_single_last_transaction"] = None
-
-                record_application_response(
-                    effective_payload,
-                    response,
-                    source="single",
-                    processed_at=st.session_state["af_single_result"]["sent_at"],
-                )
-                _record_alert_if_created(effective_payload, response)
-                if st.session_state.get("af_pending_result_dialog"):
-                    # Setting session_state alone does not reopen a @st.dialog —
-                    # it only takes effect on the NEXT script run, so force one.
-                    st.rerun()
-            except requests.exceptions.SSLError:
-                st.session_state["af_single_last_transaction"] = None
-                st.error(
-                    "Không thể hoàn tất sàng lọc gian lận. Kiểm tra kết nối TLS trong Chi tiết kỹ thuật."
-                )
-            except requests.exceptions.Timeout:
-                st.session_state["af_single_last_transaction"] = None
-                st.error("Dịch vụ gian lận không phản hồi trong thời gian cho phép.")
-            except requests.exceptions.ConnectionError:
-                st.session_state["af_single_last_transaction"] = None
-                st.error("Dịch vụ gian lận hiện không khả dụng.")
-            except (requests.RequestException, ValueError):
-                st.session_state["af_single_last_transaction"] = None
-                st.error("Không thể hoàn tất sàng lọc gian lận.")
-            finally:
-                st.session_state["af_single_sending"] = False
+                    st.error(
+                        "Không thể hoàn tất sàng lọc gian lận. Kiểm tra kết nối TLS trong Chi tiết kỹ thuật."
+                    )
+                except requests.exceptions.Timeout:
+                    st.session_state["af_single_last_transaction"] = None
+                    st.error("Dịch vụ gian lận không phản hồi trong thời gian cho phép.")
+                except requests.exceptions.ConnectionError:
+                    st.session_state["af_single_last_transaction"] = None
+                    st.error("Dịch vụ gian lận hiện không khả dụng.")
+                except (requests.RequestException, ValueError):
+                    st.session_state["af_single_last_transaction"] = None
+                    st.error("Không thể hoàn tất sàng lọc gian lận.")
+                finally:
+                    st.session_state["af_single_sending"] = False
 
     result = st.session_state.get("af_single_result")
     if result:
@@ -1428,6 +1469,7 @@ def _build_quick_demo_dialog_entry(
         "reason": actual_rule.reason if actual_rule else None,
         "application_identifier": message["application"]["identifier"],
         "customer_identifier": message["customer"]["identifier"],
+        "transaction_identifier": normalized.transaction_id,
         "alert_created": normalized.alert_created,
         "alerted_entities": normalized.alerted_entities,
         "evidence": normalized.evidence,

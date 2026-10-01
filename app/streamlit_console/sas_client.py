@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
+import json
 from typing import Any
 
 import requests
@@ -42,19 +43,29 @@ def send_message(
     timeout_seconds: float,
     verify_tls: bool,
     ca_bundle: str | None = None,
+    as_text_plain: bool = False,
 ) -> SasRuntimeResponse:
     """Send one message to the Detection runtime and preserve the raw response."""
 
     verify = _resolve_verify(verify_tls, ca_bundle)
 
     started = time.perf_counter()
-    response = requests.post(
-        endpoint,
-        json=payload,
-        headers={"Accept": "application/json", "Content-Type": "application/json"},
-        timeout=timeout_seconds,
-        verify=verify,
-    )
+    if as_text_plain:
+        response = requests.post(
+            endpoint,
+            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+            headers={"Accept": "application/json", "Content-Type": "text/plain; charset=utf-8"},
+            timeout=timeout_seconds,
+            verify=verify,
+        )
+    else:
+        response = requests.post(
+            endpoint,
+            json=payload,
+            headers={"Accept": "application/json", "Content-Type": "application/json"},
+            timeout=timeout_seconds,
+            verify=verify,
+        )
     elapsed_ms = round((time.perf_counter() - started) * 1000)
 
     parsed_body: Any = None

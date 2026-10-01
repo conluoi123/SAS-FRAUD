@@ -639,6 +639,7 @@ def execute_application_batch(
                 timeout_seconds=timeout_seconds,
                 verify_tls=verify_tls,
                 ca_bundle=ca_bundle,
+                as_text_plain=True,
             )
             return_fields = extract_return_fields(response.parsed_body)
             summary = (

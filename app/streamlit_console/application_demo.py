@@ -286,6 +286,7 @@ def run_demo_steps(
             timeout_seconds=timeout_seconds,
             verify_tls=verify_tls,
             ca_bundle=ca_bundle,
+            as_text_plain=True,
         )
         entry["response"] = response
         results.append(entry)
