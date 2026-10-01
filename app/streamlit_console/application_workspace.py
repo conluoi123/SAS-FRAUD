@@ -202,6 +202,7 @@ def _initialize_state() -> None:
         "af_json_applied_notice": False,
         "af_single_sending": False,
         "af_single_last_transaction": None,
+        "af_single_last_fingerprint": None,
         "af_single_result": None,
         "af_batch_fingerprint": None,
         "af_batch_validation": None,
@@ -238,6 +239,7 @@ def apply_new_application_same_customer(state: MutableMapping[str, Any]) -> None
     state["af_single_application_id"] = _new_application_id()
     state["af_single_transaction_id"] = _new_transaction_id()
     state["af_single_last_transaction"] = None
+    state["af_single_last_fingerprint"] = None
     state["af_single_result"] = None
     state["af_pending_result_dialog"] = None
 
@@ -263,6 +265,7 @@ def apply_fresh_test_dataset(state: MutableMapping[str, Any]) -> None:
     state["af_single_normalized_address"] = _new_normalized_address()
     state["af_single_sales_agent"] = _new_sales_agent()
     state["af_single_last_transaction"] = None
+    state["af_single_last_fingerprint"] = None
     state["af_single_result"] = None
     state["af_effective_payload"] = None
     state["af_form_payload_snapshot"] = None
@@ -445,27 +448,27 @@ def _rule_matches_target(rule: ApplicationFiredRule, target_rule: str) -> bool:
     )
 
 
-@st.dialog("Kết quả sàng lọc")
+@st.dialog("Cảnh báo hồ sơ")
 def _show_application_result_dialog(entry: dict[str, Any]) -> None:
-    st.markdown("## Hồ sơ cần xem xét")
-    st.write("SAS Fraud Decisioning đã phát hiện dấu hiệu cần kiểm tra.")
-
     fired_rules = entry.get("fired_rules") or []
     if fired_rules:
         for rule in fired_rules:
+            st.markdown(f"**Quy tắc phát hiện:**\n`{rule.get('name', '')}`")
             if rule.get("reason"):
-                st.markdown(f"**Lý do cảnh báo:** {rule['reason']}")
-            st.markdown(f"**Quy tắc phát hiện:** `{rule.get('name', '')}`")
+                st.markdown(f"**Lý do cảnh báo:**\n{rule['reason']}")
     else:
         st.caption("SAS không trả về tên quy tắc cụ thể cho cảnh báo này.")
 
-    st.markdown("**Bằng chứng / Dấu hiệu rủi ro**")
+    st.markdown("**Bằng chứng:**")
     _render_business_evidence(entry.get("evidence") or [])
-    _render_alerted_entities_section(entry.get("alerted_entities") or [])
+    
     render_copyable_value("Application ID", entry.get("application_identifier"))
     render_copyable_value("Customer ID", entry.get("customer_identifier"))
-    render_copyable_value("Transaction Identifier", entry.get("transaction_identifier"))
-    st.markdown("**Trạng thái:** Alert created by Detection; Alert Triage ID pending")
+    render_copyable_value("Transaction ID", entry.get("transaction_identifier"))
+    _render_alerted_entities_section(entry.get("alerted_entities") or [])
+    
+    st.markdown("**Trạng thái:**\nSAS Detection đã tạo cảnh báo.")
+    st.caption("Sử dụng Application ID hoặc Alerted Entity để tra cứu trong SAS Alert Triage.")
 
     if st.button(
         "Đóng", type="primary", use_container_width=True, key="af_manual_dialog_close"
@@ -474,35 +477,33 @@ def _show_application_result_dialog(entry: dict[str, Any]) -> None:
         st.rerun()
 
 
-@st.dialog("Alert Demo Result")
+@st.dialog("Cảnh báo hồ sơ (Demo)")
 def _show_quick_demo_result_dialog(entry: dict[str, Any]) -> None:
-    """Quick Demo's own popup — independent of af_pending_result_dialog.
+    """Quick Demo's own popup — independent of af_pending_result_dialog."""
 
-    Only the caller triggers this for the final (trigger) step of a demo
-    sequence; seed steps never open a popup (see _render_quick_demos).
-    """
-
-    st.markdown("## :material/warning: Application Alert")
-    st.markdown(f"**Actual fired rule:** `{entry.get('actual_rule_name', '')}`")
+    st.markdown(f"**Quy tắc phát hiện:**\n`{entry.get('actual_rule_name', '')}`")
     if entry.get("reason"):
-        st.markdown(f"**Reason:** {entry['reason']}")
+        st.markdown(f"**Lý do cảnh báo:**\n{entry['reason']}")
     st.caption(
         f"Demo validation context · Expected rule: {entry.get('target_rule', '')}"
     )
+
+    st.markdown("**Bằng chứng:**")
+    _render_business_evidence(entry.get("evidence") or [])
+
     render_copyable_value("Application ID", entry.get("application_identifier"))
     render_copyable_value("Customer ID", entry.get("customer_identifier"))
-    render_copyable_value("Transaction Identifier", entry.get("transaction_identifier"))
-    if entry.get("alert_created"):
-        st.markdown("**Alert status:** Alert created by Detection; Alert Triage ID pending")
-    else:
-        st.markdown("**Alert status:** Not created")
-    
-    st.markdown("**Bằng chứng / Dấu hiệu rủi ro**")
-    _render_business_evidence(entry.get("evidence") or [])
+    render_copyable_value("Transaction ID", entry.get("transaction_identifier"))
     _render_alerted_entities_section(entry.get("alerted_entities") or [])
+    
+    if entry.get("alert_created"):
+        st.markdown("**Trạng thái:**\nSAS Detection đã tạo cảnh báo.")
+        st.caption("Sử dụng Application ID hoặc Alerted Entity để tra cứu trong SAS Alert Triage.")
+    else:
+        st.markdown("**Trạng thái:**\nKhông tạo cảnh báo.")
 
     if st.button(
-        "Close", type="primary", use_container_width=True, key="af_demo_dialog_close"
+        "Đóng", type="primary", use_container_width=True, key="af_demo_dialog_close"
     ):
         st.session_state["af_demo_pending_dialog"] = None
         st.rerun()
@@ -759,6 +760,31 @@ def _copy_json_control(payload_text: str) -> None:
     render_copy_control(payload_text, "Copy JSON")
 
 
+def application_business_fingerprint(payload: dict[str, Any]) -> str:
+    """Create a hash of the payload ignoring the transactionIdentifier."""
+    import copy
+    import json
+    import hashlib
+    
+    cloned = copy.deepcopy(payload)
+    message = cloned.get("message")
+    if isinstance(message, dict):
+        sas = message.get("sas")
+        if isinstance(sas, dict):
+            system = sas.get("system")
+            if isinstance(system, dict) and "transactionIdentifier" in system:
+                system["transactionIdentifier"] = "<TX_ID>"
+                
+    return hashlib.sha256(
+        json.dumps(
+            cloned,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+
+
 def _render_single(
     *, endpoint: str, timeout_seconds: float, verify_tls: bool, ca_bundle: str | None
 ) -> None:
@@ -771,7 +797,7 @@ def _render_single(
     channel_codes = list(APPLICATION_CHANNELS)
 
     _section("Chuẩn bị hồ sơ")
-    reset_col1, reset_col2, reset_col3 = st.columns(3)
+    reset_col1, reset_col2 = st.columns(2)
     if reset_col1.button(
         "Hồ sơ mới — Giữ khách hàng",
         key="af_reset_same_customer",
@@ -793,20 +819,6 @@ def _render_single(
         ),
     ):
         apply_fresh_test_dataset(st.session_state)
-        st.rerun()
-    if reset_col3.button(
-        "Use verified demo network",
-        key="af_reset_demo_network",
-        use_container_width=True,
-        help=(
-            "Generate new IDs but reuse known referencePhone and disbAcctNumber to trigger "
-            "AF_DR_Shared_Reference_Network alert."
-        ),
-    ):
-        apply_fresh_test_dataset(st.session_state)
-        st.session_state["af_single_reference_phone"] = "0918000009"
-        st.session_state["af_single_disb_account"] = "09704422000005"
-        st.session_state["af_form_disb_owner_match"] = True
         st.rerun()
 
     with st.container(border=True):
@@ -1022,19 +1034,11 @@ def _render_single(
         elif st.session_state.get("af_single_sending"):
             st.warning("Đang gửi request, vui lòng đợi.")
         else:
-            # Create a fingerprint without the transactionIdentifier for comparison
-            payload_for_fp = {k: v for k, v in effective_payload.items()}
-            # A deepcopy would be safer but since we just need to blank out transactionIdentifier:
+            current_fingerprint = application_business_fingerprint(effective_payload)
             current_tx_id = effective_payload.get("message", {}).get("sas", {}).get("system", {}).get("transactionIdentifier")
             
-            # Since we just want to know if the non-transaction parts changed, we can serialize 
-            # and ignore the exact transaction ID. But to avoid deepcopy we can just replace it in string:
-            current_fingerprint = format_payload(effective_payload)
-            if current_tx_id:
-                current_fingerprint = current_fingerprint.replace(current_tx_id, "<TX_ID>")
-                
             if st.session_state.get("af_single_last_fingerprint") == current_fingerprint:
-                st.warning("This request was already submitted; reruns will not submit it again.")
+                st.warning("Hồ sơ này đã được gửi thành công trước đó; sẽ không gửi lại.")
             else:
                 # Payload changed (e.g. user manually changed App ID, or we reset demo data).
                 # If transactionIdentifier is the same as the last submitted one, we must generate a new one!
@@ -1044,7 +1048,7 @@ def _render_single(
                     st.session_state["af_single_transaction_id"] = new_tx_id
                     st.session_state["af_json_editor_text"] = format_payload(effective_payload)
                     # Recompute fingerprint for the new effective_payload
-                    current_fingerprint = format_payload(effective_payload).replace(new_tx_id, "<TX_ID>")
+                    current_fingerprint = application_business_fingerprint(effective_payload)
 
                 st.session_state["af_single_sending"] = True
                 st.session_state["af_single_result"] = None

@@ -266,26 +266,11 @@ class ApplicationFiredRule:
     raw: dict[str, Any]
 
 
-# Verified against the live Application Fraud runtime by triggering each exact
-# business condition end-to-end (Quick Demo 1 and Demo 2) and reading back
-# ruleIdentifier/referenceIdentifier on the rule that actually fired. A
-# ruleIdentifier is stable per Decision Rule definition in SAS, so this is a
-# display-only label on top of data SAS already returned — the raw identifier,
-# referenceIdentifier, and alertReason stay available on every row regardless.
-# Only entries confirmed this way belong here; do not add a guess.
-_VERIFIED_RULE_NAMES: dict[str, str] = {
-    "cc5fb2bb-4dba-4828-9ae1-0f30000db36a": "AF_DR_Disbursement_Account_Anomaly",
-    "0cfc3922-fe7c-4224-9a2f-c3140ccab1b0": "AF_DR_Shared_Reference_Network",
-}
-
-
 def _rule_display_name(rule: dict[str, Any]) -> tuple[str, str]:
     """Resolve a human-readable name for a fired rule.
 
-    Priority: SAS ruleName -> ruleReference -> a verified ruleIdentifier mapping
-    -> an alert-reason style field -> the raw identifier. A ruleName/ruleReference
-    candidate is skipped if it looks like an opaque ID itself, since some SAS
-    environments repeat the UUID across more than one field.
+    Priority: SAS ruleName -> ruleReference -> the raw identifier.
+    A ruleName/ruleReference candidate is skipped if it looks like an opaque ID itself.
     """
 
     for field_name in ("ruleName", "ruleReference"):
@@ -295,17 +280,6 @@ def _rule_display_name(rule: dict[str, Any]) -> tuple[str, str]:
             and value.strip()
             and not _looks_like_identifier(value)
         ):
-            return value.strip(), field_name
-
-    identifier = rule.get("ruleIdentifier")
-    if isinstance(identifier, str):
-        verified = _VERIFIED_RULE_NAMES.get(identifier.strip())
-        if verified:
-            return verified, "verified_mapping"
-
-    for field_name in ("alertReason", "ruleReason", "outcomeName"):
-        value = rule.get(field_name)
-        if isinstance(value, str) and value.strip():
             return value.strip(), field_name
 
     identifier = (
@@ -339,6 +313,12 @@ def extract_application_fired_rules(
         if isinstance(rules, list)
         else ([rules] if isinstance(rules, dict) else [])
     )
+    
+    app_risk = message.get("appRisk", {}) if isinstance(message, dict) else {}
+    fired_rule_summary = app_risk.get("firedRuleSummary")
+    fired_rule_summary = str(fired_rule_summary).strip() if fired_rule_summary else None
+    alert_reason_summary = app_risk.get("alertReasonSummary")
+    alert_reason_summary = str(alert_reason_summary).strip() if alert_reason_summary else None
 
     def flag(value: Any) -> bool:
         if isinstance(value, str):
@@ -356,17 +336,23 @@ def extract_application_fired_rules(
         # the two raw booleans remain separate on ApplicationFiredRule.
         if only_fired and not (fired or alert):
             continue
+            
         display_name, basis = _rule_display_name(rule)
         reason = rule.get("alertReason") or rule.get("ruleReason")
+        reason = str(reason).strip() if isinstance(reason, str) and reason.strip() else None
+        
+        # Override with explicit scalar output if available
+        if fired_rule_summary and alert:
+            display_name = fired_rule_summary
+            basis = "appRisk.firedRuleSummary"
+        if alert_reason_summary and alert:
+            reason = alert_reason_summary
+
         results.append(
             ApplicationFiredRule(
                 display_name=display_name,
                 name_basis=basis,
-                reason=(
-                    str(reason).strip()
-                    if isinstance(reason, str) and reason.strip()
-                    else None
-                ),
+                reason=reason,
                 fired=fired,
                 alert=alert,
                 rule_identifier=(
